@@ -1,5 +1,7 @@
 package airUI.pkg;
 
+//layout for comments
+
 /*
 *****************************************************************************************************************
 *  
@@ -7,12 +9,15 @@ package airUI.pkg;
 */
 
 import javax.swing.*;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 
-public class Customize
+public class Customize implements ActionListener
 {
-	String man = "Manuel";
+	//String man = "Manual";
 
 	/*
 	*****************************************************************************************************************
@@ -58,28 +63,37 @@ public class Customize
 	JButton addPreset;
 	JButton addDevices;
 	
+	/*
+	*****************************************************************************************************************
+	* In the Constructor we just instantiate everything that will be used:
+	* 
+	* JFrame: 
+	*	mainWin - "customize title in the Top right corner"
+	*
+	* JPanel: 
+	*	mainPan - nothing instantiated by default
+	*
+	* JComboBox: 
+	*	Rooms - roomList array list will be used
+	*	setPreset - setPreList array list will be used
+	*	devices - devicesList array list will be used
+	*
+	* JButton:
+	* 	addRoom - creates button with "Add Room" name
+	* 	addPreset - creates button with "Add Preset" name
+	* 	addDevices - creates button with "Add Devices" name
+	*
+	*****************************************************************************************************************
+	*/
+	
 	public Customize()
 	{
-		/*
-		*****************************************************************************************************************
-		* In the Constructor we just instantiate everything that will be used:
-		* 
-		* JFrame: 
-		*	mainWin - "customize title in the Top right corner"
-		*
-		* JPanel: 
-		*	mainPan - nothing instantiated by default
-		*
-		* JComboBox: 
-		*	Rooms - roomList array list will be used
-		*	setPreset - setPreList array list will be used
-		*	devices - devicesList array list will be used
-		*
-		*****************************************************************************************************************
-		*/
-
-		mainWin = new JFrame("Customize");
 		
+		roomList.add("Default");
+		setPreList.add("Default");
+		devicesList.add("Default");
+		
+		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
 		
 		Rooms = new JComboBox(roomList.toArray());
@@ -92,6 +106,18 @@ public class Customize
 		
 	}
 	
+	/*
+	*****************************************************************************************************************
+	*  Layout - here is where the lay out of the window is laid out. 
+	*  it is not using a standard layout that the java library has. It 
+	*  is laying it using X, Y coordinates and the size of the component is 
+	*  using a width, and height. To do this it is using the "setBounds" method.
+	*  the first two numbers in each method are the (X,Y) coordinates. The next
+	*  two are the (width, height) of the component. It also add the "actionlistener"
+	*  to it read to receive the information.
+	*****************************************************************************************************************
+	*/
+	
 	public void layOut()
 	{
 		mainWin.setSize(600, 600);
@@ -100,19 +126,59 @@ public class Customize
 		mainPan.setLayout(null);
 		mainPan.setSize(600, 600);
 		
-		Rooms.setBounds(30, 100, 130, 100);
+		Rooms.setBounds(30, 100, 100, 25);
 		mainPan.add(Rooms);
 		
-		setPreset.setBounds(200, 100, 130,100);
+		setPreset.setBounds(200, 100, 100, 25);
 		mainPan.add(setPreset);
 		
-		devices.setBounds(370, 100, 130, 100);
+		devices.setBounds(370, 100, 100, 30);
 		mainPan.add(devices);
 		
-		//
 		
+		addRoom.setBounds(30, 220, 100, 40);
+		addRoom.addActionListener(this);
+		mainPan.add(addRoom);
+		
+		addPreset.setBounds(170, 220, 130, 40);
+		addPreset.addActionListener(this);
+		mainPan.add(addPreset);
+		
+		addDevices.setBounds(370, 220,130, 40);
+		addDevices.addActionListener(this);
+		mainPan.add(addDevices);
 		
 	}
+	
+	/*
+	*****************************************************************************************************************
+	* The Next Three methods are what the action listener is going to be using to add
+	* to the array list. As their names suggest addToRooms adds to the roomList arrayList
+	* and etc. 
+	*****************************************************************************************************************
+	*/
+	
+	public void addToRooms(String aRoom)
+	{
+		roomList.add(aRoom);
+	}
+	
+	public void addToPresets(String aSet)
+	{
+		setPreList.add(aSet);
+	}
+	
+	public void addToDevices(String aDevice)
+	{
+		devicesList.add(aDevice);
+	}
+	
+	/*
+	*****************************************************************************************************************
+	* Here is the main Function, which is what is needed to call all of the
+	* components needed to show the window display. 
+	*****************************************************************************************************************
+	*/
 	
 	public static void main(String[] args)
 	{
@@ -122,5 +188,19 @@ public class Customize
 		run.mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		run.layOut();
 
+	}
+	
+	/*
+	*****************************************************************************************************************
+	* Here is where the actions are received and does the appropriate thing 
+	* according to what is needed. As of Sprint 1, this will have nothing.  
+	*****************************************************************************************************************
+	*/
+	
+	@Override
+	public void actionPerformed(ActionEvent event) 
+	{
+		// TODO Auto-generated method stub
+		;
 	}
 }
