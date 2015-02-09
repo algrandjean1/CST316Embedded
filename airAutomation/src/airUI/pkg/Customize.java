@@ -17,8 +17,6 @@ import java.util.*;
 
 public class Customize implements ActionListener
 {
-	//String man = "Manual";
-
 	/*
 	*****************************************************************************************************************
 	* roomList - the List that will hold the all the rooms that are added to the system from the user
@@ -154,7 +152,7 @@ public class Customize implements ActionListener
 	*****************************************************************************************************************
 	* The Next Three methods are what the action listener is going to be using to add
 	* to the array list. As their names suggest addToRooms adds to the roomList arrayList
-	* and etc. 
+	* and etc. As of Sprint 1, they will not be used.
 	*****************************************************************************************************************
 	*/
 	
