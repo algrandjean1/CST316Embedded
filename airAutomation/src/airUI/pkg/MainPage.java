@@ -1,8 +1,6 @@
 package airUI.pkg;
-	/*
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-=======
+
+
 /* Sites that aided in the creation of this page:
  * http://docs.oracle.com/javase/tutorial/displayCode.html?code=http://docs.oracle.com/javase/tutorial/uiswing/examples/layout/AbsoluteLayoutDemoProject/src/layout/AbsoluteLayoutDemo.java
  * http://www.tutorialspoint.com/java/java_date_time.htm
