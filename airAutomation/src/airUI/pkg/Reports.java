@@ -1,5 +1,5 @@
 package airUI.pkg;
-
+// Report GUI
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -84,7 +84,7 @@ public class Reports extends JFrame{
     // main() method
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
- Reports fr = new Reports();
+        Reports fr = new Reports();
 	}
 
 }
