@@ -1,4 +1,4 @@
-git repo commands and how toos
+git repo commands and how tools
 
 • when you enter the working directory of the repo /airUI checkout into your branch.
 	$git checkout branchName
