@@ -82,10 +82,12 @@ public class Reports extends JFrame {
    }
  
    // main() method 
-   public static void main(String[] args) {
+   /*
+   public static void main(String[] args) 
+   {
     
 	   Reports fr = new Reports();
            
          
+   }*/
 }
-   }

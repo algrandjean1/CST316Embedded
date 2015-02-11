@@ -134,7 +134,7 @@ public class MainPage
 		frame.setSize(600,600);
 		frame.setVisible(true);
 	}
-	
+	/*
 	public static void main(String[] args)
 	{
 		
@@ -145,6 +145,6 @@ public class MainPage
 				showGUI();	
 			}
 		});
-	}
+	}*/
 	
 }

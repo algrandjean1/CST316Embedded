@@ -181,6 +181,7 @@ public class Customize implements ActionListener
 	*****************************************************************************************************************
 	*/
 	
+	/*
 	public static void main(String[] args)
 	{
 		Customize run = new Customize();
@@ -190,6 +191,7 @@ public class Customize implements ActionListener
 		run.layOut();
 
 	}
+	*/
 	
 	/*
 	*****************************************************************************************************************
