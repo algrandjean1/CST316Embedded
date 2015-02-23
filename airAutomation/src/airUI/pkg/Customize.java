@@ -200,10 +200,19 @@ public class Customize implements ActionListener
 	*****************************************************************************************************************
 	*/
 	
-	@Override
 	public void actionPerformed(ActionEvent event) 
 	{
-		// TODO Auto-generated method stub
-		;
+		if(event.equals(addRoom))
+		{
+			;
+		}
+		else if(event.equals(addDevices))
+		{
+			;
+		}
+		else if(event.equals(addPreset))
+		{
+			;
+		}
 	}
 }
