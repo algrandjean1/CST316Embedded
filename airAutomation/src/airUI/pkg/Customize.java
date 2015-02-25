@@ -27,6 +27,14 @@ import java.util.Date;
 
 public class Customize implements ActionListener, ItemListener
 {
+	/*
+	*****************************************************************************************************************
+	* this will be used to compare the time that the user selected to be there sleep schedule and with time the
+	* actual time of the day, and appropriately turn off or on any device
+	* we will use the SimpleDateFormat class to make it only output the hour, minutes and am pm since that is all
+	* we will need.
+	*****************************************************************************************************************
+	*/
 	//Date time = new Date();
 	//SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
 	
@@ -40,6 +48,8 @@ public class Customize implements ActionListener, ItemListener
 	*****************************************************************************************************************
 	* roomList - the List that will hold the all the rooms that are added to the system from the user
 	* setPreList - the list that will hold all the preset that are placed for the home system, from the user 
+	* the tempR will be used to have preset range for the temperature
+	* the timeR will be used to have preset times that will be used to 
 	*****************************************************************************************************************
 	*/
 	
@@ -206,8 +216,8 @@ public class Customize implements ActionListener, ItemListener
 		
 		
 		
-		//this is to fill in for the Temperature settings
-		for(int i = 0; i < TEMPRANGE-1; i++)
+		//this is to fill in for the Temperature settings range
+		for(int i = 0; i < TEMPRANGE; i++)
 		{
 			tempR[i] = start;
 			start++;
@@ -216,7 +226,7 @@ public class Customize implements ActionListener, ItemListener
 		
 		/*
 		*****************************************************************************************************************
-		*  This will be use to fill in the String array with all the times that will be available for the sleep
+		*  This will be used to fill in the String array with all the times that will be available for the sleep
 		*  schedule 
 		*****************************************************************************************************************
 		*/
@@ -242,7 +252,8 @@ public class Customize implements ActionListener, ItemListener
 	*  using a width, and height. To do this it is using the "setBounds" method.
 	*  the first two numbers in each method are the (X,Y) coordinates. The next
 	*  two are the (width, height) of the component. It also add the "actionlistener"
-	*  to it read to receive the information.
+	*  to it read to receive the information for the buttons, and it adds an "ItemListener" 
+	*  for the comboboxs so whenever a selected item is change it will update the text areas.
 	*****************************************************************************************************************
 	*/
 	
@@ -375,7 +386,7 @@ public class Customize implements ActionListener, ItemListener
 	*****************************************************************************************************************
 	*/
 	
-	
+	/*
 	public static void main(String[] args)
 	{
 		Customize run = new Customize();
@@ -385,7 +396,7 @@ public class Customize implements ActionListener, ItemListener
 		run.layOut();
 
 	}
-	
+	/*
 	
 	/*
 	*****************************************************************************************************************
