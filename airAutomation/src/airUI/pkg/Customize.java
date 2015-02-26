@@ -82,6 +82,9 @@ public class Customize implements ActionListener, ItemListener
 	* 	Temp: 		"Temp: "
 	* 	To: 		" to "
 	* 	SleepSch: 	"Sleep Schedule: "
+	*   Rpre: 		"Room's Preset: "
+	*   newP:		"New Preset Name: "
+	*   newR: 		"New Room Name: "
 	* 
 	* JSpinner:
 	* 	lowTemp: 	to be the low preset for user in their preferred temperature range
@@ -114,6 +117,9 @@ public class Customize implements ActionListener, ItemListener
 	JLabel To;
 	JLabel To2;
 	JLabel SleepSch;
+	JLabel RPre;
+	JLabel newP;
+	JLabel newR;
 	
 	JTextField newPres;
 	JTextField newRoom;
@@ -155,6 +161,9 @@ public class Customize implements ActionListener, ItemListener
 	* 	Temp: 		"Temp: "
 	* 	To: 		" to "
 	* 	SleepSch: 	"Sleep Schedule: "
+	* 	RPre: 		"Room's Preset: "
+	* 	newP:		"New Preset Name: "
+	*   newR: 		"New Room Name: "
 	* 
 	* JSpinner:
 	* 	lowTemp: 	nothing in it by default
@@ -193,6 +202,9 @@ public class Customize implements ActionListener, ItemListener
 		To = new JLabel(" to ");
 		To2 = new JLabel(" to ");
 		SleepSch = new JLabel("Sleep Schedule: ");
+		RPre = new JLabel("Room's Preset: ");
+		newP = new JLabel("New Preset Name: ");
+		newR = new JLabel("New Room Name: ");
 		
 		newPres = new JTextField();
 		newRoom = new JTextField();
@@ -231,6 +243,7 @@ public class Customize implements ActionListener, ItemListener
 		*****************************************************************************************************************
 		*/
 		String ampm = "AM";
+		String pmam = "PM";
 		int k = 1;
 		String odd = "00";
 		String even = "30";
@@ -239,7 +252,7 @@ public class Customize implements ActionListener, ItemListener
 		{
 			if(i % 2 == 0)
 			{
-				;
+				k++;
 			}
 		}
 	}
@@ -308,12 +321,16 @@ public class Customize implements ActionListener, ItemListener
 		highTime.setBounds(290,170,80,30);
 		mainPan.add(highTime);
 		
+		//The label "New Preset Name: "
+		newP.setBounds(170, 210, 120, 30);
+		mainPan.add(newP);
+		
 		//the textfield that is blank for new preset
-		newPres.setBounds(170,210,120,30);
+		newPres.setBounds(295,210,120,30);
 		mainPan.add(newPres);
 		
 		//the button add or modify a preset
-		addModPre.setBounds(300,210,120,30);
+		addModPre.setBounds(430,210,120,30);
 		mainPan.add(addModPre);
 		addModPre.addActionListener(this);
 		
@@ -326,18 +343,27 @@ public class Customize implements ActionListener, ItemListener
 		Rooms.addItemListener(this);
 		mainPan.add(Rooms);
 		
+		//The Label "New Room Name: "
+		newR.setBounds(170,350,120,30);
+		mainPan.add(newR);
+		
 		//the textfield that is blank for new Rooms
-		newRoom.setBounds(170,350,120,30);
+		newRoom.setBounds(295,350,120,30);
 		mainPan.add(newRoom);
 		
-		//the preset same as setPreset, but that will be attached to rooms
-		roomPreset.setBounds(300,350,100,25);
-		mainPan.add(roomPreset);
+		//the Label "Room's preset: "
+		RPre.setBounds(430,350,100,30);
+		mainPan.add(RPre);
+		
 		
 		//the button add or modify a room
-		addModRooms.setBounds(410,350,120,30);
+		addModRooms.setBounds(170,390,120,30);
 		mainPan.add(addModRooms);
+		addModRooms.addActionListener(this);
 		
+		//the preset same as setPreset, but that will be attached to rooms
+		roomPreset.setBounds(430,390,100,25);
+		mainPan.add(roomPreset);
 		
 		//devices.setBounds(370, 100, 100, 30);
 		//mainPan.add(devices);
@@ -407,7 +433,14 @@ public class Customize implements ActionListener, ItemListener
 	
 	public void actionPerformed(ActionEvent e) 
 	{
-		;
+		if(e.getSource() == addModPre)
+		{
+			;
+		}
+		else if (e.getSource() == addModRooms)
+		{
+			;
+		}
 	}
 
 	/*
