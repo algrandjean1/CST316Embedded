@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerListModel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -104,6 +105,7 @@ public class Customize implements ActionListener, ItemListener
 	*   addDevices - this will be the button to add Devices
 	*   addModPre - this will be used to either modify or add a new preset
 	*   addModRooms - this will be used to either modify or add a new Room
+	*   back - this will be used to go back to the Main Page.
 	* 
 	*****************************************************************************************************************
 	*/
@@ -136,6 +138,7 @@ public class Customize implements ActionListener, ItemListener
 	
 	JButton addModPre;
 	JButton addModRooms;
+	JButton back;
 	//JButton addRoom;
 	//JButton addPreset;
 	//JButton addDevices;
@@ -183,6 +186,7 @@ public class Customize implements ActionListener, ItemListener
 	*   addDevices - this will be the button to add Devices
 	*   addModPre - "add/modify"
 	*   addModRooms - "add/modify"
+	*   back - "back"
 	*****************************************************************************************************************
 	*/
 	
@@ -211,6 +215,7 @@ public class Customize implements ActionListener, ItemListener
 		
 		addModPre = new JButton("Add/Modify");
 		addModRooms = new JButton("Add/Modify");
+		back = new JButton("Back");
 		
 		lowTemp = new JSpinner();
 		highTemp = new JSpinner();
@@ -234,8 +239,8 @@ public class Customize implements ActionListener, ItemListener
 			tempR[i] = start;
 			start++;
 		}
-		
-		
+		//SpinnerListModel tempModel = new SpinnerListModel(tempR);
+		//lowTemp.setModel(tempModel);
 		/*
 		*****************************************************************************************************************
 		*  This will be used to fill in the String array with all the times that will be available for the sleep
@@ -250,6 +255,7 @@ public class Customize implements ActionListener, ItemListener
 		timeR[0] = "0:00";
 		for(int i = 1; i < TIMERANGE; i++)
 		{
+			
 			if(i % 2 == 0)
 			{
 				k++;
@@ -355,7 +361,6 @@ public class Customize implements ActionListener, ItemListener
 		RPre.setBounds(430,350,100,30);
 		mainPan.add(RPre);
 		
-		
 		//the button add or modify a room
 		addModRooms.setBounds(170,390,120,30);
 		mainPan.add(addModRooms);
@@ -364,6 +369,10 @@ public class Customize implements ActionListener, ItemListener
 		//the preset same as setPreset, but that will be attached to rooms
 		roomPreset.setBounds(430,390,100,25);
 		mainPan.add(roomPreset);
+		
+		//the back button
+		back.setBounds(500,500,60,30);
+		mainPan.add(back);
 		
 		//devices.setBounds(370, 100, 100, 30);
 		//mainPan.add(devices);
@@ -437,7 +446,11 @@ public class Customize implements ActionListener, ItemListener
 		{
 			;
 		}
-		else if (e.getSource() == addModRooms)
+		else if(e.getSource() == addModRooms)
+		{
+			;
+		}
+		else if(e.getSource() == back)
 		{
 			;
 		}
