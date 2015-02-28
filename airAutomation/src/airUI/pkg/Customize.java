@@ -42,8 +42,6 @@ public class Customize implements ActionListener, ItemListener
 	int TEMPRANGE = 21;
 	int TIMERANGE = 49;
 	
-	int start = 60;
-	
 	
 	/*
 	*****************************************************************************************************************
@@ -58,8 +56,13 @@ public class Customize implements ActionListener, ItemListener
 	ArrayList<String> setPreList = new ArrayList<String>();
 	//ArrayList<String> devicesList = new ArrayList<String>();
 	
-	int[] tempR = new int[TEMPRANGE];
-	String[] timeR = new String[TIMERANGE];
+	ArrayList<Integer> tempR = new ArrayList<Integer>();
+	ArrayList<Integer> tempR2 = new ArrayList<Integer>();
+	ArrayList<String> timeR = new ArrayList<String>();
+	ArrayList<String> timeR2 = new ArrayList<String>();
+	
+	//int[] tempR = new int[TEMPRANGE];
+	//String[] timeR = new String[TIMERANGE];
 	
 
 	/*
@@ -131,6 +134,11 @@ public class Customize implements ActionListener, ItemListener
 	JSpinner lowTime;
 	JSpinner highTime;
 	
+	SpinnerListModel tempModel;
+	SpinnerListModel tempModel2;
+	SpinnerListModel timeModel;
+	SpinnerListModel timeModel2;
+	
 	JComboBox Rooms;
 	JComboBox setPreset;
 	JComboBox roomPreset;
@@ -194,7 +202,16 @@ public class Customize implements ActionListener, ItemListener
 	{
 		
 		roomList.add("Default");
+		roomList.add("Living Room");
+		roomList.add("Kitchen");
+		roomList.add("Master Bedroom");
+		roomList.add("Children's Room");
+		
 		setPreList.add("Default");
+		setPreList.add("Winter");
+		setPreList.add("Fall");
+		setPreList.add("Spring");
+		setPreList.add("Summer");
 		//devicesList.add("Default");
 		
 		mainWin = new JFrame("Customize");
@@ -222,6 +239,9 @@ public class Customize implements ActionListener, ItemListener
 		lowTime = new JSpinner();
 		highTime = new JSpinner();
 		
+		
+		timeModel = new SpinnerListModel();
+		
 		Rooms = new JComboBox(roomList.toArray());
 		setPreset = new JComboBox(setPreList.toArray());
 		roomPreset = new JComboBox(setPreList.toArray());
@@ -234,33 +254,67 @@ public class Customize implements ActionListener, ItemListener
 		
 		
 		//this is to fill in for the Temperature settings range
-		for(int i = 0; i < TEMPRANGE; i++)
+		int start = 60;
+		//tempR.add(0);
+		for(int i = 1; i < TEMPRANGE; i++)
 		{
-			tempR[i] = start;
+			tempR.add(start);
+			tempR2.add(start);
 			start++;
 		}
-		//SpinnerListModel tempModel = new SpinnerListModel(tempR);
-		//lowTemp.setModel(tempModel);
+		
+		tempModel = new SpinnerListModel(tempR);
+		tempModel2 = new SpinnerListModel(tempR2);
+		
 		/*
 		*****************************************************************************************************************
 		*  This will be used to fill in the String array with all the times that will be available for the sleep
-		*  schedule 
+		*  schedule It is filling in two at a time since the Spinner class that will be using requires that each 
+		*  list be separated
 		*****************************************************************************************************************
 		*/
-		String ampm = "AM";
-		String pmam = "PM";
+		String am = "AM";
+		String pm = "PM";
 		int k = 1;
 		String odd = "00";
 		String even = "30";
-		timeR[0] = "0:00";
+		timeR.add("0:00");
+		timeR2.add("0:00");
 		for(int i = 1; i < TIMERANGE; i++)
-		{
-			
+		{	
 			if(i % 2 == 0)
 			{
+				if(k > 12)
+				{
+					timeR.add(Integer.toString(k % 12) + ":" + even + pm);
+					timeR2.add(Integer.toString(k % 12) + ":" + even + pm);
+				}
+				else
+				{
+					timeR.add(Integer.toString(k) + ":" + even + am);
+					timeR2.add(Integer.toString(k) + ":" + even + am); 
+				}
 				k++;
 			}
+			else
+			{
+				if(k > 12)
+				{
+					timeR.add(Integer.toString(k % 12) + ":" + odd + pm);
+					timeR2.add(Integer.toString(k % 12) + ":" + odd + pm);
+				}
+				else
+				{
+					timeR.add(Integer.toString(k) + ":" + odd + am);
+					timeR2.add(Integer.toString(k) + ":" + odd + am);
+				}
+			}
 		}
+		
+		timeModel = new SpinnerListModel(timeR);
+		timeModel2 = new SpinnerListModel(timeR2);
+		
+		//layOut();
 	}
 	
 	/*
@@ -300,15 +354,17 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(Temp);
 		
 		//the Spinner on left for temp
-		lowTemp.setBounds(220, 100, 80, 30);
+		lowTemp.setBounds(220, 100, 120, 30);
+		lowTemp.setModel(tempModel);
 		mainPan.add(lowTemp);
 		
 		//the label " to "
-		To.setBounds(310,100,40,30);
+		To.setBounds(345,100,40,30);
 		mainPan.add(To);
 		
 		//the Spinner on the right for temp
-		highTemp.setBounds(350,100,80,30);
+		highTemp.setBounds(390,100,120,30);
+		highTemp.setModel(tempModel2);
 		mainPan.add(highTemp);
 		
 		//the label "Sleep Schedule: "
@@ -317,6 +373,7 @@ public class Customize implements ActionListener, ItemListener
 		
 		//the Spinner on the left for time
 		lowTime.setBounds(170,170,80,30);
+		lowTime.setModel(timeModel);
 		mainPan.add(lowTime);
 		
 		//Second label " to "
@@ -325,6 +382,7 @@ public class Customize implements ActionListener, ItemListener
 		
 		//the spinner on the right for time
 		highTime.setBounds(290,170,80,30);
+		highTime.setModel(timeModel2);
 		mainPan.add(highTime);
 		
 		//The label "New Preset Name: "
@@ -414,6 +472,13 @@ public class Customize implements ActionListener, ItemListener
 		devicesList.add(aDevice);
 	}*/
 	
+	public void setUp()
+	{
+		mainWin.setVisible(true);
+		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		layOut();
+	}
+	
 	/*
 	*****************************************************************************************************************
 	* Here is the main Function, which is what is needed to call all of the
@@ -421,17 +486,13 @@ public class Customize implements ActionListener, ItemListener
 	*****************************************************************************************************************
 	*/
 	
-	/*
+	
 	public static void main(String[] args)
 	{
 		Customize run = new Customize();
-
-		run.mainWin.setVisible(true);
-		run.mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		run.layOut();
-
+		run.setUp();
 	}
-	/*
+	
 	
 	/*
 	*****************************************************************************************************************
@@ -444,11 +505,27 @@ public class Customize implements ActionListener, ItemListener
 	{
 		if(e.getSource() == addModPre)
 		{
-			;
+			if(newPres.getSelectedText() != null)
+			{
+				addToPresets(newPres.getSelectedText());
+			}
+			else
+			{
+				//add current info to modify current preset's data
+				;
+			}
 		}
 		else if(e.getSource() == addModRooms)
 		{
-			;
+			if(newRoom.getSelectedText() != null)
+			{
+				addToRooms(newRoom.getSelectedText());
+			}
+			else
+			{
+				//add new preset to currently selected room
+				;
+			}
 		}
 		else if(e.getSource() == back)
 		{
