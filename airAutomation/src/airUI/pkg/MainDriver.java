@@ -35,9 +35,7 @@ public class MainDriver
 		
 		//this is for the Customize page
 		Customize run = new Customize();
-		run.mainWin.setVisible(true);
-		run.mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		run.layOut();
+		run.setUp();
 	}
 
 }
