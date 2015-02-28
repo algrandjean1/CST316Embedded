@@ -17,7 +17,7 @@ public class Reports extends JFrame {
   
    public Reports() {
     
-// main panel for reports frame   
+	   // main panel for reports frame   
        JPanel mainPane = new JPanel();
        mainPane.setPreferredSize(new Dimension(600, 600));
        getContentPane().add(mainPane);
@@ -25,7 +25,7 @@ public class Reports extends JFrame {
        mainPane.setLayout(fLayout);
        this.add(mainPane);
        
- // create a left panel
+       // create a left panel
        JPanel leftPane = new JPanel();
        BoxLayout boxLayout = new BoxLayout(leftPane, BoxLayout.PAGE_AXIS);
        leftPane.setLayout(boxLayout);
@@ -34,7 +34,7 @@ public class Reports extends JFrame {
     
 
        
-// creating the J list for time
+       // creating the J list for time
        
       String[] time = {"Daily", "Monthly", "Quarterly", "Yearly"};
       JList list = new JList(time);     
@@ -48,7 +48,7 @@ public class Reports extends JFrame {
       leftPane.add(backButton);
       mainPane.add(leftPane);
     
-  // create a J table to show the reports 
+      // create a J table to show the reports 
       String[] colName = {"Month", "O2",  "CO2", "Humidity","Temperature"};
       Object[][] data = {
           {"January", "Column 2", "Column 3", " Column 4", " Column 1"},
