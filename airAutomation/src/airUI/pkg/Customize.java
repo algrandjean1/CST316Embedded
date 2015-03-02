@@ -8,6 +8,7 @@ package airUI.pkg;
 *****************************************************************************************************************
 */
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -52,18 +53,10 @@ public class Customize implements ActionListener, ItemListener
 	*****************************************************************************************************************
 	*/
 	
-	ArrayList<String> roomList = new ArrayList<String>();
-	ArrayList<String> setPreList = new ArrayList<String>();
-	//ArrayList<String> devicesList = new ArrayList<String>();
-	
 	ArrayList<Integer> tempR = new ArrayList<Integer>();
 	ArrayList<Integer> tempR2 = new ArrayList<Integer>();
 	ArrayList<String> timeR = new ArrayList<String>();
 	ArrayList<String> timeR2 = new ArrayList<String>();
-	
-	//int[] tempR = new int[TEMPRANGE];
-	//String[] timeR = new String[TIMERANGE];
-	
 
 	/*
 	*****************************************************************************************************************
@@ -142,14 +135,10 @@ public class Customize implements ActionListener, ItemListener
 	JComboBox Rooms;
 	JComboBox setPreset;
 	JComboBox roomPreset;
-	//JComboBox devices;
 	
 	JButton addModPre;
 	JButton addModRooms;
 	JButton back;
-	//JButton addRoom;
-	//JButton addPreset;
-	//JButton addDevices;
 	
 	/*
 	*****************************************************************************************************************
@@ -201,19 +190,6 @@ public class Customize implements ActionListener, ItemListener
 	public Customize()
 	{
 		
-		roomList.add("Default");
-		roomList.add("Living Room");
-		roomList.add("Kitchen");
-		roomList.add("Master Bedroom");
-		roomList.add("Children's Room");
-		
-		setPreList.add("Default");
-		setPreList.add("Winter");
-		setPreList.add("Fall");
-		setPreList.add("Spring");
-		setPreList.add("Summer");
-		//devicesList.add("Default");
-		
 		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
 		
@@ -239,23 +215,14 @@ public class Customize implements ActionListener, ItemListener
 		lowTime = new JSpinner();
 		highTime = new JSpinner();
 		
-		
-		timeModel = new SpinnerListModel();
-		
-		Rooms = new JComboBox(roomList.toArray());
-		setPreset = new JComboBox(setPreList.toArray());
-		roomPreset = new JComboBox(setPreList.toArray());
-		//devices = new JComboBox(devicesList.toArray());
-		
-		//addRoom = new JButton("Add Room");
-		//addPreset = new JButton("Add Preset");	
-		//addDevices = new JButton("Add Devices");
-		
-		
+		Rooms = new JComboBox();
+		setPreset = new JComboBox();
+		roomPreset = new JComboBox();
 		
 		//this is to fill in for the Temperature settings range
 		int start = 60;
-		//tempR.add(0);
+		tempR.add(0);
+		tempR2.add(0);
 		for(int i = 1; i < TEMPRANGE; i++)
 		{
 			tempR.add(start);
@@ -313,8 +280,6 @@ public class Customize implements ActionListener, ItemListener
 		
 		timeModel = new SpinnerListModel(timeR);
 		timeModel2 = new SpinnerListModel(timeR2);
-		
-		//layOut();
 	}
 	
 	/*
@@ -346,6 +311,8 @@ public class Customize implements ActionListener, ItemListener
 		
 		//the combobox with the Presets
 		setPreset.setBounds(60, 100, 100, 25);
+	    setPreset.addActionListener(this);
+	    setPreset.addActionListener(this);
 		setPreset.addItemListener(this);
 		mainPan.add(setPreset);
 		
@@ -359,11 +326,11 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(lowTemp);
 		
 		//the label " to "
-		To.setBounds(345,100,40,30);
+		To.setBounds(350,100,40,30);
 		mainPan.add(To);
 		
 		//the Spinner on the right for temp
-		highTemp.setBounds(390,100,120,30);
+		highTemp.setBounds(420,100,120,30);
 		highTemp.setModel(tempModel2);
 		mainPan.add(highTemp);
 		
@@ -372,16 +339,16 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(SleepSch);
 		
 		//the Spinner on the left for time
-		lowTime.setBounds(170,170,80,30);
+		lowTime.setBounds(170,170,150,30);
 		lowTime.setModel(timeModel);
 		mainPan.add(lowTime);
 		
 		//Second label " to "
-		To2.setBounds(260,170,40,30);
+		To2.setBounds(330,170,40,30);
 		mainPan.add(To2);
 		
 		//the spinner on the right for time
-		highTime.setBounds(290,170,80,30);
+		highTime.setBounds(390,170,150,30);
 		highTime.setModel(timeModel2);
 		mainPan.add(highTime);
 		
@@ -403,7 +370,8 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(Room);
 		
 		//the combobox with all the rooms
-		Rooms.setBounds(60, 300, 100, 25);
+		Rooms.setBounds(60, 300, 150, 25);
+		Rooms.addActionListener(this);
 		Rooms.addItemListener(this);
 		mainPan.add(Rooms);
 		
@@ -426,6 +394,8 @@ public class Customize implements ActionListener, ItemListener
 		
 		//the preset same as setPreset, but that will be attached to rooms
 		roomPreset.setBounds(430,390,100,25);
+		roomPreset.addActionListener(this);
+		roomPreset.addItemListener(this);
 		mainPan.add(roomPreset);
 		
 		//the back button
@@ -451,27 +421,9 @@ public class Customize implements ActionListener, ItemListener
 	
 	/*
 	*****************************************************************************************************************
-	* The Next Three methods are what the action listener is going to be using to add
-	* to the array list. As their names suggest addToRooms adds to the roomList arrayList
-	* and etc. As of Sprint 1, they will not be used.
+	* The next method is to just have one method to set everything up when called
 	*****************************************************************************************************************
 	*/
-	
-	public void addToRooms(String aRoom)
-	{
-		roomList.add(aRoom);
-	}
-	
-	public void addToPresets(String aSet)
-	{
-		setPreList.add(aSet);
-	}
-	
-	/*public void addToDevices(String aDevice)
-	{
-		devicesList.add(aDevice);
-	}*/
-	
 	public void setUp()
 	{
 		mainWin.setVisible(true);
@@ -505,25 +457,25 @@ public class Customize implements ActionListener, ItemListener
 	{
 		if(e.getSource() == addModPre)
 		{
-			if(newPres.getSelectedText() != null)
+			if(newPres.getText() != null)
 			{
-				addToPresets(newPres.getSelectedText());
+				setPreset.addItem(newPres.getText());
+				roomPreset.addItem(newPres.getText());
 			}
 			else
 			{
-				//add current info to modify current preset's data
 				;
 			}
 		}
 		else if(e.getSource() == addModRooms)
 		{
-			if(newRoom.getSelectedText() != null)
+			if(newRoom.getText() != null)
 			{
-				addToRooms(newRoom.getSelectedText());
+				Rooms.addItem(newRoom.getText());
 			}
 			else
 			{
-				//add new preset to currently selected room
+				
 				;
 			}
 		}
@@ -541,6 +493,9 @@ public class Customize implements ActionListener, ItemListener
 	*/
 	public void itemStateChanged(ItemEvent event) 
 	{
-		;
+		if(event.getStateChange() == ItemEvent.SELECTED)
+		{
+			Object compare = event.getSource();
+		}
 	}
 }
