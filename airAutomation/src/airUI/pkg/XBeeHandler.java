@@ -12,8 +12,6 @@ package airUI.pkg;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
 
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.XBeeNetwork;
@@ -26,11 +24,10 @@ import com.digi.xbee.api.models.XBeeMessage;
  * XBeeHandler class sets up a XBee network and locates remote devices to communicate with.
  * Will allows for the sending and receiving of serial data to and from a remote device from a java client
  */
-public class XBeeHandler {
+public class XBeeHandler implements IDataReceiveListener{
 	protected XBeeNetwork xbeeNetwork = null;
 	protected ZigBeeDevice xbee = null;
 	protected RemoteXBeeDevice dragon = xbeeNetwork.getDevice("DRAGON");	
-	protected IDataReceiveListener dataReceiveListener;
 	protected String lowerBound, upperBound = "";
 	protected String carbonDioxide, humidity, methane = "";
 
@@ -86,12 +83,27 @@ public class XBeeHandler {
 			public void run()
 			{
 				if (xbee.isOpen()) {
-					xbee.close();
 				}
 			}
 		});
 	}
 
+	// Setup a listener so we can see what the remote XBee is saying
+    IDataReceiveListener dataReceiveListener = new IDataReceiveListener()
+    {
+       @Override
+       public void dataReceived(XBeeMessage xbeeMessage)
+       {
+          if (xbeeMessage.getDevice().get64BitAddress().equals(dragon.get64BitAddress())) {
+             System.out.println("Dragon: " + xbeeMessage.getDataString());
+          }
+       }
+    };
+	
+    public void dataReceived(XBeeMessage xbeeMessage) {
+    	xbee.addDataListener(dataReceiveListener);
+    	System.out.println("Dragon: " + xbeeMessage.getDataString());
+    }
 /**
  * refer to devices by name
  * allows for point to point communication
@@ -110,24 +122,6 @@ public class XBeeHandler {
 
 		}
 		return dragon;
-	}
-
-	/**
-	 * receive serial data from device and return to GUI
-	 * @param xbeeMessage serial data string from device
-	 * @return sensor readings from device
-	 */
-	public String receiveMessage(XBeeMessage xbeeMessage) {
-		// Setup a listener so we can see what the remote XBee is saying
-		//dataReceiveListener = new IDataReceiveListener();
-		String message = "";
-
-		if (xbeeMessage.getDevice().get64BitAddress().equals(dragon.get64BitAddress())) {
-			message = xbeeMessage.getDataString();
-		}
-		xbee.addDataListener(dataReceiveListener);
-
-		return message;
 	}
 
 	/**
