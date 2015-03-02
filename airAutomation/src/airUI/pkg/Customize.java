@@ -217,7 +217,7 @@ public class Customize implements ActionListener, ItemListener
 		
 		Rooms = new JComboBox();
 		setPreset = new JComboBox();
-		roomPreset = new JComboBox();
+		roomPreset = new JComboBox();	
 		
 		//this is to fill in for the Temperature settings range
 		int start = 60;
@@ -311,8 +311,7 @@ public class Customize implements ActionListener, ItemListener
 		
 		//the combobox with the Presets
 		setPreset.setBounds(60, 100, 100, 25);
-	    setPreset.addActionListener(this);
-	    setPreset.addActionListener(this);
+	        setPreset.addActionListener(this);
 		setPreset.addItemListener(this);
 		mainPan.add(setPreset);
 		
