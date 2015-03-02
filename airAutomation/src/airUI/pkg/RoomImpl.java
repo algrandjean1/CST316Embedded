@@ -27,9 +27,9 @@ public class RoomImpl  {
 
 	/**
 	 * reads from the file of rooms and adds them to the HashTable
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	public RoomImpl() throws IOException {
+	public RoomImpl() throws Exception {
 	try {
 		BufferedReader fin = new BufferedReader(new FileReader(new File(
 				"roomList.txt")));
