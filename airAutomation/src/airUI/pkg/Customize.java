@@ -40,7 +40,7 @@ public class Customize implements ActionListener, ItemListener
 	//Date time = new Date();
 	//SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
 	
-	int TEMPRANGE = 21;
+	int TEMPRANGE = 26;
 	int TIMERANGE = 49;
 	
 	
@@ -53,8 +53,8 @@ public class Customize implements ActionListener, ItemListener
 	*****************************************************************************************************************
 	*/
 	
-	ArrayList<Integer> tempR = new ArrayList<Integer>();
-	ArrayList<Integer> tempR2 = new ArrayList<Integer>();
+	ArrayList<String> tempR = new ArrayList<String>();
+	ArrayList<String> tempR2 = new ArrayList<String>();
 	ArrayList<String> timeR = new ArrayList<String>();
 	ArrayList<String> timeR2 = new ArrayList<String>();
 
@@ -220,13 +220,13 @@ public class Customize implements ActionListener, ItemListener
 		roomPreset = new JComboBox();	
 		
 		//this is to fill in for the Temperature settings range
-		int start = 60;
-		tempR.add(0);
-		tempR2.add(0);
+		int start = 65;
+		tempR.add("None");
+		tempR2.add("None");
 		for(int i = 1; i < TEMPRANGE; i++)
 		{
-			tempR.add(start);
-			tempR2.add(start);
+			tempR.add(Integer.toString(start));
+			tempR2.add(Integer.toString(start));
 			start++;
 		}
 		
@@ -311,7 +311,7 @@ public class Customize implements ActionListener, ItemListener
 		
 		//the combobox with the Presets
 		setPreset.setBounds(60, 100, 100, 25);
-	        setPreset.addActionListener(this);
+		setPreset.addActionListener(this);
 		setPreset.addItemListener(this);
 		mainPan.add(setPreset);
 		
@@ -426,6 +426,7 @@ public class Customize implements ActionListener, ItemListener
 	public void setUp()
 	{
 		mainWin.setVisible(true);
+		mainPan.setVisible(true);
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layOut();
 	}
