@@ -8,6 +8,7 @@ package airUI.pkg;
 *****************************************************************************************************************
 */
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -35,6 +36,7 @@ public class Customize implements ActionListener, ItemListener
 	int TEMPRANGE = 27;
 	int TIMERANGE = 49;
 	
+
 	ArrayList<String> roomList = new ArrayList<String>();
 	ArrayList<String> setPreList = new ArrayList<String>();
 	
@@ -42,6 +44,7 @@ public class Customize implements ActionListener, ItemListener
 	ArrayList<String> tempR2 = new ArrayList<String>();
 	ArrayList<String> timeR = new ArrayList<String>();
 	ArrayList<String> timeR2 = new ArrayList<String>();
+
 
 	JFrame mainWin;
 	JPanel mainPan;
@@ -72,7 +75,6 @@ public class Customize implements ActionListener, ItemListener
 	JComboBox Rooms;
 	JComboBox setPreset;
 	JComboBox roomPreset;
-
 	
 	JButton addModPre;
 	JButton addModRooms;
@@ -105,9 +107,6 @@ public class Customize implements ActionListener, ItemListener
 		highTemp = new JSpinner();
 		lowTime = new JSpinner();
 		highTime = new JSpinner();
-		
-		
-		timeModel = new SpinnerListModel();
 		
 		Rooms = new JComboBox(roomList.toArray());
 		setPreset = new JComboBox(setPreList.toArray());
@@ -174,8 +173,6 @@ public class Customize implements ActionListener, ItemListener
 		
 		timeModel = new SpinnerListModel(timeR);
 		timeModel2 = new SpinnerListModel(timeR2);
-		
-		//layOut();
 	}
 	
 	public void layOut()
@@ -207,11 +204,11 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(lowTemp);
 		
 		//the label " to "
-		To.setBounds(345,100,40,30);
+		To.setBounds(350,100,40,30);
 		mainPan.add(To);
 		
 		//the Spinner on the right for temp
-		highTemp.setBounds(390,100,120,30);
+		highTemp.setBounds(420,100,120,30);
 		highTemp.setModel(tempModel2);
 		mainPan.add(highTemp);
 		
@@ -220,16 +217,16 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(SleepSch);
 		
 		//the Spinner on the left for time
-		lowTime.setBounds(170,170,80,30);
+		lowTime.setBounds(170,170,150,30);
 		lowTime.setModel(timeModel);
 		mainPan.add(lowTime);
 		
 		//Second label " to "
-		To2.setBounds(260,170,40,30);
+		To2.setBounds(330,170,40,30);
 		mainPan.add(To2);
 		
 		//the spinner on the right for time
-		highTime.setBounds(290,170,80,30);
+		highTime.setBounds(390,170,150,30);
 		highTime.setModel(timeModel2);
 		mainPan.add(highTime);
 		
@@ -281,7 +278,7 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(back);
 		
 	}
-	
+
 	public void setUp()
 	{
 		mainWin.setVisible(true);
@@ -329,6 +326,9 @@ public class Customize implements ActionListener, ItemListener
 
 	public void itemStateChanged(ItemEvent event) 
 	{
-		;
+		if(event.getStateChange() == ItemEvent.SELECTED)
+		{
+			Object compare = event.getSource();
+		}
 	}
 }
