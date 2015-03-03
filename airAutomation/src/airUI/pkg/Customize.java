@@ -247,13 +247,13 @@ public class Customize implements ActionListener, ItemListener
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layOut();
 	}
-	
+	/*
 	public static void main(String[] args)
 	{
 		Customize run = new Customize();
 		run.setUp();
 	}
-	
+	*/
 	public void actionPerformed(ActionEvent e) 
 	{
 		if(e.getSource() == addModPre)
