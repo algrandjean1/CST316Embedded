@@ -8,23 +8,20 @@ package airUI.pkg;
 *****************************************************************************************************************
 */
 
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerListModel;
-
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerListModel;
 
 public class Customize implements ActionListener, ItemListener
 {
@@ -46,7 +43,7 @@ public class Customize implements ActionListener, ItemListener
 	protected JPanel mainPan;
 	
 	protected JLabel Preset;
-	protected JLabel Room;
+	protected JLabel rLabel;
 	protected JLabel Temp;
 	protected JLabel To;
 	protected JLabel To2;
@@ -84,7 +81,7 @@ public class Customize implements ActionListener, ItemListener
 		
 		Preset = new JLabel("Preset: ");
 		Temp = new JLabel("Temp: ");
-		Room = new JLabel("Rooms: ");
+		rLabel = new JLabel("Rooms: ");
 		To = new JLabel(" to ");
 		To2 = new JLabel(" to ");
 		SleepSch = new JLabel("Sleep Schedule: ");
@@ -103,7 +100,6 @@ public class Customize implements ActionListener, ItemListener
 		highTemp = new JSpinner();
 		lowTime = new JSpinner();
 		highTime = new JSpinner();
-		
 		
 		timeModel = new SpinnerListModel();
 		
@@ -178,8 +174,8 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.setSize(600, 600);
 		
 		//The label "Room: " 
-		Room.setBounds(10,100,80,30);
-		mainPan.add(Room);
+		rLabel.setBounds(10,100,80,30);
+		mainPan.add(rLabel);
 		
 		//the combobox with the Rooms
 		Rooms.setBounds(60, 100, 100, 25);
