@@ -8,7 +8,6 @@ package airUI.pkg;
 *****************************************************************************************************************
 */
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -36,49 +35,46 @@ public class Customize implements ActionListener, ItemListener
 	int TEMPRANGE = 27;
 	int TIMERANGE = 49;
 	
-
 	ArrayList<String> roomList = new ArrayList<String>();
 	ArrayList<String> setPreList = new ArrayList<String>();
-	
 	ArrayList<String> tempR = new ArrayList<String>();
 	ArrayList<String> tempR2 = new ArrayList<String>();
 	ArrayList<String> timeR = new ArrayList<String>();
 	ArrayList<String> timeR2 = new ArrayList<String>();
 
-
-	JFrame mainWin;
-	JPanel mainPan;
+	protected JFrame mainWin;
+	protected JPanel mainPan;
 	
-	JLabel Preset;
-	JLabel Room;
-	JLabel Temp;
-	JLabel To;
-	JLabel To2;
-	JLabel SleepSch;
-	JLabel RPre;
-	JLabel newP;
-	JLabel newR;
+	protected JLabel Preset;
+	protected JLabel Room;
+	protected JLabel Temp;
+	protected JLabel To;
+	protected JLabel To2;
+	protected JLabel SleepSch;
+	protected JLabel RPre;
+	protected JLabel newP;
+	protected JLabel newR;
 	
-	JTextField newPres;
-	JTextField newRoom;
+	protected JTextField newPres;
+	protected JTextField newRoom;
 	
-	JSpinner lowTemp;
-	JSpinner highTemp;
-	JSpinner lowTime;
-	JSpinner highTime;
+	protected JSpinner lowTemp;
+	protected JSpinner highTemp;
+	protected JSpinner lowTime;
+	protected JSpinner highTime;
 	
-	SpinnerListModel tempModel;
-	SpinnerListModel tempModel2;
-	SpinnerListModel timeModel;
-	SpinnerListModel timeModel2;
+	protected SpinnerListModel tempModel;
+	protected SpinnerListModel tempModel2;
+	protected SpinnerListModel timeModel;
+	protected SpinnerListModel timeModel2;
 	
-	JComboBox Rooms;
-	JComboBox setPreset;
-	JComboBox roomPreset;
+	protected JComboBox Rooms;
+	protected JComboBox setPreset;
+	protected JComboBox roomPreset;
 	
-	JButton addModPre;
-	JButton addModRooms;
-	JButton back;
+	protected JButton addModPre;
+	protected JButton addModRooms;
+	protected JButton back;
 
 	public Customize()
 	{
@@ -108,6 +104,9 @@ public class Customize implements ActionListener, ItemListener
 		lowTime = new JSpinner();
 		highTime = new JSpinner();
 		
+		
+		timeModel = new SpinnerListModel();
+		
 		Rooms = new JComboBox(roomList.toArray());
 		setPreset = new JComboBox(setPreList.toArray());
 		roomPreset = new JComboBox(setPreList.toArray());
@@ -125,14 +124,7 @@ public class Customize implements ActionListener, ItemListener
 		
 		tempModel = new SpinnerListModel(tempR);
 		tempModel2 = new SpinnerListModel(tempR2);
-		
-		/*
-		*****************************************************************************************************************
-		*  This will be used to fill in the String array with all the times that will be available for the sleep
-		*  schedule It is filling in two at a time since the Spinner class that will be using requires that each 
-		*  list be separated
-		*****************************************************************************************************************
-		*/
+
 		String am = "AM";
 		String pm = "PM";
 		int k = 1;
@@ -204,11 +196,11 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(lowTemp);
 		
 		//the label " to "
-		To.setBounds(350,100,40,30);
+		To.setBounds(345,100,40,30);
 		mainPan.add(To);
 		
 		//the Spinner on the right for temp
-		highTemp.setBounds(420,100,120,30);
+		highTemp.setBounds(390,100,120,30);
 		highTemp.setModel(tempModel2);
 		mainPan.add(highTemp);
 		
@@ -217,16 +209,16 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(SleepSch);
 		
 		//the Spinner on the left for time
-		lowTime.setBounds(170,170,150,30);
+		lowTime.setBounds(170,170,80,30);
 		lowTime.setModel(timeModel);
 		mainPan.add(lowTime);
 		
 		//Second label " to "
-		To2.setBounds(330,170,40,30);
+		To2.setBounds(260,170,40,30);
 		mainPan.add(To2);
 		
 		//the spinner on the right for time
-		highTime.setBounds(390,170,150,30);
+		highTime.setBounds(290,170,80,30);
 		highTime.setModel(timeModel2);
 		mainPan.add(highTime);
 		
@@ -243,42 +235,12 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(addModRooms);
 		addModRooms.addActionListener(this);
 		
-		//the label "Rooms: "
-		//Room.setBounds(10,300,80,30);
-		//mainPan.add(Room);
-		
-		//the combobox with all the rooms
-		//Rooms.setBounds(60, 300, 100, 25);
-		//Rooms.addItemListener(this);
-		//mainPan.add(Rooms);
-		
-		//The Label "New Room Name: "
-		//newR.setBounds(170,350,120,30);
-		//mainPan.add(newR);
-		
-		//the textfield that is blank for new Rooms
-		//newRoom.setBounds(295,350,120,30);
-		//mainPan.add(newRoom);
-		
-		//the Label "Room's preset: "
-		//RPre.setBounds(430,350,100,30);
-		//mainPan.add(RPre);
-		
-		//the button add or modify a room
-		//addModRooms.setBounds(170,390,120,30);
-		//mainPan.add(addModRooms);
-		//addModRooms.addActionListener(this);
-		
-		//the preset same as setPreset, but that will be attached to rooms
-		//roomPreset.setBounds(430,390,100,25);
-		//mainPan.add(roomPreset);
-		
 		//the back button
 		back.setBounds(500,500,60,30);
 		mainPan.add(back);
 		
 	}
-
+	
 	public void setUp()
 	{
 		mainWin.setVisible(true);
@@ -326,9 +288,6 @@ public class Customize implements ActionListener, ItemListener
 
 	public void itemStateChanged(ItemEvent event) 
 	{
-		if(event.getStateChange() == ItemEvent.SELECTED)
-		{
-			Object compare = event.getSource();
-		}
+		;
 	}
 }
