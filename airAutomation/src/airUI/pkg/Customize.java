@@ -24,7 +24,6 @@ import javax.swing.SpinnerListModel;
 
 public class Customize implements ActionListener, ItemListener
 {
-
 	//Date time = new Date();
 	//SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
 	
@@ -68,7 +67,6 @@ public class Customize implements ActionListener, ItemListener
 
 	public Customize()
 	{
-		
 		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
 		
@@ -228,7 +226,7 @@ public class Customize implements ActionListener, ItemListener
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layOut();
 	}
-	
+		
 	public static void main(String[] args)
 	{
 		Customize run = new Customize();
