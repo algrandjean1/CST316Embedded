@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -33,7 +32,6 @@ public class Customize implements ActionListener, ItemListener
 	int TIMERANGE = 49;
 	
 	ArrayList<String> roomList = new ArrayList<String>();
-	ArrayList<String> setPreList = new ArrayList<String>();
 	ArrayList<String> tempR = new ArrayList<String>();
 	ArrayList<String> tempR2 = new ArrayList<String>();
 	ArrayList<String> timeR = new ArrayList<String>();
@@ -42,17 +40,14 @@ public class Customize implements ActionListener, ItemListener
 	protected JFrame mainWin;
 	protected JPanel mainPan;
 	
-	protected JLabel Preset;
 	protected JLabel rLabel;
 	protected JLabel Temp;
 	protected JLabel To;
 	protected JLabel To2;
 	protected JLabel SleepSch;
 	protected JLabel RPre;
-	protected JLabel newP;
 	protected JLabel newR;
 	
-	protected JTextField newPres;
 	protected JTextField newRoom;
 	
 	protected JSpinner lowTemp;
@@ -65,11 +60,9 @@ public class Customize implements ActionListener, ItemListener
 	protected SpinnerListModel timeModel;
 	protected SpinnerListModel timeModel2;
 	
-	protected JComboBox Rooms;
-	protected JComboBox setPreset;
+	protected JComboBox roomBox;
 	protected JComboBox roomPreset;
 	
-	protected JButton addModPre;
 	protected JButton addModRooms;
 	protected JButton back;
 
@@ -79,20 +72,16 @@ public class Customize implements ActionListener, ItemListener
 		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
 		
-		Preset = new JLabel("Preset: ");
 		Temp = new JLabel("Temp: ");
 		rLabel = new JLabel("Rooms: ");
 		To = new JLabel(" to ");
 		To2 = new JLabel(" to ");
 		SleepSch = new JLabel("Sleep Schedule: ");
 		RPre = new JLabel("Room's Preset: ");
-		newP = new JLabel("New Preset Name: ");
 		newR = new JLabel("New Room Name: ");
 		
-		newPres = new JTextField();
 		newRoom = new JTextField();
 		
-		addModPre = new JButton("Add/Modify");
 		addModRooms = new JButton("Add/Modify");
 		back = new JButton("Back");
 		
@@ -101,11 +90,7 @@ public class Customize implements ActionListener, ItemListener
 		lowTime = new JSpinner();
 		highTime = new JSpinner();
 		
-		timeModel = new SpinnerListModel();
-		
-		Rooms = new JComboBox(roomList.toArray());
-		setPreset = new JComboBox(setPreList.toArray());
-		roomPreset = new JComboBox(setPreList.toArray());
+		roomBox = new JComboBox(roomList.toArray());
 		
 		//this is to fill in for the Temperature settings range
 		int start = 60;
@@ -178,9 +163,9 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(rLabel);
 		
 		//the combobox with the Rooms
-		Rooms.setBounds(60, 100, 100, 25);
-		Rooms.addItemListener(this);
-		mainPan.add(Rooms);
+		roomBox.setBounds(60, 100, 100, 25);
+		roomBox.addItemListener(this);
+		mainPan.add(roomBox);
 		
 		//the label "Temp: "
 		Temp.setBounds(170,100,60,30);
@@ -218,15 +203,15 @@ public class Customize implements ActionListener, ItemListener
 		highTime.setModel(timeModel2);
 		mainPan.add(highTime);
 		
-		//The label "New Preset Name: "
+		//The label "New Rooms Name: "
 		newR.setBounds(170, 210, 120, 30);
 		mainPan.add(newR);
 		
-		//the textfield that is blank for new preset
+		//the textfield that is blank for new Rooms
 		newRoom.setBounds(295,210,120,30);
 		mainPan.add(newRoom);
 		
-		//the button add or modify a preset
+		//the button add or modify a rooms
 		addModRooms.setBounds(430,210,120,30);
 		mainPan.add(addModRooms);
 		addModRooms.addActionListener(this);
@@ -252,27 +237,14 @@ public class Customize implements ActionListener, ItemListener
 	
 	public void actionPerformed(ActionEvent e) 
 	{
-		if(e.getSource() == addModPre)
-		{
-			if(newPres.getText() != null)
-			{
-				setPreset.addItem(newPres.getText());
-				roomPreset.addItem(newPres.getText());
-			}
-			else
-			{
-				;
-			}
-		}
-		else if(e.getSource() == addModRooms)
+		if(e.getSource() == addModRooms)
 		{
 			if(newRoom.getText() != null)
 			{
-				Rooms.addItem(newRoom.getText());
+				roomBox.addItem(newRoom.getText());
 			}
 			else
 			{
-				
 				;
 			}
 		}
