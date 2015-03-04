@@ -26,7 +26,7 @@ public class RoomImpl  {
 
 	/**
 	 * reads from the file of rooms and adds them to the HashTable
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public RoomImpl() throws Exception {
 	try {
@@ -71,9 +71,9 @@ public class RoomImpl  {
 	public static ArrayList<String> getroomList() {
 		return Collections.list(roomList.keys());
 	}
-	
+
 /**
- *locates room and removes it from hashtable 
+ *locates room and removes it from hashtable
  * @param name name of room to  remove
  */
 	public static void removeRoom(String name) {
@@ -82,7 +82,7 @@ public class RoomImpl  {
 			System.out.println("Removed: " + name + " from the room List.");
 		} // end if
 	}
-	
+
 	/**
 	 *creates new room object with the name, upper, and lower boundary for temperature reading
 	 * @param name name of room to add to hashtable

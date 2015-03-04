@@ -17,9 +17,9 @@ package airUI.pkg;
 public class Room {
 	private String name, humidity, carbonDioxide, methane;
 	private String lowerBound, upperBound;
-	
+
 /**
- *constructor for new Room 
+ *constructor for new Room
  * @param name name of new room
  * @param lowerBound lower boundary of temperature to be set
  * @param upperBound upper boundary of temperature to be set
@@ -46,7 +46,7 @@ methane = "0";
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/**
 	 * @return the lowerBound
 	 */
