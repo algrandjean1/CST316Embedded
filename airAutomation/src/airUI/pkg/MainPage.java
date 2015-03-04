@@ -1,4 +1,4 @@
-package airUI.pkg;
+package AirUI;
 
 /* Sites that aided in the creation of this page:
  * http://docs.oracle.com/javase/tutorial/displayCode.html?code=http://docs.oracle.com/javase/tutorial/uiswing/examples/layout/AbsoluteLayoutDemoProject/src/layout/AbsoluteLayoutDemo.java
@@ -7,15 +7,31 @@ package airUI.pkg;
  */
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Date;
 import javax.swing.*;
 
-public class MainPage {
+public class MainPage 
+{
+	JFrame frame = new JFrame("Main Page.");
+	JButton customizeButton;
+	JButton reportsButton;
+	MainDriver driver;
 	
-	public static void addElements(Container pane){
+	
+	public MainPage(MainDriver driver){
+		
+		this.driver = driver;
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		addElements(frame.getContentPane());
+		frame.setSize(600,600);	
+	}
+
+	public void addElements(Container pane)
+	{
 		pane.setLayout(null);
 		JList currentRoomList, currentlyOnList;
-		JButton customizeButton, reportsButton;
 		JLabel roomLabel, onLabel, dateLabel;
 		float co2Read = 0.0f; 
 		float o2Read = 0.0f; 
@@ -51,6 +67,9 @@ public class MainPage {
 		
 		reportsButton = new JButton("Reports");
 		pane.add(reportsButton);
+		
+		reportsButton.addActionListener(driver);
+		customizeButton.addActionListener(driver);
 		
 		roomLabel = new JLabel("Current Room: ");
 		pane.add(roomLabel);
@@ -118,25 +137,35 @@ public class MainPage {
 	
 		size = dateLabel.getPreferredSize();
 		dateLabel.setBounds(150 + insets.left, 180 + insets.right, size.width, size.height);
+		
+
 	}
 	
-	public static void showGUI(){
+	public void launch(){
+		showMainGUI();
+	}
+	
+	public void showMainGUI(){
 		
-		JFrame frame = new JFrame("Main Page.");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		addElements(frame.getContentPane());
-		frame.setSize(600,600);
 		frame.setVisible(true);
 	}
-	
-	public static void main(String[] args){
+
+	public void hideMainGUI(){
 		
-		javax.swing.SwingUtilities.invokeLater(new Runnable(){
-			public void run(){
+		frame.setVisible(false);
+	}
+
+	/*
+	public static void main(String[] args)
+	{
+		
+		javax.swing.SwingUtilities.invokeLater(new Runnable()
+		{
+			public void run()
+			{
 				showGUI();	
 			}
 		});
-	}
-
+	}*/
+	
 }
