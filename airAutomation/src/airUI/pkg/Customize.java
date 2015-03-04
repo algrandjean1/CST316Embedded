@@ -183,36 +183,37 @@ public class Customize implements ActionListener, ItemListener
 		highTemp.setModel(tempModel2);
 		mainPan.add(highTemp);
 		
+		//The label "New Rooms Name: "
+		newR.setBounds(170, 150, 120, 30);
+		mainPan.add(newR);
+		
+		//the textfield that is blank for new Rooms
+		newRoom.setBounds(295,150,120,30);
+		mainPan.add(newRoom);
+		
+		//the button add or modify a rooms
+		addModRooms.setBounds(430,150,120,30);
+		mainPan.add(addModRooms);
+		addModRooms.addActionListener(this);
+		
+		
 		//the label "Sleep Schedule: "
-		SleepSch.setBounds(170, 140, 150, 30);
+		SleepSch.setBounds(170,200, 150, 30);
 		mainPan.add(SleepSch);
 		
 		//the Spinner on the left for time
-		lowTime.setBounds(170,170,80,30);
+		lowTime.setBounds(170,250,80,30);
 		lowTime.setModel(timeModel);
 		mainPan.add(lowTime);
 		
 		//Second label " to "
-		To2.setBounds(260,170,40,30);
+		To2.setBounds(260,250,40,30);
 		mainPan.add(To2);
 		
 		//the spinner on the right for time
-		highTime.setBounds(290,170,80,30);
+		highTime.setBounds(290,250,80,30);
 		highTime.setModel(timeModel2);
 		mainPan.add(highTime);
-		
-		//The label "New Rooms Name: "
-		newR.setBounds(170, 210, 120, 30);
-		mainPan.add(newR);
-		
-		//the textfield that is blank for new Rooms
-		newRoom.setBounds(295,210,120,30);
-		mainPan.add(newRoom);
-		
-		//the button add or modify a rooms
-		addModRooms.setBounds(430,210,120,30);
-		mainPan.add(addModRooms);
-		addModRooms.addActionListener(this);
 		
 		//the back button
 		back.setBounds(500,500,60,30);
