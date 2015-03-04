@@ -1,4 +1,4 @@
-package AirUI;
+package airUI.pkg;
 
 //layout for comments
 
