@@ -4,206 +4,277 @@ package airUI.pkg;
 
 /*
 *****************************************************************************************************************
-*  
+*
 *****************************************************************************************************************
 */
 
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerListModel;
 
-public class Customize implements ActionListener
+public class Customize implements ActionListener, ItemListener
 {
-	/*
-	*****************************************************************************************************************
-	* roomList - the List that will hold the all the rooms that are added to the system from the user
-	* setPreList - the list that will hold all the preset that are placed for the home system, from the user 
-	*****************************************************************************************************************
-	*/
+	//Date time = new Date();
+	//SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+
+	int TEMPRANGE = 27;
+	int TIMERANGE = 49;
+
 	ArrayList<String> roomList = new ArrayList<String>();
-	ArrayList<String> setPreList = new ArrayList<String>();
-	ArrayList<String> devicesList = new ArrayList<String>();
-	
+	ArrayList<String> tempR = new ArrayList<String>();
+	ArrayList<String> tempR2 = new ArrayList<String>();
+	ArrayList<String> timeR = new ArrayList<String>();
+	ArrayList<String> timeR2 = new ArrayList<String>();
 
-	/*
-	*****************************************************************************************************************
-	* The Swing components that will be used are:
-	* 
-	* JFrame: 
-	*	mainWin - the main window that has all the exit, minimize, etc.
-	*
-	* JPanel: 
-	*	mainPan - the window that will be placed on top of the JFrame, with this panel, we will use it to hold
-	*             all of the buttons, combobox, JTextField. 
-	*
-	* JComboBox: 
-	*	Rooms - this will be filled with all of the rooms from the roomList arrayList.
-	*   setPreset - this will be filled with all of the presets from the setPreList arrayList.
-	*   devices - this will filled with all of the devices that are being controlled
-	* 
-	* JButton:
-	* 	addRoom - This will be the button to add the rooms
-	* 	addPreset - this will be the button to add Presets
-	*   addDevices - this will be the button to add Devices
-	* 
-	*****************************************************************************************************************
-	*/
+	protected JFrame mainWin;
+	protected JPanel mainPan;
 
-	JFrame mainWin;
-	JPanel mainPan;
-	JComboBox Rooms;
-	JComboBox setPreset;
-	JComboBox devices;
-	JButton addRoom;
-	JButton addPreset;
-	JButton addDevices;
+	protected JLabel rLabel;
+	protected JLabel Temp;
+	protected JLabel To;
+	protected JLabel To2;
+	protected JLabel SleepSch;
+	protected JLabel RPre;
+	protected JLabel newR;
+
+	protected JTextField newRoom;
+
+	protected JSpinner lowTemp;
+	protected JSpinner highTemp;
+	protected JSpinner lowTime;
+	protected JSpinner highTime;
+
+	protected SpinnerListModel tempModel;
+	protected SpinnerListModel tempModel2;
+	protected SpinnerListModel timeModel;
+	protected SpinnerListModel timeModel2;
+
+	protected JComboBox roomBox;
+	protected JComboBox roomPreset;
+
+	protected JButton addModRooms;
+	protected JButton backButton;
 	
-	/*
-	*****************************************************************************************************************
-	* In the Constructor we just instantiate everything that will be used:
-	* 
-	* JFrame: 
-	*	mainWin - "customize title in the Top right corner"
-	*
-	* JPanel: 
-	*	mainPan - nothing instantiated by default
-	*
-	* JComboBox: 
-	*	Rooms - roomList array list will be used
-	*	setPreset - setPreList array list will be used
-	*	devices - devicesList array list will be used
-	*
-	* JButton:
-	* 	addRoom - creates button with "Add Room" name
-	* 	addPreset - creates button with "Add Preset" name
-	* 	addDevices - creates button with "Add Devices" name
-	*
-	*****************************************************************************************************************
-	*/
-	
-	public Customize()
+	protected MainDriver driver;
+
+	public Customize(MainDriver driver)
 	{
-		
-		roomList.add("Default");
-		setPreList.add("Default");
-		devicesList.add("Default");
+		this.driver = driver;
 		
 		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
+
+		Temp = new JLabel("Temp: ");
+		rLabel = new JLabel("Rooms: ");
+		To = new JLabel(" to ");
+		To2 = new JLabel(" to ");
+		SleepSch = new JLabel("Sleep Schedule: ");
+		RPre = new JLabel("Room's Preset: ");
+		newR = new JLabel("New Room Name: ");
+
+		newRoom = new JTextField();
+
+		addModRooms = new JButton("Add/Modify");
+		backButton = new JButton("Back");
+
+		lowTemp = new JSpinner();
+		highTemp = new JSpinner();
+		lowTime = new JSpinner();
+		highTime = new JSpinner();
+
+		roomBox = new JComboBox(roomList.toArray());
+
+		//this is to fill in for the Temperature settings range
+		int start = 60;
+		tempR.add("None");
+		tempR2.add("None");
+		for(int i = 1; i < TEMPRANGE; i++)
+		{
+			tempR.add(Integer.toString(start));
+			tempR2.add(Integer.toString(start));
+			start++;
+		}
+
+		tempModel = new SpinnerListModel(tempR);
+		tempModel2 = new SpinnerListModel(tempR2);
+
+		String am = "AM";
+		String pm = "PM";
+		int k = 1;
+		String odd = "00";
+		String even = "30";
+		timeR.add("0:00");
+		timeR2.add("0:00");
+		for(int i = 1; i < TIMERANGE; i++)
+		{
+			if(i % 2 == 0)
+			{
+				if(k > 12)
+				{
+					timeR.add(Integer.toString(k % 12) + ":" + even + pm);
+					timeR2.add(Integer.toString(k % 12) + ":" + even + pm);
+				}
+				else
+				{
+					timeR.add(Integer.toString(k) + ":" + even + am);
+					timeR2.add(Integer.toString(k) + ":" + even + am);
+				}
+				k++;
+			}
+			else
+			{
+				if(k > 12)
+				{
+					timeR.add(Integer.toString(k % 12) + ":" + odd + pm);
+					timeR2.add(Integer.toString(k % 12) + ":" + odd + pm);
+				}
+				else
+				{
+					timeR.add(Integer.toString(k) + ":" + odd + am);
+					timeR2.add(Integer.toString(k) + ":" + odd + am);
+				}
+			}
+		}
+
+		timeModel = new SpinnerListModel(timeR);
+		timeModel2 = new SpinnerListModel(timeR2);
 		
-		Rooms = new JComboBox(roomList.toArray());
-		setPreset = new JComboBox(setPreList.toArray());
-		devices = new JComboBox(devicesList.toArray());
-		
-		addRoom = new JButton("Add Room");
-		addPreset = new JButton("Add Preset");	
-		addDevices = new JButton("Add Devices");
-		
+		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		layOut();
 	}
-	
-	/*
-	*****************************************************************************************************************
-	*  Layout - here is where the lay out of the window is laid out. 
-	*  it is not using a standard layout that the java library has. It 
-	*  is laying it using X, Y coordinates and the size of the component is 
-	*  using a width, and height. To do this it is using the "setBounds" method.
-	*  the first two numbers in each method are the (X,Y) coordinates. The next
-	*  two are the (width, height) of the component. It also add the "actionlistener"
-	*  to it read to receive the information.
-	*****************************************************************************************************************
-	*/
-	
+
 	public void layOut()
 	{
+		//Window
 		mainWin.setSize(600, 600);
 		mainWin.add(mainPan);
-		
+
+		//Panel on the window
 		mainPan.setLayout(null);
 		mainPan.setSize(600, 600);
-		
-		Rooms.setBounds(30, 100, 100, 25);
-		mainPan.add(Rooms);
-		
-		setPreset.setBounds(200, 100, 100, 25);
-		mainPan.add(setPreset);
-		
-		devices.setBounds(370, 100, 100, 30);
-		mainPan.add(devices);
-		
-		
-		addRoom.setBounds(30, 220, 100, 40);
-		addRoom.addActionListener(this);
-		mainPan.add(addRoom);
-		
-		addPreset.setBounds(170, 220, 130, 40);
-		addPreset.addActionListener(this);
-		mainPan.add(addPreset);
-		
-		addDevices.setBounds(370, 220,130, 40);
-		addDevices.addActionListener(this);
-		mainPan.add(addDevices);
-		
+
+		//The label "Room: "
+		rLabel.setBounds(10,100,80,30);
+		mainPan.add(rLabel);
+
+		//the combobox with the Rooms
+		roomBox.setBounds(60, 100, 100, 25);
+		roomBox.addItemListener(this);
+		mainPan.add(roomBox);
+
+		//the label "Temp: "
+		Temp.setBounds(170,100,60,30);
+		mainPan.add(Temp);
+
+		//the Spinner on left for temp
+		lowTemp.setBounds(220, 100, 120, 30);
+		lowTemp.setModel(tempModel);
+		mainPan.add(lowTemp);
+
+		//the label " to "
+		To.setBounds(350,100,40,30);
+		mainPan.add(To);
+
+		//the Spinner on the right for temp
+		highTemp.setBounds(420,100,120,30);
+		highTemp.setModel(tempModel2);
+		mainPan.add(highTemp);
+
+		//The label "New Rooms Name: "
+		newR.setBounds(170, 150, 120, 30);
+		mainPan.add(newR);
+
+		//the textfield that is blank for new Rooms
+		newRoom.setBounds(295,150,120,30);
+		mainPan.add(newRoom);
+
+		//the button add or modify a rooms
+		addModRooms.setBounds(430,150,120,30);
+		mainPan.add(addModRooms);
+		addModRooms.addActionListener(this);
+
+
+		//the label "Sleep Schedule: "
+		SleepSch.setBounds(170,200, 150, 30);
+		mainPan.add(SleepSch);
+
+		//the Spinner on the left for time
+		lowTime.setBounds(170,250,80,30);
+		lowTime.setModel(timeModel);
+		mainPan.add(lowTime);
+
+		//Second label " to "
+		To2.setBounds(260,250,40,30);
+		mainPan.add(To2);
+
+		//the spinner on the right for time
+		highTime.setBounds(290,250,80,30);
+		highTime.setModel(timeModel2);
+		mainPan.add(highTime);
+
+		//the back button
+		backButton.setBounds(500,500,60,30);
+		mainPan.add(backButton);
+		backButton.addActionListener(driver);
+
 	}
-	
-	/*
-	*****************************************************************************************************************
-	* The Next Three methods are what the action listener is going to be using to add
-	* to the array list. As their names suggest addToRooms adds to the roomList arrayList
-	* and etc. As of Sprint 1, they will not be used.
-	*****************************************************************************************************************
-	*/
-	
-	public void addToRooms(String aRoom)
+
+	public void setUp()
 	{
-		roomList.add(aRoom);
+		mainWin.setVisible(true);
+		mainPan.setVisible(true);
+		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		layOut();
 	}
-	
-	public void addToPresets(String aSet)
-	{
-		setPreList.add(aSet);
-	}
-	
-	public void addToDevices(String aDevice)
-	{
-		devicesList.add(aDevice);
-	}
-	
-	/*
-	*****************************************************************************************************************
-	* Here is the main Function, which is what is needed to call all of the
-	* components needed to show the window display. 
-	*****************************************************************************************************************
-	*/
-	
-	/*
+    /*
 	public static void main(String[] args)
 	{
 		Customize run = new Customize();
-
-		run.mainWin.setVisible(true);
-		run.mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		run.layOut();
-
+		run.setUp();
 	}
 	*/
-	
-	/*
-	*****************************************************************************************************************
-	* Here is where the actions are received and does the appropriate thing 
-	* according to what is needed. As of Sprint 1, this will have nothing.  
-	*****************************************************************************************************************
-	*/
-	
-	@Override
-	public void actionPerformed(ActionEvent event) 
+	public void actionPerformed(ActionEvent e)
 	{
-		// TODO Auto-generated method stub
-		;
+		if(e.getSource() == addModRooms)
+		{
+			if(newRoom.getText() != null)
+			{
+				roomBox.addItem(newRoom.getText());
+			}
+			else
+			{
+				;
+			}
+		}
+		else if(e.getSource() == backButton)
+		{
+			;
+		}
+	}
+
+	public void itemStateChanged(ItemEvent event)
+	{
+		if(event.getStateChange() == ItemEvent.SELECTED)
+		{
+			Object compare = event.getSource();
+		}
+	}
+
+	public void showcustomize(){
+		mainWin.setVisible(true);
+	}
+
+	public void hidecustomize(){
+		mainWin.setVisible(false);
 	}
 }
