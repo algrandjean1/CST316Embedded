@@ -175,11 +175,11 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(lowTemp);
 
 		//the label " to "
-		To.setBounds(345,100,40,30);
+		To.setBounds(350,100,40,30);
 		mainPan.add(To);
 
 		//the Spinner on the right for temp
-		highTemp.setBounds(390,100,120,30);
+		highTemp.setBounds(420,100,120,30);
 		highTemp.setModel(tempModel2);
 		mainPan.add(highTemp);
 
@@ -224,6 +224,7 @@ public class Customize implements ActionListener, ItemListener
 	public void setUp()
 	{
 		mainWin.setVisible(true);
+		mainPan.setVisible(true);
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layOut();
 	}
@@ -247,7 +248,7 @@ public class Customize implements ActionListener, ItemListener
 				;
 			}
 		}
-		else if(e.getSource() == back)
+		else if(e.getSource() == backButton)
 		{
 			;
 		}
@@ -255,6 +256,17 @@ public class Customize implements ActionListener, ItemListener
 
 	public void itemStateChanged(ItemEvent event)
 	{
-		;
+		if(event.getStateChange() == ItemEvent.SELECTED)
+		{
+			Object compare = event.getSource();
+		}
+	}
+
+	public void showcustomize(){
+		mainWin.setVisible(true);
+	}
+
+	public void hidecustomize(){
+		mainWin.setVisible(false);
 	}
 }

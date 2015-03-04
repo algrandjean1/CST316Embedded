@@ -1,11 +1,13 @@
 package airUI.pkg;
-
 /*
-*****************************************************************************************************************
-*  In this main driver that will open the GUI. The main that we all have been using for our individual
-*  code is now just commented out and all placed here.
-*****************************************************************************************************************
-*/
+ *****************************************************************************************************************
+ *  In this main driver that will open the GUI. The main that we all have been using for our individual
+ *  code is now just commented out and all placed here.
+ *****************************************************************************************************************
+ */
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,10 +22,10 @@ public class MainDriver implements ActionListener
 
 
 	/*
-	*****************************************************************************************************************
-	*  Here is where the MainPage.java will be called to display the GUI that will be using.
-	*****************************************************************************************************************
-	*/
+     *****************************************************************************************************************
+     *  Here is where the MainPage.java will be called to display the GUI that will be using.
+     *****************************************************************************************************************
+     */
 
 	public static void main(String[] args)
 	{
@@ -32,50 +34,49 @@ public class MainDriver implements ActionListener
 
 		mp.showMainGUI();
 
-/*		javax.swing.SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				mp.showGUI();
-			}
-		});
-*/
+        /*		javax.swing.SwingUtilities.invokeLater(new Runnable()
+         {
+         public void run()
+         {
+         mp.showGUI();
+         }
+         });
+         */
 		//this is for the reports page
 
 
 		//this is for the Customize page
 
-/*		run.mainWin.setVisible(true);
-		run.mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		run.layOut();
-*/	}
+        /*		run.mainWin.setVisible(true);
+         run.mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+         run.layOut();
+         */	}
 
 
 	public void actionPerformed(ActionEvent event) {
-	        Object obj = event.getSource();
+        Object obj = event.getSource();
 
-	        if (obj == mp.reportsButton) {
-	            mp.hideMainGUI();
-	           // fr.showReportsGUI();
-	        }
+        if (obj == mp.reportsButton) {
+            mp.hideMainGUI();
+            fr.showReportsGUI();
+        }
 
-	       /* if (obj == fr.backButton) {
-	            mp.showMainGUI();
-	            fr.hideReportsGUI();
-	        }*/
+        if (obj == fr.backButton) {
+            mp.showMainGUI();
+            fr.hideReportsGUI();
+        }
 
 
-	        else if (obj == mp.customizeButton) {
-	            mp.hideMainGUI();
-	            run.setUp();
-	            run.showCustomize();
-	        }
+        if (obj == mp.customizeButton) {
+            mp.hideMainGUI();
+            run.showcustomize();
+        }
 
-	        else if(obj == run.back){
-	            mp.showMainGUI();
-	            run.hideCustomize();
-	        }
+        if(obj == run.backButton){
+            mp.showMainGUI();
+            run.hidecustomize();
+        }
 
-	    }
+    }
 
 }
