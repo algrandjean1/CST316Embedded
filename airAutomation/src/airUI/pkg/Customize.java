@@ -63,10 +63,14 @@ public class Customize implements ActionListener, ItemListener
 	protected JComboBox roomPreset;
 
 	protected JButton addModRooms;
-	protected JButton back;
+	protected JButton backButton;
+	
+	protected MainDriver driver;
 
-	public Customize()
+	public Customize(MainDriver driver)
 	{
+		this.driver = driver;
+		
 		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
 
@@ -81,7 +85,7 @@ public class Customize implements ActionListener, ItemListener
 		newRoom = new JTextField();
 
 		addModRooms = new JButton("Add/Modify");
-		back = new JButton("Back");
+		backButton = new JButton("Back");
 
 		lowTemp = new JSpinner();
 		highTemp = new JSpinner();
@@ -144,6 +148,9 @@ public class Customize implements ActionListener, ItemListener
 
 		timeModel = new SpinnerListModel(timeR);
 		timeModel2 = new SpinnerListModel(timeR2);
+		
+		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		layOut();
 	}
 
 	public void layOut()
@@ -216,8 +223,9 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(highTime);
 
 		//the back button
-		back.setBounds(500,500,60,30);
-		mainPan.add(back);
+		backButton.setBounds(500,500,60,30);
+		mainPan.add(backButton);
+		backButton.addActionListener(driver);
 
 	}
 
@@ -228,13 +236,13 @@ public class Customize implements ActionListener, ItemListener
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layOut();
 	}
-
+    /*
 	public static void main(String[] args)
 	{
 		Customize run = new Customize();
 		run.setUp();
 	}
-
+	*/
 	public void actionPerformed(ActionEvent e)
 	{
 		if(e.getSource() == addModRooms)
@@ -242,6 +250,7 @@ public class Customize implements ActionListener, ItemListener
 			if(newRoom.getText() != null)
 			{
 				roomBox.addItem(newRoom.getText());
+				
 			}
 			else
 			{
