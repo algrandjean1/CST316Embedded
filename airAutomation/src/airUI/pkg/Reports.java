@@ -70,6 +70,13 @@ public class Reports extends JFrame {
             {"9am", "1", "4", "0", "0"}
         };
         
+        final Object[][] dataWeekly = {
+            {"Week1", "2", "3", " 4", "1"},
+            {"Week2", "1", "2", "3", "0"},
+            {"Week3", "2", "0", "0", "0"},
+            {"Week4", "1", "4", "0", "0"}
+        };
+        
         final Object[][] dataMonthly = {
             {"January", "2", "3", " 4", "1"},
             {"February", "1", "2", "3", "0"},
@@ -87,12 +94,7 @@ public class Reports extends JFrame {
         };
         
         
-        final Object[][] dataQuarterly = {
-            {"Week1", "2", "3", " 4", "1"},
-            {"Week2", "1", "2", "3", "0"},
-            {"Week3", "2", "0", "0", "0"},
-            {"Week4", "1", "4", "0", "0"}
-        };
+      
         final Object[][] dataYearly = {
             {"2013", "2", "3", " 4", "1"},
             {"2014", "1", "2", "3", "0"},
