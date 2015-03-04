@@ -250,7 +250,6 @@ public class Customize implements ActionListener, ItemListener
 			if(newRoom.getText() != null)
 			{
 				roomBox.addItem(newRoom.getText());
-				
 			}
 			else
 			{
