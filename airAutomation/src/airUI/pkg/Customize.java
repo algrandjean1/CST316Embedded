@@ -39,17 +39,14 @@ public class Customize implements ActionListener, ItemListener
 	protected JFrame mainWin;
 	protected JPanel mainPan;
 
-	protected JLabel Preset;
-	protected JLabel Room;
+	protected JLabel rLabel;
 	protected JLabel Temp;
 	protected JLabel To;
 	protected JLabel To2;
 	protected JLabel SleepSch;
 	protected JLabel RPre;
-	protected JLabel newP;
 	protected JLabel newR;
 
-	protected JTextField newPres;
 	protected JTextField newRoom;
 
 	protected JSpinner lowTemp;
@@ -62,235 +59,16 @@ public class Customize implements ActionListener, ItemListener
 	protected SpinnerListModel timeModel;
 	protected SpinnerListModel timeModel2;
 
-	protected JComboBox Rooms;
-	protected JComboBox setPreset;
+	protected JComboBox roomBox;
 	protected JComboBox roomPreset;
 
-	protected JButton addModPre;
 	protected JButton addModRooms;
 	protected JButton back;
 
 	public Customize()
 	{
-
 		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
-
-		Preset = new JLabel("Preset: ");
-		Temp = new JLabel("Temp: ");
-		Room = new JLabel("Rooms: ");
-		To = new JLabel(" to ");
-		To2 = new JLabel(" to ");
-		SleepSch = new JLabel("Sleep Schedule: ");
-		RPre = new JLabel("Room's Preset: ");
-		newP = new JLabel("New Preset Name: ");
-		newR = new JLabel("New Room Name: ");
-
-		newPres = new JTextField();
-		newRoom = new JTextField();
-
-		addModPre = new JButton("Add/Modify");
-		addModRooms = new JButton("Add/Modify");
-		back = new JButton("Back");
-
-		lowTemp = new JSpinner();
-		highTemp = new JSpinner();
-		lowTime = new JSpinner();
-		highTime = new JSpinner();
-
-
-		timeModel = new SpinnerListModel();
-
-		Rooms = new JComboBox(roomList.toArray());
-		setPreset = new JComboBox(setPreList.toArray());
-		roomPreset = new JComboBox(setPreList.toArray());
-
-		//this is to fill in for the Temperature settings range
-		int start = 60;
-		tempR.add("None");
-		tempR2.add("None");
-		for(int i = 1; i < TEMPRANGE; i++)
-		{
-			tempR.add(Integer.toString(start));
-			tempR2.add(Integer.toString(start));
-			start++;
-		}
-
-		tempModel = new SpinnerListModel(tempR);
-		tempModel2 = new SpinnerListModel(tempR2);
-
-		String am = "AM";
-		String pm = "PM";
-		int k = 1;
-		String odd = "00";
-		String even = "30";
-		timeR.add("0:00");
-		timeR2.add("0:00");
-		for(int i = 1; i < TIMERANGE; i++)
-		{
-			if(i % 2 == 0)
-			{
-				if(k > 12)
-				{
-					timeR.add(Integer.toString(k % 12) + ":" + even + pm);
-					timeR2.add(Integer.toString(k % 12) + ":" + even + pm);
-				}
-				else
-				{
-					timeR.add(Integer.toString(k) + ":" + even + am);
-					timeR2.add(Integer.toString(k) + ":" + even + am);
-				}
-				k++;
-			}
-			else
-			{
-				if(k > 12)
-				{
-					timeR.add(Integer.toString(k % 12) + ":" + odd + pm);
-					timeR2.add(Integer.toString(k % 12) + ":" + odd + pm);
-				}
-				else
-				{
-					timeR.add(Integer.toString(k) + ":" + odd + am);
-					timeR2.add(Integer.toString(k) + ":" + odd + am);
-				}
-			}
-		}
-
-		timeModel = new SpinnerListModel(timeR);
-		timeModel2 = new SpinnerListModel(timeR2);
-	}
-
-	public void layOut()
-	{
-		//Window
-		mainWin.setSize(600, 600);
-		mainWin.add(mainPan);
-
-		//Panel on the window
-		mainPan.setLayout(null);
-		mainPan.setSize(600, 600);
-
-		//The label "Room: "
-		Room.setBounds(10,100,80,30);
-		mainPan.add(Room);
-
-		//the combobox with the Rooms
-		Rooms.setBounds(60, 100, 100, 25);
-		Rooms.addItemListener(this);
-		mainPan.add(Rooms);
-
-		//the label "Temp: "
-		Temp.setBounds(170,100,60,30);
-		mainPan.add(Temp);
-
-		//the Spinner on left for temp
-		lowTemp.setBounds(220, 100, 120, 30);
-		lowTemp.setModel(tempModel);
-		mainPan.add(lowTemp);
-
-		//the label " to "
-		To.setBounds(345,100,40,30);
-		mainPan.add(To);
-
-		//the Spinner on the right for temp
-		highTemp.setBounds(390,100,120,30);
-		highTemp.setModel(tempModel2);
-		mainPan.add(highTemp);
-
-		//the label "Sleep Schedule: "
-		SleepSch.setBounds(170, 140, 150, 30);
-		mainPan.add(SleepSch);
-
-		//the Spinner on the left for time
-		lowTime.setBounds(170,170,80,30);
-		lowTime.setModel(timeModel);
-		mainPan.add(lowTime);
-
-		//Second label " to "
-		To2.setBounds(260,170,40,30);
-		mainPan.add(To2);
-
-		//the spinner on the right for time
-		highTime.setBounds(290,170,80,30);
-		highTime.setModel(timeModel2);
-		mainPan.add(highTime);
-
-		//The label "New Preset Name: "
-		newR.setBounds(170, 210, 120, 30);
-		mainPan.add(newR);
-
-		//the textfield that is blank for new preset
-		newRoom.setBounds(295,210,120,30);
-		mainPan.add(newRoom);
-
-		//the button add or modify a preset
-		addModRooms.setBounds(430,210,120,30);
-		mainPan.add(addModRooms);
-		addModRooms.addActionListener(this);
-
-		//the back button
-		back.setBounds(500,500,60,30);
-		mainPan.add(back);
-
-	}
-
-	public void setUp()
-	{
-		mainWin.setVisible(true);
-		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		layOut();
-	}
-	/*
-	public static void main(String[] args)
-	{
-		Customize run = new Customize();
-		run.setUp();
-	}
-	*/
-	public void actionPerformed(ActionEvent e)
-	{
-		if(e.getSource() == addModPre)
-		{
-			if(newPres.getText() != null)
-			{
-				setPreset.addItem(newPres.getText());
-				roomPreset.addItem(newPres.getText());
-			}
-			else
-			{
-				;
-			}
-		}
-		else if(e.getSource() == addModRooms)
-		{
-			if(newRoom.getText() != null)
-			{
-				Rooms.addItem(newRoom.getText());
-			}
-			else
-			{
-
-				;
-			}
-		}
-		else if(e.getSource() == back)
-		{
-			;
-		}
-	}
-
-	public void addElements(){
-		mainWin = new JFrame("Customize");
-		mainPan = new JPanel();
-
-		//Window
-				mainWin.setSize(600, 600);
-				mainWin.add(mainPan);
-
-				//Panel on the window
-				mainPan.setLayout(null);
-				mainPan.setSize(600, 600);
 
 		Temp = new JLabel("Temp: ");
 		rLabel = new JLabel("Rooms: ");
@@ -366,7 +144,10 @@ public class Customize implements ActionListener, ItemListener
 
 		timeModel = new SpinnerListModel(timeR);
 		timeModel2 = new SpinnerListModel(timeR2);
+	}
 
+	public void layOut()
+	{
 		//Window
 		mainWin.setSize(600, 600);
 		mainWin.add(mainPan);
@@ -402,36 +183,37 @@ public class Customize implements ActionListener, ItemListener
 		highTemp.setModel(tempModel2);
 		mainPan.add(highTemp);
 
+		//The label "New Rooms Name: "
+		newR.setBounds(170, 150, 120, 30);
+		mainPan.add(newR);
+
+		//the textfield that is blank for new Rooms
+		newRoom.setBounds(295,150,120,30);
+		mainPan.add(newRoom);
+
+		//the button add or modify a rooms
+		addModRooms.setBounds(430,150,120,30);
+		mainPan.add(addModRooms);
+		addModRooms.addActionListener(this);
+
+
 		//the label "Sleep Schedule: "
-		SleepSch.setBounds(170, 140, 150, 30);
+		SleepSch.setBounds(170,200, 150, 30);
 		mainPan.add(SleepSch);
 
 		//the Spinner on the left for time
-		lowTime.setBounds(170,170,80,30);
+		lowTime.setBounds(170,250,80,30);
 		lowTime.setModel(timeModel);
 		mainPan.add(lowTime);
 
 		//Second label " to "
-		To2.setBounds(260,170,40,30);
+		To2.setBounds(260,250,40,30);
 		mainPan.add(To2);
 
 		//the spinner on the right for time
-		highTime.setBounds(290,170,80,30);
+		highTime.setBounds(290,250,80,30);
 		highTime.setModel(timeModel2);
 		mainPan.add(highTime);
-
-		//The label "New Rooms Name: "
-		newR.setBounds(170, 210, 120, 30);
-		mainPan.add(newR);
-
-		//the textfield that is blank for new Rooms
-		newRoom.setBounds(295,210,120,30);
-		mainPan.add(newRoom);
-
-		//the button add or modify a rooms
-		addModRooms.setBounds(430,210,120,30);
-		mainPan.add(addModRooms);
-		addModRooms.addActionListener(this);
 
 		//the back button
 		back.setBounds(500,500,60,30);
@@ -441,28 +223,17 @@ public class Customize implements ActionListener, ItemListener
 
 	public void setUp()
 	{
-		//mainWin.setVisible(true);
-		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-
-	public void hideCustomize() {
-		mainWin.setVisible(false);
-		System.out.println("Customize Invisible");
-
-	}
-
-	public void showCustomize() {
 		mainWin.setVisible(true);
-		System.out.println("Customize Visible");
+		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		layOut();
 	}
 
-/*
 	public static void main(String[] args)
 	{
 		Customize run = new Customize();
 		run.setUp();
 	}
-*/
+
 	public void actionPerformed(ActionEvent e)
 	{
 		if(e.getSource() == addModRooms)
