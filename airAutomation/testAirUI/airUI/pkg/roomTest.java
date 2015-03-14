@@ -8,12 +8,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.digi.xbee.api.RemoteXBeeDevice;
+import com.digi.xbee.api.models.XBeeMessage;
+
 /**
  * @author BMosAir
  *
  */
 public class roomTest {
 	private static Room room;
+	XBeeHandler xbeeHandler;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -48,7 +52,7 @@ public class roomTest {
 		Assert.assertEquals(bryan, Room.getRoom("bryan"));
 		
 		// what is the size of the room list
-		Assert.assertEquals(4, room.getSize());
+		Assert.assertEquals(4, Room.getSize());
 		
 		// try to create a room that already exists
 		Assert.assertEquals(bryan, Room.createRoom("bryan", "65", "85"));
@@ -63,7 +67,7 @@ public class roomTest {
 	 */
 	@Test
 	public void testDataReceived() {
-		// TODO
+		
 	}
 
 	/**
@@ -71,7 +75,8 @@ public class roomTest {
 	 */
 	@Test
 	public void testGetRoom() {
-		System.out.println("getRoom: ");
+		Room danielle = Room.createRoom("dani", "65", "85");
+		Assert.assertEquals(danielle, Room.getRoom("dani"));
 	}
 
 	/**
@@ -79,7 +84,8 @@ public class roomTest {
 	 */
 	@Test
 	public void testGetroomList() {
-
+int listSize = Room.getroomList().size();
+Assert.assertEquals(4, listSize);
 	}
 
 	/**
@@ -87,8 +93,9 @@ public class roomTest {
 	 */
 	@Test
 	public void testRemoveRoom() {
-		System.out.println("remove room test: ");
-
+		Assert.assertFalse(Room.removeRoom("bryan"));
+		
+		Assert.assertTrue(Room.removeRoom("dani"));
 	}
 
 	/**
@@ -96,7 +103,7 @@ public class roomTest {
 	 */
 	@Test
 	public void testGetHumidity() {
-		System.out.println("get humidity test: ");
+		Assert.assertEquals("21", Room.getRoom("dani").getHumidity());
 	}
 
 	/**
