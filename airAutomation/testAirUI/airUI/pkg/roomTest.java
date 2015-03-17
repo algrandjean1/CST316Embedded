@@ -8,9 +8,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.digi.xbee.api.RemoteXBeeDevice;
-import com.digi.xbee.api.models.XBeeMessage;
-
 /**
  * @author BMosAir
  *
