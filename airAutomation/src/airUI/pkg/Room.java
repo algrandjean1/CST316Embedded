@@ -35,28 +35,7 @@ private String tempThresholdLow, tempThresholdHigh, humidityThresholdLow, humidi
 	private String temperature, humidity, carbonDioxide, methane;
 	private String name, lowerBound, upperBound;
 	private static Hashtable<String, Room> roomList = new Hashtable<String, Room>();
-
-	private Room() {
-		// reads in threshold values to base the automation of events 
-				// default settings for a room
-				try {
-				this.roomProps = new Properties();
-				FileInputStream in = new FileInputStream("room.properties");
-				roomProps.load(in);
-				in.close();
-				
-				this.tempThresholdLow = roomProps.getProperty("tempThresholdLow");
-						this.tempThresholdHigh = roomProps.getProperty("tempThresholdHigh");
-						this.humidityThresholdLow = roomProps.getProperty("humidityThresholdLow");
-						this.humidityThresholdHigh = roomProps.getProperty("humidityThresholdHigh");
-						this.carbonDioxideThreshold = roomProps.getProperty("carbonDioxideThreshold");
-						this.methaneThreshold = roomProps.getProperty("methaneThreshold");
-						
-				} catch(IOException ioex) {
-					ioex.printStackTrace();
-				}
-	} // end default constructor with threshold values
-	
+		
 	/**
 	 *constructor for new Room 
 	 * @param name name of new room
@@ -72,6 +51,25 @@ private String tempThresholdLow, tempThresholdHigh, humidityThresholdLow, humidi
 		this.lowerBound = lowerBound;
 		this.upperBound = upperBound;
 
+		// reads in threshold values to base the automation of events 
+		// default settings for a room
+		try {
+		this.roomProps = new Properties();
+		FileInputStream in = new FileInputStream("room.properties");
+		roomProps.load(in);
+		in.close();
+		
+		this.tempThresholdLow = roomProps.getProperty("tempThresholdLow");
+				this.tempThresholdHigh = roomProps.getProperty("tempThresholdHigh");
+				this.humidityThresholdLow = roomProps.getProperty("humidityThresholdLow");
+				this.humidityThresholdHigh = roomProps.getProperty("humidityThresholdHigh");
+				this.carbonDioxideThreshold = roomProps.getProperty("carbonDioxideThreshold");
+				this.methaneThreshold = roomProps.getProperty("methaneThreshold");
+				
+		} catch(IOException ioex) {
+			ioex.printStackTrace();
+		}
+		
 		// load properties from last invocation
 				FileInputStream in = new FileInputStream("user.properties");
 				userProps.load(in);
@@ -124,11 +122,8 @@ private String tempThresholdLow, tempThresholdHigh, humidityThresholdLow, humidi
 	 * IDataReceiveListener is an interface for setting up a listener
 	 * @method dataReceived: access the data being transmitted from XBee
 	 */
-	IDataReceiveListener dataReceiveListener = new IDataReceiveListener()
-	{
-public void dataReceived(XBeeMessage xbeeMessage) {}
-	};
-
+	IDataReceiveListener dataReceiveListener = new Room("", "", "");
+	
 	public void dataReceived(XBeeMessage xbeeMessage) {
 		try {
 			dragon = xbeeHandler.getXbeeNetwork().getDevice("DRAGON");
@@ -157,8 +152,6 @@ public void dataReceived(XBeeMessage xbeeMessage) {}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
-		System.out.println("Settings saved");
 	}
 	
 	/**
@@ -199,6 +192,13 @@ public void dataReceived(XBeeMessage xbeeMessage) {}
 
 	public static int getSize() {
 		return roomList.size();
+	}
+
+	/**
+	 * @return the temperature
+	 */
+	public String getTemperature() {
+		return temperature;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /**
- * 
+ * whitebox unit tests on the Room class 
  */
 package airUI.pkg;
 
@@ -19,7 +19,7 @@ public class roomTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		try {
-		room = Room.createRoom("", "", "");
+		Room.createRoom("", "", "");
 		} catch (Exception e) {
 			System.err.println(e);
 		}
@@ -94,13 +94,22 @@ Assert.assertEquals(4, listSize);
 		
 		Assert.assertTrue(Room.removeRoom("dani"));
 	}
-
+/**
+* Test method for {@link airUI.pkg.Room#getTemperature()}.
+ */
+	@Test
+	public void testGetTemperature() {
+		Room bryan = Room.createRoom("", "", "");
+		Assert.assertEquals("\"\"", bryan.getTemperature());
+	}
+	
 	/**
 	 * Test method for {@link airUI.pkg.Room#getHumidity()}.
 	 */
 	@Test
 	public void testGetHumidity() {
-		Assert.assertEquals("21", Room.getRoom("dani").getHumidity());
+		Room bryan = Room.createRoom("bryan", "65", "85");
+Assert.assertEquals("\"\"", bryan.getHumidity());
 	}
 
 	/**
@@ -108,7 +117,8 @@ Assert.assertEquals(4, listSize);
 	 */
 	@Test
 	public void testGetCarbonDioxide() {
-		// TODO
+		Room bryan = Room.createRoom("bryan", "65", "85");
+		Assert.assertEquals("\"\"", bryan.getCarbonDioxide());
 	}
 
 	/**
@@ -116,7 +126,8 @@ Assert.assertEquals(4, listSize);
 	 */
 	@Test
 	public void testGetMethane() {
-		// TODO
+		Room bryan = Room.createRoom("", "", "");
+		Assert.assertEquals("\"\"", bryan.getMethane());
 	}
 
 }
