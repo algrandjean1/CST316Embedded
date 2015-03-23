@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -37,11 +38,10 @@ public class Customize implements ActionListener, ItemListener
 	int TEMPRANGE = 27;
 	int TIMERANGE = 49;
 
-	ArrayList<String> roomList = new ArrayList<String>();
-	ArrayList<String> tempR = new ArrayList<String>();
-	ArrayList<String> tempR2 = new ArrayList<String>();
-	ArrayList<String> timeR = new ArrayList<String>();
-	ArrayList<String> timeR2 = new ArrayList<String>();
+	ArrayList<String> tempRange = new ArrayList<String>();
+	ArrayList<String> tempRange2 = new ArrayList<String>();
+	ArrayList<String> timeRange = new ArrayList<String>();
+	ArrayList<String> timeRange2 = new ArrayList<String>();
 
 	protected JFrame mainWin;
 	protected JPanel mainPan;
@@ -56,19 +56,17 @@ public class Customize implements ActionListener, ItemListener
 
 	protected JTextField roomName;
 
-	protected JComboBox<String> lowTemp;
-	protected JComboBox<String> highTemp;
-	protected JComboBox<String> lowTime;
-	protected JComboBox<String> highTime;
+	protected JSpinner lowTemp;
+	protected JSpinner highTemp;
+	protected JSpinner lowTime;
+	protected JSpinner highTime;
 
 	protected SpinnerListModel tempModel;
 	protected SpinnerListModel tempModel2;
 	protected SpinnerListModel timeModel;
 	protected SpinnerListModel timeModel2;
 
-	protected JComboBox<Object> roomBox;
-	protected JComboBox roomPreset;
-
+	protected JComboBox<String> roomBox;
 	protected JButton addModRooms;
 	protected JButton backButton;
 	
@@ -95,23 +93,29 @@ public class Customize implements ActionListener, ItemListener
 		addModRooms = new JButton("Add/Modify");
 		backButton = new JButton("Back");
 
-		lowTime = new JComboBox<String>();
-		highTime = new JComboBox<String>();
-		lowTemp = new JComboBox<String>();
-		highTemp = new JComboBox<String>();
-
-		roomBox = new JComboBox<Object>();
+		lowTime = new JSpinner();
+		highTime = new JSpinner();
+		lowTemp = new JSpinner();
+		highTemp = new JSpinner();
+		
+		
+		//roomModel = new DefaultComboBoxModel(roomList);
+		roomBox = new JComboBox<String>();
 
 		//this is to fill in for the Temperature settings range
 		int start = 60;
-		lowTemp.addItem("None");
-		highTemp.addItem("None");
+		tempRange.add("None");
+		tempRange2.add("None");
 		for(int i = 1; i < TEMPRANGE; i++)
 		{
-			lowTemp.addItem(Integer.toString(start));
-			highTemp.addItem(Integer.toString(start));
+			tempRange.add(Integer.toString(start));
+			tempRange2.add(Integer.toString(start));
 			start++;
 		}
+		
+		
+		tempModel = new SpinnerListModel(tempRange);
+		tempModel = new SpinnerListModel(tempRange2);
 		
 
 		String am = "AM";
@@ -119,21 +123,21 @@ public class Customize implements ActionListener, ItemListener
 		int k = 1;
 		String odd = "00";
 		String even = "30";
-		lowTime.addItem("0:00");
-		highTime.addItem("0:00");
+		timeRange.add("0:00");
+		timeRange2.add("0:00");
 		for(int i = 1; i < TIMERANGE; i++)
 		{
 			if(i % 2 == 0)
 			{
 				if(k > 12)
 				{
-					lowTime.addItem(Integer.toString(k % 12) + ":" + even + pm);
-					highTime.addItem(Integer.toString(k % 12) + ":" + even + pm);
+					timeRange.add(Integer.toString(k % 12) + ":" + even + pm);
+					timeRange2.add(Integer.toString(k % 12) + ":" + even + pm);
 				}
 				else
 				{
-					lowTime.addItem(Integer.toString(k) + ":" + even + am);
-					highTime.addItem(Integer.toString(k) + ":" + even + am);
+					timeRange.add(Integer.toString(k) + ":" + even + am);
+					timeRange2.add(Integer.toString(k) + ":" + even + am);
 				}
 				k++;
 			}
@@ -141,19 +145,19 @@ public class Customize implements ActionListener, ItemListener
 			{
 				if(k > 12)
 				{
-					lowTime.addItem(Integer.toString(k % 12) + ":" + odd + pm);
-					highTime.addItem(Integer.toString(k % 12) + ":" + odd + pm);
+					timeRange.add(Integer.toString(k % 12) + ":" + odd + pm);
+					timeRange2.add(Integer.toString(k % 12) + ":" + odd + pm);
 				}
 				else
 				{
-					lowTime.addItem(Integer.toString(k) + ":" + odd + am);
-					highTime.addItem(Integer.toString(k) + ":" + odd + am);
+					timeRange.add(Integer.toString(k) + ":" + odd + am);
+					timeRange2.add(Integer.toString(k) + ":" + odd + am);
 				}
 			}
 		}
 
-		timeModel = new SpinnerListModel(timeR);
-		timeModel2 = new SpinnerListModel(timeR2);
+		timeModel = new SpinnerListModel(timeRange);
+		timeModel2 = new SpinnerListModel(timeRange2);
 		
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layOut();
@@ -253,19 +257,28 @@ public class Customize implements ActionListener, ItemListener
 		if(event.getStateChange() == ItemEvent.SELECTED)
 		{
 			Object compare = event.getSource();
+			if(roomBox==compare)
+			{
+				roomBox.revalidate();
+			}
 		}
 	}
 	
 	public void addModRoomsButton()
 	{
-		//Room add = new Room();
 		if(roomName.getText() != null)
 		{
+			ArrayList<String> roomList = newRoom.getroomList();
 			String nameOfRoom = roomName.getText();
-			String lowTempRead = lowTemp.getModel().toString();
-			System.out.print(lowTempRead);
-			roomBox.addItem(nameOfRoom);
-			//newRoom.createRoom(nameOfRoom, lowerBound, upperBound)
+			String lowEnd = lowTemp.getValue().toString();
+			String highEnd = highTemp.getValue().toString();
+			newRoom.createRoom(nameOfRoom, lowEnd, highEnd);
+			
+			int size = roomList.size();
+			for(int i = 0; i < size;++i)
+			{
+				roomBox.addItem(roomList.get(i));
+			}
 		}
 		else
 		{
