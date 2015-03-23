@@ -33,10 +33,10 @@ public class MainPage
 		pane.setLayout(null);
 		JList currentRoomList, currentlyOnList;
 		JLabel roomLabel, onLabel, dateLabel;
-		float co2Read = 0.0f;
-		float o2Read = 0.0f;
-		float tempRead = 0.0f;
-		float humidRead = 0.0f;
+		String co2Read = "0.0";
+		String o2Read = "0.0";
+		String tempRead = "0.0";
+		String humidRead = "0.0";
 		JTextArea co2Print, o2Print, tempPrint, humidPrint;
 		DefaultListModel room = new DefaultListModel();
 		DefaultListModel currOn = new DefaultListModel();
@@ -106,7 +106,6 @@ public class MainPage
 		Insets insets = pane.getInsets();
 		Dimension size = roomList.getPreferredSize();
 		roomList.setBounds(100 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
-
 
 		size = onList.getPreferredSize();
 		onList.setBounds(350 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
