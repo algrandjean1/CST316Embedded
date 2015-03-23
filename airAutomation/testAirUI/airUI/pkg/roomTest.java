@@ -1,7 +1,7 @@
 /**
  * 
  */
-package airUI.pkg;
+package airAutomation.airUI.pkg;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,7 +15,7 @@ import org.junit.Test;
 public class roomTest {
 	private static Room room;
 
-	@BeforeClass
+	//@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		try {
 		room = Room.createRoom("", "", "");
@@ -24,7 +24,7 @@ public class roomTest {
 		}
 	}
 
-	@Before
+	//@Before
 	public void setUp() throws Exception {
 		try {
 		Room.createRoom("master", "65", "85");
@@ -37,7 +37,7 @@ public class roomTest {
 	/**
 	 * Test method for {@link airUI.pkg.Room#createRoom(java.lang.String, java.lang.String, java.lang.String)}.
 	 */
-	@Test
+	//@Test
 	public void testCreateRoom() {
 		Room bryan = Room.createRoom("bryan", "65", "85");
 		
@@ -61,7 +61,7 @@ public class roomTest {
 	/**
 	 * Test method for {@link airUI.pkg.Room#dataReceived(com.digi.xbee.api.models.XBeeMessage)}.
 	 */
-	@Test
+	//@Test
 	public void testDataReceived() {
 		// TODO
 	}
@@ -69,7 +69,7 @@ public class roomTest {
 	/**
 	 * Test method for {@link airUI.pkg.Room#getRoom(java.lang.String)}.
 	 */
-	@Test
+	//@Test
 	public void testGetRoom() {
 		System.out.println("getRoom: ");
 	}
@@ -77,7 +77,7 @@ public class roomTest {
 	/**
 	 * Test method for {@link airUI.pkg.Room#getroomList()}.
 	 */
-	@Test
+	//@Test
 	public void testGetroomList() {
 
 	}
@@ -85,7 +85,7 @@ public class roomTest {
 	/**
 	 * Test method for {@link airUI.pkg.Room#removeRoom(java.lang.String)}.
 	 */
-	@Test
+	//@Test
 	public void testRemoveRoom() {
 		System.out.println("remove room test: ");
 
@@ -94,7 +94,7 @@ public class roomTest {
 	/**
 	 * Test method for {@link airUI.pkg.Room#getHumidity()}.
 	 */
-	@Test
+	//@Test
 	public void testGetHumidity() {
 		System.out.println("get humidity test: ");
 	}
@@ -102,7 +102,7 @@ public class roomTest {
 	/**
 	 * Test method for {@link airUI.pkg.Room#getCarbonDioxide()}.
 	 */
-	@Test
+	//@Test
 	public void testGetCarbonDioxide() {
 		// TODO
 	}
@@ -110,7 +110,7 @@ public class roomTest {
 	/**
 	 * Test method for {@link airUI.pkg.Room#getMethane()}.
 	 */
-	@Test
+	//@Test
 	public void testGetMethane() {
 		// TODO
 	}
