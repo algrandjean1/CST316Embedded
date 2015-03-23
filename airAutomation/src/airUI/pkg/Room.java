@@ -23,7 +23,8 @@ import com.digi.xbee.api.models.XBeeMessage;
 /**
  * Room object with sensor data
  */
-public class Room implements IDataReceiveListener {
+public class Room implements IDataReceiveListener 
+{
 	private XBeeHandler xbeeHandler;
 	private RemoteXBeeDevice dragon;	
 	private String name, humidity, carbonDioxide, methane;
@@ -36,7 +37,8 @@ public class Room implements IDataReceiveListener {
 	 * @param lowerBound lower boundary of temperature to be set
 	 * @param upperBound upper boundary of temperature to be set
 	 */
-	private Room(String name, String lowerBound, String upperBound) {
+	private Room(String name, String lowerBound, String upperBound) 
+	{
 		this.name = name;
 		this.lowerBound = lowerBound;
 		this.upperBound = upperBound;
@@ -49,10 +51,12 @@ public class Room implements IDataReceiveListener {
 	 * @param lowerBound lower boundary for temperature to be set
 	 * @param upperBound upper boundary of temperature to be set
 	 */
-	public static Room createRoom(String name, String lowerBound, String upperBound) {
+	public static Room createRoom(String name, String lowerBound, String upperBound) 
+	{
 		Room newRoom;
 
-		if (roomList.containsKey(name)) {
+		if (roomList.containsKey(name)) 
+		{
 			newRoom = roomList.get(name);
 		} else {
 			newRoom = new Room(name, lowerBound, upperBound);
@@ -75,14 +79,17 @@ public class Room implements IDataReceiveListener {
 	 * sets up the listener and updates the Rooms readings
 	 * @param xbeeMessage is the data message received from the remote XBee device
 	 */
-	public void dataReceived(XBeeMessage xbeeMessage) {
-		try {
+	public void dataReceived(XBeeMessage xbeeMessage) 
+	{
+		try 
+		{
 		 dragon = xbeeHandler.getXbeeNetwork().getDevice("DRAGON");
 			String line;
 			String[] sensorData;
 			xbeeHandler.getXbee().addDataListener(dataReceiveListener);
 			XBee64BitAddress priorDestination = dragon.getDestinationAddress();
-			if (xbeeMessage.getDevice().get64BitAddress().equals(dragon.get64BitAddress())) {
+			if (xbeeMessage.getDevice().get64BitAddress().equals(dragon.get64BitAddress())) 
+			{
 				System.out.println("Dragon: " + xbeeMessage.getDataString());
 
 				line = xbeeMessage.getDataString();
@@ -99,7 +106,9 @@ public class Room implements IDataReceiveListener {
 			xbeeHandler.getXbee().removeDataListener(dataReceiveListener);
 			dragon.setDestinationAddress(priorDestination);
 			xbeeHandler.getXbee().close();
-		} catch(Exception e) {
+		} 
+		catch(Exception e) 
+		{
 			e.printStackTrace();
 		}
 
@@ -111,8 +120,10 @@ public class Room implements IDataReceiveListener {
 	 * @param name name of room
 	 * @return room object if found
 	 */
-	public static Room getRoom(String name) {
-		if (roomList.containsKey(name)) {
+	public static Room getRoom(String name) 
+	{
+		if (roomList.containsKey(name)) 
+		{
 			return roomList.get(name);
 		} // end if
 
@@ -122,7 +133,8 @@ public class Room implements IDataReceiveListener {
 	 * creates ArrayList of room names from hashtable
 	 * @return ArrayList of room names
 	 */
-	public static ArrayList<String> getroomList() {
+	public static ArrayList<String> getroomList() 
+	{
 		return Collections.list(roomList.keys());
 	}
 
@@ -131,8 +143,10 @@ public class Room implements IDataReceiveListener {
 	 * @param name the name of the room to remove
 	 * @return true if removed, false otherwise
 	 */
-	public static Boolean removeRoom(String name) {
-		if (roomList.containsKey(name)) {
+	public static Boolean removeRoom(String name) 
+	{
+		if (roomList.containsKey(name)) 
+		{
 			roomList.remove(name);
 			System.out.println("Removed: " + name + " from the room List.");
 
@@ -142,28 +156,32 @@ public class Room implements IDataReceiveListener {
 		return false;
 	}
 
-	public static int getSize() {
+	public static int getSize() 
+	{
 		return roomList.size();
 	}
 	
 	/**
 	 * @return the humidity
 	 */
-	public String getHumidity() {
+	public String getHumidity() 
+	{
 		return humidity;
 	}
 
 	/**
 	 * @return the carbonDioxide
 	 */
-	public String getCarbonDioxide() {
+	public String getCarbonDioxide() 
+	{
 		return carbonDioxide;
 	}
 
 	/**
 	 * @return the methane
 	 */
-	public String getMethane() {
+	public String getMethane() 
+	{
 		return methane;
 	}
 
