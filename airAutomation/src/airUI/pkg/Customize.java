@@ -320,9 +320,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String lowEnd = lowTemp.getValue().toString();
 			String highEnd = highTemp.getValue().toString();
 			String modRoom = roomName.getText();
-			
-			//Room temporary = newRoom.getRoom(modRoom);
-			
+						
 			if(newRoom.removeRoom(modRoom) == true)
 			{
 				newRoom.createRoom(modRoom, lowEnd, highEnd);
