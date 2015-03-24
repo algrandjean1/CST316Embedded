@@ -26,8 +26,11 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerListModel;
+import javax.swing.SpinnerModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class Customize implements ActionListener, ItemListener
+public class Customize implements ActionListener, ItemListener, ChangeListener
 {
 	Date time = new Date();
 	SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
@@ -264,25 +267,68 @@ public class Customize implements ActionListener, ItemListener
 		}
 	}
 	
+	@Override
+	public void stateChanged(ChangeEvent e) 
+	{
+		if (tempModel instanceof SpinnerListModel || tempModel2 instanceof SpinnerListModel) 
+		{
+            correctRange();
+        }
+	}
+	
+	
+	public void correctRange()
+	{
+		int lowEnd = Integer.parseInt(lowTemp.getValue().toString());
+		int highEnd = Integer.parseInt(highTemp.getValue().toString());
+		
+		if(lowEnd >= highEnd)
+		{
+			tempModel2.setValue(tempModel.getNextValue());
+		}
+		else if(highEnd <= lowEnd)
+		{
+			tempModel.setValue(tempModel2.getPreviousValue());
+		}
+	}
+	
 	public void addModRoomsButton()
 	{
 		if(roomName.getText() != null)
 		{
-			ArrayList<String> roomList = newRoom.getroomList();
 			String nameOfRoom = roomName.getText();
 			String lowEnd = lowTemp.getValue().toString();
 			String highEnd = highTemp.getValue().toString();
 			newRoom.createRoom(nameOfRoom, lowEnd, highEnd);
 			
-			int size = roomList.size();
-			for(int i = 0; i < size;++i)
+			int sizeOfListRoom = newRoom.getSize();
+			ArrayList<String> roomList = newRoom.getroomList();
+			
+			if(sizeOfListRoom == roomList.size())
 			{
-				roomBox.addItem(roomList.get(i));
+				for(int i = 0; i < sizeOfListRoom;++i)
+				{
+					roomBox.addItem(roomList.get(i));
+				}
 			}
 		}
 		else
 		{
-			;
+			//Need to create room object, then get lowerBound and upperBound
+			//to compare to current low and high end to see if modify necessary
+			
+			String lowEnd = lowTemp.getValue().toString();
+			String highEnd = highTemp.getValue().toString();
+			String modRoom = roomName.getText();
+			
+			//Room temporary = newRoom.getRoom(modRoom);
+			
+			if(newRoom.removeRoom(modRoom) == true)
+			{
+				newRoom.createRoom(modRoom, lowEnd, highEnd);
+				
+			}
+			
 		}
 	}
 	public void showcustomize(){

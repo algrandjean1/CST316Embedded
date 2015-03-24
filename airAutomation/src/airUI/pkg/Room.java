@@ -139,7 +139,7 @@ public class Room implements IDataReceiveListener
 	}
 
 	/**
-	 * locates the rom specified and removes it
+	 * locates the room specified and removes it
 	 * @param name the name of the room to remove
 	 * @return true if removed, false otherwise
 	 */
