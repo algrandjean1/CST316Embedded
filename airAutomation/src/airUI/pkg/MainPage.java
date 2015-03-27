@@ -90,30 +90,68 @@ public class MainPage
 	public void addElements(Container pane)
 	{
 		pane.setLayout(null);
-		JList currentRoomList, currentlyOnList;
 		JLabel roomLabel, onLabel, dateLabel;
 	
 
 		Font bigText = new Font("Serif",Font.BOLD,20);
+        
+        roomList = Room.getroomList();
 
-		String thisList[] = {"One", "Two", "Three", "Four", "Five"};
+		/*String thisList[] = {"One", "Two", "Three", "Four", "Five"};
 
 		for(int i=0; i<thisList.length; i++){
 			room.addElement(thisList[i]);
 			currOn.addElement(thisList[i]);
-		}
+		}*/
 
 		currentRoomList = new JList(room);
 		currentRoomList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		JScrollPane roomList = new JScrollPane(currentRoomList);
-		roomList.setPreferredSize(new Dimension(100,200));
-		pane.add(roomList);
+        
+		currentRoomList.addListSelectionListener(new ListSelectionListener() {
+			
+			public void valueChanged(ListSelectionEvent e) {
+				
+				int lastIndex = e.getLastIndex();
+				Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
+				float co2Read = 0f;
+				float methaneRead = 0f;
+				float tempRead = 0f;
+				float humidRead = 0f;
+				
+				if(!selectedRoom.getCarbonDioxide().trim().isEmpty()){
+					co2Read =Float.valueOf(selectedRoom.getCarbonDioxide());
+				}
+				
+				if(!selectedRoom.getMethane().trim().isEmpty()){
+					methaneRead = Float.valueOf(selectedRoom.getMethane());
+				}
+				
+				if(!selectedRoom.getTemperature().trim().isEmpty()){
+					tempRead = Float.valueOf(selectedRoom.getTemperature());
+				}
+                
+				if(!selectedRoom.getHumidity().trim().isEmpty()){
+					humidRead = Float.valueOf(selectedRoom.getHumidity());
+				}
+                
+                setData(co2Read, methaneRead, tempRead, humidRead);
+				
+			}
+		});
+        
+        roomListPane = new JScrollPane(currentRoomList);
+		roomListPane.setPreferredSize(new Dimension(100,200));
+		pane.add(roomListPane);
 
-		currentlyOnList = new JList(currOn);
-		currentlyOnList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		JScrollPane onList = new JScrollPane(currentlyOnList);
+
+        currentlyOnListPane = new JList(currOn);
+		currentlyOnListPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+		JScrollPane onList = new JScrollPane(currentlyOnListPane);
 		onList.setPreferredSize(new Dimension(100,200));
 		pane.add(onList);
+        
+        customizeButton = new JButton("Refresh");
+		pane.add(customizeButton);
 
 		customizeButton = new JButton("Customize");
 		pane.add(customizeButton);
