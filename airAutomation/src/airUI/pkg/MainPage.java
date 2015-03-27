@@ -145,7 +145,7 @@ public class MainPage
 
 
         currentlyOnListPane = new JList(currOn);
-		currentlyOnListPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+		currentlyOnListPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		JScrollPane onList = new JScrollPane(currentlyOnListPane);
 		onList.setPreferredSize(new Dimension(100,200));
 		pane.add(onList);
@@ -173,10 +173,12 @@ public class MainPage
 		co2Print.setText("CO2: \n"+ co2Read);
 		pane.add(co2Print);
 
-		o2Print = new JTextArea();
-		o2Print.setFont(bigText);
-		o2Print.setText("O2: \n" + o2Read);
-		pane.add(o2Print);
+        
+		methanePrint = new JTextArea();
+		methanePrint.setFont(bigText);
+		methanePrint.setText("CH4: \n" + methaneRead);
+		pane.add(methanePrint);
+
 
 		tempPrint = new JTextArea();
 		tempPrint.setFont(bigText);;
@@ -195,11 +197,10 @@ public class MainPage
 		pane.add(dateLabel);
 
 		Insets insets = pane.getInsets();
-		Dimension size = roomList.getPreferredSize();
-		roomList.setBounds(100 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
+        Dimension size = roomListPane.getPreferredSize();
+		roomListPane.setBounds(100 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
 
-
-		size = onList.getPreferredSize();
+        size = onList.getPreferredSize();
 		onList.setBounds(350 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
 
 		size = customizeButton.getPreferredSize();
@@ -217,8 +218,8 @@ public class MainPage
 		size = co2Print.getPreferredSize();
 		co2Print.setBounds(10 + insets.left, 2 + insets.right, size.width + 65, size.height + 60);
 
-		size = o2Print.getPreferredSize();
-		o2Print.setBounds(135 + insets.left, 2 + insets.right, size.width + 78, size.height + 60);
+		size = methanePrint.getPreferredSize();
+		methanePrint.setBounds(135 + insets.left, 2 + insets.right, size.width + 78, size.height + 60);
 
 		size = tempPrint.getPreferredSize();
 		tempPrint.setBounds(270 + insets.left, 2 + insets.right, size.width + 10, size.height + 60);
