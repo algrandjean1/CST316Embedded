@@ -27,6 +27,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerListModel;
 import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -37,8 +38,10 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	
 	Properties props;
 	Room newRoom;
-
-	int TEMPRANGE = 27;
+	
+	int CURRENTTEMP = 60;
+	int CURRENTTEMP2 = 61;
+	//int TEMPRANGE = 27;
 	int TIMERANGE = 49;
 
 	ArrayList<String> tempRange = new ArrayList<String>();
@@ -64,12 +67,16 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	protected JSpinner lowTime;
 	protected JSpinner highTime;
 
-	protected SpinnerListModel tempModel;
-	protected SpinnerListModel tempModel2;
+	//protected SpinnerListModel tempModel;
+	//protected SpinnerListModel tempModel2;
+	protected SpinnerNumberModel tempModel;
+	protected SpinnerNumberModel tempModel2;
+	
 	protected SpinnerListModel timeModel;
 	protected SpinnerListModel timeModel2;
 
 	protected JComboBox<String> roomBox;
+	
 	protected JButton addModRooms;
 	protected JButton backButton;
 	
@@ -92,20 +99,22 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		newR = new JLabel("New Room Name: ");
 
 		roomName = new JTextField();
-
+		
+		tempModel = new SpinnerNumberModel(CURRENTTEMP, 60, 85, 1);
+		tempModel2 = new SpinnerNumberModel(CURRENTTEMP2, 60, 85, 1);
+		
+		//lowTime = new JSpinner();
+		//highTime = new JSpinner();
+		lowTemp = new JSpinner(tempModel);
+		highTemp = new JSpinner(tempModel2);
+		
+		roomBox = new JComboBox<String>();
+		
 		addModRooms = new JButton("Add/Modify");
 		backButton = new JButton("Back");
 
-		lowTime = new JSpinner();
-		highTime = new JSpinner();
-		lowTemp = new JSpinner();
-		highTemp = new JSpinner();
-		
-		
-		//roomModel = new DefaultComboBoxModel(roomList);
-		roomBox = new JComboBox<String>();
-
 		//this is to fill in for the Temperature settings range
+		/*
 		int start = 60;
 		tempRange.add("None");
 		tempRange2.add("None");
@@ -115,15 +124,15 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			tempRange2.add(Integer.toString(start));
 			start++;
 		}
-		
-		
 		tempModel = new SpinnerListModel(tempRange);
 		tempModel = new SpinnerListModel(tempRange2);
+		*/
 		
 
+		//This is used to fill in the time
+		int k = 1;
 		String am = "AM";
 		String pm = "PM";
-		int k = 1;
 		String odd = "00";
 		String even = "30";
 		timeRange.add("0:00");
@@ -158,9 +167,12 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				}
 			}
 		}
-
 		timeModel = new SpinnerListModel(timeRange);
 		timeModel2 = new SpinnerListModel(timeRange2);
+	
+		
+		lowTime = new JSpinner(timeModel);
+		highTime = new JSpinner(timeModel2);
 		
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layOut();
@@ -244,19 +256,22 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		run.setUp();
 	}
 	*/
+	
 	public void actionPerformed(ActionEvent e)
 	{
+		
 		if(e.getSource() == addModRooms)
 		{
 			String lowTempRead = lowTemp.getModel().toString();
 			roomName.setText(lowTempRead);
 			addModRoomsButton();
 		}
-
+		
 	}
 
 	public void itemStateChanged(ItemEvent event)
 	{
+		
 		if(event.getStateChange() == ItemEvent.SELECTED)
 		{
 			Object compare = event.getSource();
@@ -265,15 +280,18 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				roomBox.revalidate();
 			}
 		}
+		
 	}
 	
 	@Override
 	public void stateChanged(ChangeEvent e) 
 	{
-		if (tempModel instanceof SpinnerListModel || tempModel2 instanceof SpinnerListModel) 
+		
+		if (tempModel instanceof SpinnerNumberModel || tempModel2 instanceof SpinnerNumberModel) 
 		{
             correctRange();
         }
+		
 	}
 	
 	
@@ -329,6 +347,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			
 		}
 	}
+	
+	
 	public void showcustomize(){
 		mainWin.setVisible(true);
 	}
