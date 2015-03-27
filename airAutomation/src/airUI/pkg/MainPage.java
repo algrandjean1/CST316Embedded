@@ -259,6 +259,16 @@ public class MainPage
 
 		frame.setVisible(false);
 	}
+    
+    public void setData(float co2, float ch4, float temp, float humid){
+		this.co2Read = co2;
+		this.methaneRead = ch4;
+		this.tempRead = temp;
+		this.humidRead = humid;
+		
+		updateData();
+		
+	}
 
 	/*
 	public static void main(String[] args)
