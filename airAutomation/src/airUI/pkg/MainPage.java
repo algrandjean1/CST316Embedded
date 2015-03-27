@@ -9,23 +9,82 @@ package airUI.pkg;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
+
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class MainPage
 {
 	JFrame frame = new JFrame("Main Page.");
 	JButton customizeButton;
 	JButton reportsButton;
+    JButton refreshButton;
+    JList currentRoomList, currentlyOnListPane;
+	JScrollPane roomListPane;
+	ArrayList<String> roomList;
+    
+    //Read the values from properties files
+	String propFileName = "room.properties";
+	Properties prop = new Properties();
+    
+    float tempThresholdLow;
+	float tempThresholdHigh;
+	float humidityThresholdLow;
+	float humidityThresholdHigh;
+	float carbonDioxideThresholdLow;
+	float carbonDioxideThresholdHigh;
+	float methaneThresholdLow;
+	float methaneThresholdHigh;
+    
 	MainDriver driver;
-
-
+    private float co2Read = 0f;
+	private float methaneRead = 0f;
+	private float tempRead =0f;
+	private float humidRead =0f;
+    JTextArea co2Print, methanePrint, tempPrint, humidPrint;
+    
+    DefaultListModel room = new DefaultListModel();
+	DefaultListModel currOn = new DefaultListModel();
+    
 	public MainPage(MainDriver driver){
 
 		this.driver = driver;
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addElements(frame.getContentPane());
 		frame.setSize(600,600);
+        //Read Properties File
+		readRoomProperties();
+	}
+    
+	private void readRoomProperties() {
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+		try{
+            if (inputStream != null) {
+                prop.load(inputStream);
+                tempThresholdLow 	= Float.parseFloat(prop.getProperty("tempThresholdLow"));
+                tempThresholdHigh = Float.parseFloat(prop.getProperty("tempThresholdHigh"));
+                humidityThresholdLow = Float.parseFloat(prop.getProperty("humidityThresholdLow"));
+                humidityThresholdHigh= Float.parseFloat(prop.getProperty("humidityThresholdHigh"));
+                carbonDioxideThresholdLow= Float.parseFloat(prop.getProperty("carbonDioxideThresholdLow"));
+                carbonDioxideThresholdHigh= Float.parseFloat(prop.getProperty("carbonDioxideThresholdHigh"));
+                methaneThresholdLow= Float.parseFloat(prop.getProperty("methaneThresholdLow"));
+                methaneThresholdHigh = Float.parseFloat(prop.getProperty("methaneThresholdHigh"));
+                
+            } else {
+                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+            }
+		}catch(IOException e){
+            
+		}
+		
+        
 	}
 
 	public void addElements(Container pane)
@@ -33,13 +92,7 @@ public class MainPage
 		pane.setLayout(null);
 		JList currentRoomList, currentlyOnList;
 		JLabel roomLabel, onLabel, dateLabel;
-		float co2Read = 0.0f;
-		float o2Read = 0.0f;
-		float tempRead = 0.0f;
-		float humidRead = 0.0f;
-		JTextArea co2Print, o2Print, tempPrint, humidPrint;
-		DefaultListModel room = new DefaultListModel();
-		DefaultListModel currOn = new DefaultListModel();
+	
 
 		Font bigText = new Font("Serif",Font.BOLD,20);
 
