@@ -269,6 +269,48 @@ public class MainPage
 		updateData();
 		
 	}
+    public void updateData(){
+		co2Print.setText("CO2: \n"+ co2Read + "ppm");
+		methanePrint.setText("CH4: \n" + methaneRead + "ppm");
+		tempPrint.setText("Temperature: \n" + tempRead + "F");
+		humidPrint.setText("Humidity: \n" + humidRead + "%");
+		
+		if(co2Read <carbonDioxideThresholdLow){
+			co2Print.setBackground(Color.GREEN);
+		}else if(co2Read >carbonDioxideThresholdLow && co2Read <carbonDioxideThresholdHigh){
+			co2Print.setBackground(Color.ORANGE);
+		}else{
+            co2Print.setBackground(Color.RED);
+		}
+		
+        
+		if(methaneRead <methaneThresholdLow){
+			methanePrint.setBackground(Color.GREEN);
+		}else if(methaneRead >methaneThresholdLow && methaneRead <methaneThresholdHigh){
+			methanePrint.setBackground(Color.ORANGE);
+		}else{
+			methanePrint.setBackground(Color.RED);
+		}
+		
+        
+		if(tempRead <tempThresholdLow){
+			tempPrint.setBackground(Color.GREEN);
+		}else if(tempRead >tempThresholdLow && tempRead <tempThresholdHigh){
+			methanePrint.setBackground(Color.ORANGE);
+		}else{
+            tempPrint.setBackground(Color.RED);
+		}
+		
+        
+		if(humidRead <humidityThresholdLow){
+			humidPrint.setBackground(Color.GREEN);
+		}else if(humidRead >humidityThresholdLow && humidRead <humidityThresholdHigh){
+			methanePrint.setBackground(Color.ORANGE);
+		}else{
+			humidPrint.setBackground(Color.RED);
+		}
+        
+	}
 
 	/*
 	public static void main(String[] args)
