@@ -219,13 +219,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		backButton.addActionListener(driver);
 
 	}
-    /*
-	public static void main(String[] args)
-	{
-		Customize run = new Customize();
-		run.setUp();
-	}
-	*/
 	
 	public void actionPerformed(ActionEvent e)
 	{	
@@ -238,7 +231,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String highEnd = highTemp.getValue().toString();
 			
 			addModRoomsButton(nameOfRoom, lowEnd, highEnd);
-			//System.out.println(newRoom.getroomList().toString());
 		}
 		
 	}
@@ -282,13 +274,11 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	public boolean correctRange(int L, int H)
 	{	
 		boolean corrected = false;
-		
 		System.out.println("Correct Range");
-		
 		if(L >= H)
 		{
-			tempModel.setValue(H);
-			tempModel2.setValue(L);
+			System.out.println("enter to correct");
+			setTempValues(H,L);
 			corrected = true;
 		}
 
@@ -296,9 +286,9 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		return corrected;
 	}
 	
-	public void addModRoomsButton(String N, String L, String H)
+	public boolean addModRoomsButton(String N, String L, String H)
 	{
-		
+		boolean added = false;
 		System.out.println("Add Modify Room Buttons");
 		
 		int low = Integer.parseInt(L);
@@ -324,7 +314,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 						
 			if(lowCompare.equalsIgnoreCase(lowEnd) && highCompare.equalsIgnoreCase(highEnd))
 			{
-				
+				return added;
 			}
 			else
 			{
@@ -334,6 +324,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				{
 					newRoom.createRoom(modRoom, lowEnd, highEnd);
 				}
+				added = false;
 			}
 			
 		}
@@ -342,23 +333,24 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			System.out.println("text not null");
 			
 			newRoom.createRoom(N, L, H);
-			
-			int sizeOfListRoom = newRoom.getSize();
-			ArrayList<String> roomList = newRoom.getroomList();
-			
-			if(sizeOfListRoom == roomList.size())
-			{
-				for(int i = 0; i < sizeOfListRoom;++i)
-				{
-					roomBox.addItem(roomList.get(i));
-				}
-			}
+			roomBox.addItem(N);
+			added = true;
 		}
 		
+		return added;
+		
+	}
+	
+	public void setTempValues(int lo, int hi)
+	{
+		System.out.println("Setting temprature values");
+		tempModel.setValue(lo);
+		tempModel2.setValue(hi);
 	}
 	
 	public void setRoomValues(String na, int lo, int hi)
 	{
+		System.out.println("Setting all room values");
 		tempModel.setValue(lo);
 		tempModel2.setValue(hi);
 		roomName.setText(na);	

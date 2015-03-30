@@ -46,7 +46,7 @@ public class TestCustomize extends TestCase
 		r.createRoom("Fatimah", "73", "78");
 		r.createRoom("temo", "61", "66");
 		
-		r.getRoo
+		r.getRoom("temo");
 		
 		
 	}
