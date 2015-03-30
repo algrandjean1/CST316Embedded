@@ -4,9 +4,14 @@
 
 package airUI.pkg;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Properties;
 
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.listeners.IDataReceiveListener;
@@ -26,8 +31,10 @@ import com.digi.xbee.api.models.XBeeMessage;
 public class Room implements IDataReceiveListener {
 	private XBeeHandler xbeeHandler;
 	private RemoteXBeeDevice dragon;	
-	private String name, humidity, carbonDioxide, methane;
-	private String temperature, lowerBound, upperBound;
+	private Properties roomProps, userProps;
+	private String tempThresholdLow, tempThresholdHigh, humidityThresholdLow, humidityThresholdHigh, carbonDioxideThreshold, methaneThreshold;
+	private String temperature, humidity, carbonDioxide, methane;
+	private String name, lowerBound, upperBound;
 	private static Hashtable<String, Room> roomList = new Hashtable<String, Room>();
 
 	/**
@@ -37,11 +44,68 @@ public class Room implements IDataReceiveListener {
 	 * @param upperBound upper boundary of temperature to be set
 	 */
 	private Room(String name, String lowerBound, String upperBound) {
-		this.name = name;
-		this.lowerBound = lowerBound;
-		this.upperBound = upperBound;
-		
-	}
+		try {
+			// initialize user properties from default
+			userProps = new Properties(roomProps);
+			this.name = name;
+			this.lowerBound = lowerBound;
+			this.upperBound = upperBound;
+
+			// reads in threshold values to base the automation of events 
+			// default settings for a room
+			try {
+				//File file = new File("room.properties");
+				System.out.println("Extra Prop");
+				this.roomProps = new Properties();
+				System.out.println("New Prop");
+				FileInputStream in = new FileInputStream("airAutomation/room.properties");
+				System.out.println("Read Prop File");
+				roomProps.load(in);
+				System.out.println("Load Prop File");
+				in.close();
+				System.out.println("File Read In");
+
+				this.tempThresholdLow = roomProps.getProperty("tempThresholdLow");
+				this.tempThresholdHigh = roomProps.getProperty("tempThresholdHigh");
+				this.humidityThresholdLow = roomProps.getProperty("humidityThresholdLow");
+				this.humidityThresholdHigh = roomProps.getProperty("humidityThresholdHigh");
+				this.carbonDioxideThreshold = roomProps.getProperty("carbonDioxideThreshold");
+				this.methaneThreshold = roomProps.getProperty("methaneThreshold");
+				System.out.println("Pre Catch");
+			} catch(IOException ioex) {
+				System.out.println("GLOB");
+				ioex.printStackTrace();
+			}
+			System.out.println("User Props");
+			// load properties from last invocation
+			FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
+			System.out.println("Input User Props");
+			userProps.load(inIt);
+			inIt.close();
+
+			// set the properties from user input
+			userProps.setProperty("roomName", name);
+			userProps.setProperty("tempThresholdLow", lowerBound);
+			userProps.setProperty("tempThresholdHigh", upperBound);
+
+			// reads in last values stored, to be overridden by serial data from XBee
+			this.temperature = userProps.getProperty("temperature");
+			System.out.println("Temperature: " + temperature);;
+			this.humidity = userProps.getProperty("humidity");
+			System.out.println("Humidity: " + humidity);;
+			this.carbonDioxide = userProps.getProperty("carbonDioxide");
+			System.out.println("Carbon Dioxide: " + carbonDioxide);;
+			this.methane = userProps.getProperty("methane");
+			System.out.println("Methane: " + methane);;
+
+			// write user settings to properties file if they change
+			FileOutputStream out = new FileOutputStream("user.properties");
+			userProps.store(out, "User settings saved");
+			out.close();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	} // end constructor
 
 	/**
 	 *creates new room object with the name, upper, and lower boundary for temperature reading
@@ -66,22 +130,16 @@ public class Room implements IDataReceiveListener {
 	 * IDataReceiveListener is an interface for setting up a listener
 	 * @method dataReceived: access the data being transmitted from XBee
 	 */
-	IDataReceiveListener dataReceiveListener = new IDataReceiveListener()
-	{
-		public void dataReceived(XBeeMessage xbeeMessage) {}
-	};
+	IDataReceiveListener dataReceiveListener = Room.getRoom("");
 
-	/**
-	 * sets up the listener and updates the Rooms readings
-	 * @param xbeeMessage is the data message received from the remote XBee device
-	 */
 	public void dataReceived(XBeeMessage xbeeMessage) {
 		try {
-		 dragon = xbeeHandler.getXbeeNetwork().getDevice("DRAGON");
-			String line;
-			String[] sensorData;
+			dragon = xbeeHandler.getXbeeNetwork().getDevice("DRAGON");
 			xbeeHandler.getXbee().addDataListener(dataReceiveListener);
 			XBee64BitAddress priorDestination = dragon.getDestinationAddress();
+			String line;
+			String[] sensorData;
+
 			if (xbeeMessage.getDevice().get64BitAddress().equals(dragon.get64BitAddress())) {
 				System.out.println("Dragon: " + xbeeMessage.getDataString());
 
@@ -102,8 +160,6 @@ public class Room implements IDataReceiveListener {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
-		System.out.println("Settings saved");
 	}
 
 	/**
@@ -145,7 +201,14 @@ public class Room implements IDataReceiveListener {
 	public static int getSize() {
 		return roomList.size();
 	}
-	
+
+	/**
+	 * @return the temperature
+	 */
+	public String getTemperature() {
+		return temperature;
+	}
+
 	/**
 	 * @return the humidity
 	 */
@@ -168,16 +231,14 @@ public class Room implements IDataReceiveListener {
 	}
 
 
-	/*
-	public static void main(String[] args) throws Exception {
+/*	public static void main(String[] args) throws Exception {
 		try {
-		Room room = createRoom("bryan", "65", "85");
-		System.out.println("Room value: " + room.toString());
+			Room room = createRoom("bryan", "65", "85");
+			System.out.println("Room value: " + room.toString());
 
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
-	*/
+	}*/
 
 }
