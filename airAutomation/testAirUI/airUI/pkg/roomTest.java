@@ -1,7 +1,7 @@
 /**
- * 
+ * whitebox unit tests on the Room class 
  */
-package airUI.pkg;
+package airAutomation.airUI.pkg;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,17 +14,18 @@ import org.junit.Test;
  */
 public class roomTest {
 	private static Room room;
+	XBeeHandler xbeeHandler;
 
-	@BeforeClass
+	//@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		try {
-		room = Room.createRoom("", "", "");
+		Room.createRoom("", "", "");
 		} catch (Exception e) {
 			System.err.println(e);
 		}
 	}
 
-	@Before
+	//@Before
 	public void setUp() throws Exception {
 		try {
 		Room.createRoom("master", "65", "85");
@@ -37,7 +38,7 @@ public class roomTest {
 	/**
 	 * Test method for {@link airUI.pkg.Room#createRoom(java.lang.String, java.lang.String, java.lang.String)}.
 	 */
-	@Test
+	//@Test
 	public void testCreateRoom() {
 		Room bryan = Room.createRoom("bryan", "65", "85");
 		
@@ -48,7 +49,7 @@ public class roomTest {
 		Assert.assertEquals(bryan, Room.getRoom("bryan"));
 		
 		// what is the size of the room list
-		Assert.assertEquals(4, room.getSize());
+		Assert.assertEquals(4, Room.getSize());
 		
 		// try to create a room that already exists
 		Assert.assertEquals(bryan, Room.createRoom("bryan", "65", "85"));
@@ -61,58 +62,72 @@ public class roomTest {
 	/**
 	 * Test method for {@link airUI.pkg.Room#dataReceived(com.digi.xbee.api.models.XBeeMessage)}.
 	 */
-	@Test
+	//@Test
 	public void testDataReceived() {
-		// TODO
+		
 	}
 
 	/**
 	 * Test method for {@link airUI.pkg.Room#getRoom(java.lang.String)}.
 	 */
-	@Test
+	//@Test
 	public void testGetRoom() {
-		System.out.println("getRoom: ");
+		Room danielle = Room.createRoom("dani", "65", "85");
+		Assert.assertEquals(danielle, Room.getRoom("dani"));
 	}
 
 	/**
 	 * Test method for {@link airUI.pkg.Room#getroomList()}.
 	 */
-	@Test
+	//@Test
 	public void testGetroomList() {
-
+int listSize = Room.getroomList().size();
+Assert.assertEquals(4, listSize);
 	}
 
 	/**
 	 * Test method for {@link airUI.pkg.Room#removeRoom(java.lang.String)}.
 	 */
-	@Test
+	//@Test
 	public void testRemoveRoom() {
-		System.out.println("remove room test: ");
-
+		Assert.assertFalse(Room.removeRoom("bryan"));
+		
+		Assert.assertTrue(Room.removeRoom("dani"));
 	}
-
+/**
+* Test method for {@link airUI.pkg.Room#getTemperature()}.
+ */
+	@Test
+	public void testGetTemperature() {
+		Room bryan = Room.createRoom("", "", "");
+		Assert.assertEquals("\"\"", bryan.getTemperature());
+	}
+	
 	/**
 	 * Test method for {@link airUI.pkg.Room#getHumidity()}.
 	 */
-	@Test
+	//@Test
 	public void testGetHumidity() {
-		System.out.println("get humidity test: ");
+		Room bryan = Room.createRoom("bryan", "65", "85");
+Assert.assertEquals("\"\"", bryan.getHumidity());
 	}
 
 	/**
 	 * Test method for {@link airUI.pkg.Room#getCarbonDioxide()}.
 	 */
-	@Test
+	//@Test
 	public void testGetCarbonDioxide() {
-		// TODO
+		Room bryan = Room.createRoom("bryan", "65", "85");
+		Assert.assertEquals("\"\"", bryan.getCarbonDioxide());
 	}
 
 	/**
 	 * Test method for {@link airUI.pkg.Room#getMethane()}.
 	 */
-	@Test
+	//@Test
 	public void testGetMethane() {
-		// TODO
+		Room bryan = Room.createRoom("", "", "");
+		Assert.assertEquals("\"\"", bryan.getMethane());
 	}
 
 }
