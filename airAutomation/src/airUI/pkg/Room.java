@@ -230,6 +230,14 @@ public class Room implements IDataReceiveListener
 	{
 		return roomList.size();
 	}
+	
+	public String getLowerBound(){
+		return lowerBound;
+	}
+	
+	public String getUpperBound(){
+		return upperBound;
+	}
 
 	/**
 	 * @return the temperature
