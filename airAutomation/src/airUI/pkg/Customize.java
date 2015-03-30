@@ -253,8 +253,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			if(roomBox==compare)
 			{
 				String keyToget = roomBox.getSelectedItem().toString();
-				String setLow = newRoom.getRoom(keyToget).getLowerBound();
-				String setHigh = newRoom.getRoom(keyToget).getUpperBound();
+				int setLow = Integer.parseInt(newRoom.getRoom(keyToget).getLowerBound());
+				int setHigh = Integer.parseInt(newRoom.getRoom(keyToget).getUpperBound());
 				
 				setRoomValues(keyToget, setLow, setHigh);
 				roomBox.revalidate();
@@ -357,7 +357,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		
 	}
 	
-	public void setRoomValues(String na, String lo, String hi)
+	public void setRoomValues(String na, int lo, int hi)
 	{
 		tempModel.setValue(lo);
 		tempModel2.setValue(hi);

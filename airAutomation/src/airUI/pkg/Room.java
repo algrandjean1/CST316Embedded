@@ -56,7 +56,7 @@ public class Room implements IDataReceiveListener
 			// default settings for a room
 			try {
 				this.roomProps = new Properties();
-				FileInputStream in = new FileInputStream("room.properties");
+				FileInputStream in = new FileInputStream("airAutomation/room.properties");
 				roomProps.load(in);
 				in.close();
 
@@ -72,7 +72,7 @@ public class Room implements IDataReceiveListener
 			}
 
 			// load properties from last invocation
-			FileInputStream in = new FileInputStream("user.properties");
+			FileInputStream in = new FileInputStream("airAutomation/user.properties");
 			userProps.load(in);
 			in.close();
 
