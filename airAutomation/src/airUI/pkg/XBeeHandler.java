@@ -12,27 +12,19 @@ package airUI.pkg;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
 
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.XBeeNetwork;
 import com.digi.xbee.api.ZigBeeDevice;
-import com.digi.xbee.api.listeners.IDataReceiveListener;
 import com.digi.xbee.api.models.XBee64BitAddress;
-import com.digi.xbee.api.models.XBeeMessage;
 
 /**
  * XBeeHandler class sets up a XBee network and locates remote devices to communicate with.
  * Will allows for the sending and receiving of serial data to and from a remote device from a java client
  */
 public class XBeeHandler {
-	protected XBeeNetwork xbeeNetwork = null;
-	protected ZigBeeDevice xbee = null;
-	protected RemoteXBeeDevice dragon = xbeeNetwork.getDevice("DRAGON");	
-	protected IDataReceiveListener dataReceiveListener;
-	protected String lowerBound, upperBound = "";
-	protected String carbonDioxide, humidity, methane = "";
+	private XBeeNetwork xbeeNetwork;
+	private ZigBeeDevice xbee;
 
 	/**
 	 *  set up the XBee network
@@ -41,11 +33,12 @@ public class XBeeHandler {
 	 *  returns devices or message that no devices were found
 	 */
 	public XBeeHandler() throws Exception {
+		try {
 		xbee = new ZigBeeDevice(getFirstUsbPortName(), 115200);
 		xbee.open();
 
 		xbeeNetwork = xbee.getNetwork();
-		dragon = xbeeNetwork.getDevice("DRAGON");
+		RemoteXBeeDevice dragon = xbeeNetwork.getDevice("DRAGON");
 		for (int tries = 0; xbeeNetwork.getNumberOfDevices() == 0 && tries < 3; tries++) {
 			xbeeNetwork.startDiscoveryProcess();
 			for (int i = 0; i < 30; i++) {
@@ -75,6 +68,9 @@ public class XBeeHandler {
 			device.readDeviceInfo();
 			System.out.println("\t\t" + device.get64BitAddress() + ":" + device.getNodeID() + " " + device.getFirmwareVersion());
 		}
+		} catch(Exception e) {
+			System.err.println(e);
+		}
 	} // end constructor 
 
 	/**
@@ -82,14 +78,28 @@ public class XBeeHandler {
 	 */
 	public void shutDown() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run()
-			{
-				if (xbee.isOpen()) {
-					xbee.close();
-				}
-			}
-		});
+	         @Override
+	         public void run()
+	         {
+	            if (xbee.isOpen()) {
+	               xbee.close();
+	            }
+	         }
+	      });
+	      	}
+	
+/**
+	 * @return the xbeeNetwork
+	 */
+	public XBeeNetwork getXbeeNetwork() {
+		return xbeeNetwork;
+	}
+
+	/**
+	 * @return the xbee
+	 */
+	public ZigBeeDevice getXbee() {
+		return xbee;
 	}
 
 /**
@@ -99,6 +109,8 @@ public class XBeeHandler {
  * @throws Exception
  */
 	public RemoteXBeeDevice getDevices() throws Exception {
+		RemoteXBeeDevice dragon = xbeeNetwork.getDevice("DRAGON");
+		
 		if (dragon == null) {
 			System.out.println("Didn't find dragon");
 		} else {
@@ -110,52 +122,6 @@ public class XBeeHandler {
 
 		}
 		return dragon;
-	}
-
-	/**
-	 * receive serial data from device and return to GUI
-	 * @param xbeeMessage serial data string from device
-	 * @return sensor readings from device
-	 */
-	public String receiveMessage(XBeeMessage xbeeMessage) {
-		// Setup a listener so we can see what the remote XBee is saying
-		//dataReceiveListener = new IDataReceiveListener();
-		String message = "";
-
-		if (xbeeMessage.getDevice().get64BitAddress().equals(dragon.get64BitAddress())) {
-			message = xbeeMessage.getDataString();
-		}
-		xbee.addDataListener(dataReceiveListener);
-
-		return message;
-	}
-
-	/**
-	 *allows the user to update the device with custom boundaries for temperature
-	 * @param command received command from UI
-	 * @param lower lower boundary for temperature setting
-	 * @param upper upper boundary for temperature setting
-	 * @return message if settings were updated successfully
-	 * @throws Exception
-	 */
-	public String customize(String command, String lower, String upper) throws Exception {
-		//BufferedReader keyboard = new BufferedReader(new InputStreamReader(new CloseShieldedInputStream(System.in)));
-		while (!command.equalsIgnoreCase("save")) {
-			lowerBound = lower;
-			upperBound = upper;
-
-			if (command.equalsIgnoreCase("save")) {
-				xbee.sendData(dragon, (String.format("!d%+d%+d\r", lowerBound, upperBound)).getBytes());
-				return "Settings saved";
-			}
-		}
-
-		// Restore the previous destination address
-		xbee.removeDataListener(dataReceiveListener);
-		//dragon.setDestinationAddress(priorDestination);
-		xbee.close();
-
-			return "Hault! device not updated";
 	}
 
 	/**

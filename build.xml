@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<project name="Embedded CST316 Project Test Build" default="targets" basedir=".">
+
+    <!-- set global properties for this build -->
+    <property name="src" location="airAutomation/src" />
+    <property name="test" location="airAutomation/tests" />
+    <property name="build" location="airAutomation/classes" />
+    <property name="test.dir" location="airAutomation/classes/tests" />
+    <property name="test.report.dir" location="airAutomation/testreport" />
+
+    <path id="junit.class.path">
+        <pathelement location="${build}" />
+        <pathelement location="airAutomation/lib/xbjlib-1.0.1.jar" />
+    </path>
+
+    <target name="targets">
+        <!-- Display available targets -->
+        <echo message="targets are clean, prepare, compile, junit"/>
+    </target>
+
+    <target name="clean">
+        <!-- Delete the ${build} directory tree -->
+        <delete dir="${build}" />
+        <delete dir="${test.report.dir}" />
+        <delete dir="${test}" />
+    </target>
+
+    <target name="prepare">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <!-- Create the build directory structure used by compile -->
+        <mkdir dir="${build}" />
+        <mkdir dir="${test}" />
+        <mkdir dir="${test.dir}" />
+        <mkdir dir="${test.report.dir}" />
+    </target>
+
+    <target name="compile" depends="clean, prepare"
+        description="Compile Unit Tests">
+        <!-- Compile all classes -->
+        <javac srcdir="${src}"
+            includeantruntime="false"
+            destdir="${build}" >
+            <classpath refid="junit.class.path" />
+        </javac>
+        <javac srcdir="${test}"
+            includeantruntime="false"
+            destdir="${test.dir}" >
+            <classpath refid="junit.class.path" />
+        </javac>
+    </target>
+
+    <target name="junit" depends="compile"
+        description="Execute Unit Tests">
+        <!-- Run Junit tests -->
+        <junit printsummary="yes" fork="true" haltonfailure="yes">
+            <classpath refid="junit.class.path" />
+            <classpath>
+                <pathelement location="${test.dir}" />
+             </classpath>
+            <formatter type="xml" />
+            <batchtest todir="${test.report.dir}">
+                <fileset dir="airAutomation/testAirUI/airUI/pkg/">
+                    <include name="**Test*.java" />
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+</project>
