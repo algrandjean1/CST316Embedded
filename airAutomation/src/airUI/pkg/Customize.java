@@ -238,7 +238,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String highEnd = highTemp.getValue().toString();
 			
 			addModRoomsButton(nameOfRoom, lowEnd, highEnd);
-			System.out.println(newRoom.getroomList().toString());
+			//System.out.println(newRoom.getroomList().toString());
 		}
 		
 	}
@@ -255,10 +255,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				String keyToget = roomBox.getSelectedItem().toString();
 				String setLow = newRoom.getRoom(keyToget).getLowerBound();
 				String setHigh = newRoom.getRoom(keyToget).getUpperBound();
-				
-				System.out.println(keyToget);
-				System.out.println(setLow);
-				System.out.println(setHigh);
 				
 				setRoomValues(keyToget, setLow, setHigh);
 				roomBox.revalidate();
@@ -295,12 +291,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			tempModel2.setValue(L);
 			corrected = true;
 		}
-		else if(H <= L)
-		{
-			tempModel.setValue(H);
-			tempModel2.setValue(L);
-			corrected = true;
-		}
+
 		
 		return corrected;
 	}
@@ -309,6 +300,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	{
 		
 		System.out.println("Add Modify Room Buttons");
+		
 		int low = Integer.parseInt(L);
 		int high = Integer.parseInt(H);
 		
@@ -319,25 +311,36 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		
 		if(N.equals("") || N.equals(" "))
 		{
+			System.out.println("Blank");
 			//Need to create room object, then get lowerBound and upperBound
 			//to compare to current low and high end to see if modify necessary
+			boolean comapre = false;
 			
-			
-			System.out.println("Blank");
+			String modRoom = roomBox.getSelectedItem().toString();
+			String lowCompare = newRoom.getRoom(modRoom).getLowerBound();
+			String highCompare = newRoom.getRoom(modRoom).getUpperBound();
 			String lowEnd = lowTemp.getValue().toString();
 			String highEnd = highTemp.getValue().toString();
-			String modRoom = roomName.getText();
 						
-			if(newRoom.removeRoom(modRoom) == true)
+			if(lowCompare.equalsIgnoreCase(lowEnd) && highCompare.equalsIgnoreCase(highEnd))
 			{
-				newRoom.createRoom(modRoom, lowEnd, highEnd);
 				
 			}
+			else
+			{
+				
+				comapre = newRoom.removeRoom(modRoom);
+				if(comapre == true)
+				{
+					newRoom.createRoom(modRoom, lowEnd, highEnd);
+				}
+			}
+			
 		}
 		else
-		{
-			
+		{	
 			System.out.println("text not null");
+			
 			newRoom.createRoom(N, L, H);
 			
 			int sizeOfListRoom = newRoom.getSize();

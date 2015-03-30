@@ -252,13 +252,15 @@ public class Room implements IDataReceiveListener
 
 
 	public static void main(String[] args) throws Exception {
+		/*
 		try {
 			Room room = createRoom("bryan", "65", "85");
 			System.out.println("Room value: " + room.toString());
 
 		} catch(Exception e) {
 			e.printStackTrace();
-		}
+		} 
+		*/
 	}
 
 }
