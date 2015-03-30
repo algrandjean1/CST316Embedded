@@ -9,48 +9,17 @@ package airUI.pkg;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 public class MainDriver implements ActionListener
 {
-
-
 	static MainPage mp = new MainPage(new MainDriver());
 	static Reports fr = new Reports(new MainDriver());
 	static Customize run = new Customize(new MainDriver());
 
-
-	/*
-     *****************************************************************************************************************
-     *  Here is where the MainPage.java will be called to display the GUI that will be using.
-     *****************************************************************************************************************
-     */
-
 	public static void main(String[] args)
 	{
 		// This is for the main page
-
-
 		mp.showMainGUI();
-
-        /*		javax.swing.SwingUtilities.invokeLater(new Runnable()
-         {
-         public void run()
-         {
-         mp.showGUI();
-         }
-         });
-         */
-		//this is for the reports page
-
-
-		//this is for the Customize page
-
-        /*		run.mainWin.setVisible(true);
-         run.mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-         run.layOut();
-         */	}
+	}
 
 
 	public void actionPerformed(ActionEvent event) {
