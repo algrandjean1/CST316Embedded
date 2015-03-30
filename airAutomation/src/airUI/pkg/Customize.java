@@ -28,6 +28,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerListModel;
 import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -71,7 +72,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	protected SpinnerListModel timeModel;
 	protected SpinnerListModel timeModel2;
     
-	protected JComboBox<String> roomBox;
+	protected JComboBox roomBox;
 	protected JButton addModRooms;
 	protected JButton backButton;
 	
@@ -120,7 +121,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		
 		
 		//roomModel = new DefaultComboBoxModel(roomList);
-		roomBox = new JComboBox<String>();
+		roomBox = new JComboBox();
         
 		//this is to fill in for the Temperature settings range
 		int start = 60;
