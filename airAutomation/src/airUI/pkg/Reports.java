@@ -141,7 +141,7 @@ public class Reports extends JFrame {
                     
                 }
                 if(list.getSelectedValue().equals("Weekly")){
-                    model.setData(colNamesWeekly, dataQuarterly);
+                    model.setData(colNamesWeekly, dataWeekly);
                     
                 }
                 
