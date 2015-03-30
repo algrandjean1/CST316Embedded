@@ -36,6 +36,23 @@ public class Room implements IDataReceiveListener
 	private String temperature, humidity, carbonDioxide, methane;
 	private String name, lowerBound, upperBound;
 	private static Hashtable<String, Room> roomList = new Hashtable<String, Room>();
+	
+	public void setTemperature(String temperature) {
+		this.temperature = temperature;
+	}
+
+	public void setHumidity(String humidity) {
+		this.humidity = humidity;
+	}
+
+	public void setCarbonDioxide(String carbonDioxide) {
+		this.carbonDioxide = carbonDioxide;
+	}
+
+	public void setMethane(String methane) {
+		this.methane = methane;
+	}
+
 
 	/**
 	 *constructor for new Room
