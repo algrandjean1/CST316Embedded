@@ -6,6 +6,7 @@ package airUI.pkg;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,8 +46,7 @@ public class Room implements IDataReceiveListener {
 	private Room(String name, String lowerBound, String upperBound) {
 		try {
 			// initialize user properties from default
-			Properties userProps = new Properties(roomProps);
-
+			userProps = new Properties(roomProps);
 			this.name = name;
 			this.lowerBound = lowerBound;
 			this.upperBound = upperBound;
@@ -54,10 +54,16 @@ public class Room implements IDataReceiveListener {
 			// reads in threshold values to base the automation of events 
 			// default settings for a room
 			try {
+				//File file = new File("room.properties");
+				System.out.println("Extra Prop");
 				this.roomProps = new Properties();
-				FileInputStream in = new FileInputStream("room.properties");
+				System.out.println("New Prop");
+				FileInputStream in = new FileInputStream("airAutomation/room.properties");
+				System.out.println("Read Prop File");
 				roomProps.load(in);
+				System.out.println("Load Prop File");
 				in.close();
+				System.out.println("File Read In");
 
 				this.tempThresholdLow = roomProps.getProperty("tempThresholdLow");
 				this.tempThresholdHigh = roomProps.getProperty("tempThresholdHigh");
@@ -65,15 +71,17 @@ public class Room implements IDataReceiveListener {
 				this.humidityThresholdHigh = roomProps.getProperty("humidityThresholdHigh");
 				this.carbonDioxideThreshold = roomProps.getProperty("carbonDioxideThreshold");
 				this.methaneThreshold = roomProps.getProperty("methaneThreshold");
-
+				System.out.println("Pre Catch");
 			} catch(IOException ioex) {
+				System.out.println("GLOB");
 				ioex.printStackTrace();
 			}
-
+			System.out.println("User Props");
 			// load properties from last invocation
-			FileInputStream in = new FileInputStream("user.properties");
-			userProps.load(in);
-			in.close();
+			FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
+			System.out.println("Input User Props");
+			userProps.load(inIt);
+			inIt.close();
 
 			// set the properties from user input
 			userProps.setProperty("roomName", name);
@@ -195,20 +203,6 @@ public class Room implements IDataReceiveListener {
 	}
 
 	/**
-	 * @return the lowerBound
-	 */
-	public String getLowerBound() {
-		return lowerBound;
-	}
-
-	/**
-	 * @return the upperBound
-	 */
-	public String getUpperBound() {
-		return upperBound;
-	}
-
-	/**
 	 * @return the temperature
 	 */
 	public String getTemperature() {
@@ -237,7 +231,7 @@ public class Room implements IDataReceiveListener {
 	}
 
 
-	public static void main(String[] args) throws Exception {
+/*	public static void main(String[] args) throws Exception {
 		try {
 			Room room = createRoom("bryan", "65", "85");
 			System.out.println("Room value: " + room.toString());
@@ -245,6 +239,6 @@ public class Room implements IDataReceiveListener {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 }
