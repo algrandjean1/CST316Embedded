@@ -1,6 +1,5 @@
 package airUI.pkg;
 
-package airUI.pkg;
 
 /* Sites that aided in the creation of this page:
  * http://docs.oracle.com/javase/tutorial/displayCode.html?code=http://docs.oracle.com/javase/tutorial/uiswing/examples/layout/AbsoluteLayoutDemoProject/src/layout/AbsoluteLayoutDemo.java
