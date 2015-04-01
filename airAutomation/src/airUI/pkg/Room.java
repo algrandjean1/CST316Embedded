@@ -37,25 +37,25 @@ public class Room implements IDataReceiveListener
 	private String temperature, humidity, carbonDioxide, methane;
 	private String name, lowerBound, upperBound;
 	private static Hashtable<String, Room> roomList = new Hashtable<String, Room>();
-	
+
     public void setTemperature(String temperature) {
 		this.temperature = temperature;
 	}
-    
+
 	public void setHumidity(String humidity) {
 		this.humidity = humidity;
 	}
-    
+
 	public void setCarbonDioxide(String carbonDioxide) {
 		this.carbonDioxide = carbonDioxide;
 	}
-    
+
 	public void setMethane(String methane) {
 		this.methane = methane;
 	}
 
      /**
-	 *constructor for new Room 
+	 *constructor for new Room
 	/**
 	 *constructor for new Room
 	 * @param name name of new room
@@ -116,7 +116,7 @@ public class Room implements IDataReceiveListener
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-	}
+	} // end constructor
 
 	/**
 	 *creates new room object with the name, upper, and lower boundary for temperature reading
@@ -223,11 +223,11 @@ public class Room implements IDataReceiveListener
 	{
 		return roomList.size();
 	}
-	
+
 	public String getLowerBound(){
 		return lowerBound;
 	}
-	
+
 	public String getUpperBound(){
 		return upperBound;
 	}
@@ -264,5 +264,14 @@ public class Room implements IDataReceiveListener
 	}
 
 
+/*	public static void main(String[] args) throws Exception {
+		try {
+			Room room = createRoom("bryan", "65", "85");
+			System.out.println("Room value: " + room.toString());
+
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}*/
 
 }
