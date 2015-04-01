@@ -73,15 +73,10 @@ public class Room implements IDataReceiveListener
 			// default settings for a room
 			try {
 				//File file = new File("room.properties");
-				System.out.println("Extra Prop");
 				this.roomProps = new Properties();
-				System.out.println("New Prop");
 				FileInputStream in = new FileInputStream("airAutomation/room.properties");
-				System.out.println("Read Prop File");
 				roomProps.load(in);
-				System.out.println("Load Prop File");
 				in.close();
-				System.out.println("File Read In");
 
 				this.tempThresholdLow = roomProps.getProperty("tempThresholdLow");
 				this.tempThresholdHigh = roomProps.getProperty("tempThresholdHigh");
@@ -89,15 +84,11 @@ public class Room implements IDataReceiveListener
 				this.humidityThresholdHigh = roomProps.getProperty("humidityThresholdHigh");
 				this.carbonDioxideThreshold = roomProps.getProperty("carbonDioxideThreshold");
 				this.methaneThreshold = roomProps.getProperty("methaneThreshold");
-				System.out.println("Pre Catch");
 			} catch(IOException ioex) {
-				System.out.println("GLOB");
 				ioex.printStackTrace();
 			}
-			System.out.println("User Props");
 			// load properties from last invocation
 			FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
-			System.out.println("Input User Props");
 			userProps.load(inIt);
 			inIt.close();
 

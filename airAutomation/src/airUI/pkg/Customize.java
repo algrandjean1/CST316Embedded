@@ -247,38 +247,39 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				String keyToget = roomBox.getSelectedItem().toString();
 				int setLow = Integer.parseInt(newRoom.getRoom(keyToget).getLowerBound());
 				int setHigh = Integer.parseInt(newRoom.getRoom(keyToget).getUpperBound());
-
+				System.out.println("Breaks?");
 				setRoomValues(keyToget, setLow, setHigh);
 				roomBox.revalidate();
 			}
 		}
-
 	}
 
 	@Override
 	public void stateChanged(ChangeEvent e)
 	{
 		System.out.println("State change");
-
+		
+		String name = roomName.getText();
 		int lowEnd = Integer.parseInt(lowTemp.getValue().toString());
 		int highEnd = Integer.parseInt(highTemp.getValue().toString());
 
 		if (tempModel instanceof SpinnerNumberModel || tempModel2 instanceof SpinnerNumberModel)
 		{
-            correctRange(lowEnd, highEnd);
+			System.out.println("go inside state change");
+            correctRange(name, lowEnd, highEnd);
         }
 
 	}
 
 
-	public boolean correctRange(int L, int H)
+	public boolean correctRange(String N, int L, int H)
 	{
 		boolean corrected = false;
 		System.out.println("Correct Range");
 		if(L >= H)
 		{
 			System.out.println("enter to correct");
-			setTempValues(H,L);
+			setRoomValues(N,H,L);
 			corrected = true;
 		}
 
@@ -294,7 +295,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		int low = Integer.parseInt(L);
 		int high = Integer.parseInt(H);
 
-		if(correctRange(low,high))
+		if(correctRange(N,low,high))
 		{
 			System.out.println("Corrected");
 		}
@@ -324,7 +325,10 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				{
 					newRoom.createRoom(modRoom, lowEnd, highEnd);
 				}
-				added = false;
+				else
+				{
+					added = false;
+				}
 			}
 
 		}
@@ -341,19 +345,12 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 	}
 
-	public void setTempValues(int lo, int hi)
-	{
-		System.out.println("Setting temprature values");
-		tempModel.setValue(lo);
-		tempModel2.setValue(hi);
-	}
-
 	public void setRoomValues(String na, int lo, int hi)
 	{
 		System.out.println("Setting all room values");
+		roomName.setText(na);
 		tempModel.setValue(lo);
 		tempModel2.setValue(hi);
-		roomName.setText(na);
 	}
 
 
