@@ -222,8 +222,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		System.out.println("Action Performed");
-
+		//System.out.println("Action Performed");
 		if(e.getSource() == addModRooms)
 		{
 			String nameOfRoom = roomName.getText();
@@ -237,8 +236,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 	public void itemStateChanged(ItemEvent event)
 	{
-		System.out.println("item state change");
-
+		//System.out.println("item state change");
 		if(event.getStateChange() == ItemEvent.SELECTED)
 		{
 			Object compare = event.getSource();
@@ -247,63 +245,64 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				String keyToget = roomBox.getSelectedItem().toString();
 				int setLow = Integer.parseInt(newRoom.getRoom(keyToget).getLowerBound());
 				int setHigh = Integer.parseInt(newRoom.getRoom(keyToget).getUpperBound());
-
 				setRoomValues(keyToget, setLow, setHigh);
 				roomBox.revalidate();
 			}
 		}
-
 	}
 
 	@Override
 	public void stateChanged(ChangeEvent e)
 	{
-		System.out.println("State change");
-
+		//System.out.println("State change");
+		String name = roomName.getText();
 		int lowEnd = Integer.parseInt(lowTemp.getValue().toString());
 		int highEnd = Integer.parseInt(highTemp.getValue().toString());
 
 		if (tempModel instanceof SpinnerNumberModel || tempModel2 instanceof SpinnerNumberModel)
 		{
-            correctRange(lowEnd, highEnd);
+			//System.out.println("go inside state change");
+            correctRange(name, lowEnd, highEnd);
         }
-
 	}
 
 
-	public boolean correctRange(int L, int H)
+	public boolean correctRange(String N, int L, int H)
 	{
 		boolean corrected = false;
-		System.out.println("Correct Range");
+		//System.out.println("Correct Range");
 		if(L >= H)
 		{
-			System.out.println("enter to correct");
-			setTempValues(H,L);
+			//System.out.println("Has been Corrected 1");
+			setRoomValues(N,H,L);
 			corrected = true;
 		}
-
-
+		else if(H <= L)
+		{
+			//System.out.println("Has been Corrected 2");
+			setRoomValues(N,H,L);
+			corrected = true;
+		}
 		return corrected;
 	}
 
 	public boolean addModRoomsButton(String N, String L, String H)
 	{
 		boolean added = false;
-		System.out.println("Add Modify Room Buttons");
+		//System.out.println("Add Modify Room Buttons");
 
 		int low = Integer.parseInt(L);
 		int high = Integer.parseInt(H);
-
-		if(correctRange(low,high))
+				
+		boolean cR = correctRange(N,low,high);
+		if(cR)
 		{
 			System.out.println("Corrected");
 		}
 
 		if(N.equals("") || N.equals(" "))
 		{
-			System.out.println("Blank");
-			//Need to create room object, then get lowerBound and upperBound
-			//to compare to current low and high end to see if modify necessary
+			//System.out.println("Blank");
 			boolean comapre = false;
 
 			String modRoom = roomBox.getSelectedItem().toString();
@@ -314,46 +313,45 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 			if(lowCompare.equalsIgnoreCase(lowEnd) && highCompare.equalsIgnoreCase(highEnd))
 			{
-				return added;
+				added = false;
 			}
 			else
 			{
-
 				comapre = newRoom.removeRoom(modRoom);
 				if(comapre == true)
 				{
 					newRoom.createRoom(modRoom, lowEnd, highEnd);
+					added = true;
 				}
-				added = false;
+				else
+				{
+					added = false;
+				}
 			}
-
 		}
 		else
 		{
-			System.out.println("text not null");
-
-			newRoom.createRoom(N, L, H);
-			roomBox.addItem(N);
-			added = true;
+			//System.out.println("text not null");
+			if(newRoom.getRoom(N) == null)
+			{
+				newRoom.createRoom(N, L, H);
+				roomBox.addItem(N);
+				added = true;
+			}
+			else if(roomName.getText().equalsIgnoreCase(N))
+			{
+				addModRoomsButton("",L, H);
+			}
 		}
-
 		return added;
-
-	}
-
-	public void setTempValues(int lo, int hi)
-	{
-		System.out.println("Setting temprature values");
-		tempModel.setValue(lo);
-		tempModel2.setValue(hi);
 	}
 
 	public void setRoomValues(String na, int lo, int hi)
 	{
 		System.out.println("Setting all room values");
+		roomName.setText(na);
 		tempModel.setValue(lo);
 		tempModel2.setValue(hi);
-		roomName.setText(na);
 	}
 
 
