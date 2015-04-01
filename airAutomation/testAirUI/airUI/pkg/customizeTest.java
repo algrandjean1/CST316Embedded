@@ -31,8 +31,10 @@ public class customizeTest
 	@Test
 	public void testCorrectRange() 
 	{
+		//Return false if nothing is wrong
 		assertFalse(c.correctRange("Alain", 66,75));
-		assertTrue(c.correctRange("Bryan", 75,85));
+		//Return True if 
+		assertTrue(c.correctRange("Bryan", 85,75));
 	}
 
 	/**
