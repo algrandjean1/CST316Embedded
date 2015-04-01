@@ -247,7 +247,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				String keyToget = roomBox.getSelectedItem().toString();
 				int setLow = Integer.parseInt(newRoom.getRoom(keyToget).getLowerBound());
 				int setHigh = Integer.parseInt(newRoom.getRoom(keyToget).getUpperBound());
-				System.out.println("Breaks?");
 				setRoomValues(keyToget, setLow, setHigh);
 				roomBox.revalidate();
 			}
@@ -294,7 +293,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 		int low = Integer.parseInt(L);
 		int high = Integer.parseInt(H);
-
+				
 		if(correctRange(N,low,high))
 		{
 			System.out.println("Corrected");
@@ -315,7 +314,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 			if(lowCompare.equalsIgnoreCase(lowEnd) && highCompare.equalsIgnoreCase(highEnd))
 			{
-				return added;
+				added = false;
 			}
 			else
 			{
@@ -335,10 +334,18 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		else
 		{
 			System.out.println("text not null");
-
-			newRoom.createRoom(N, L, H);
-			roomBox.addItem(N);
-			added = true;
+			
+			
+			if(newRoom.getRoom(N) == null)
+			{
+				newRoom.createRoom(N, L, H);
+				roomBox.addItem(N);
+				added = true;
+			}
+			else if(roomName.getText().equalsIgnoreCase(N))
+			{
+				addModRoomsButton("",L, H);
+			}
 		}
 
 		return added;
