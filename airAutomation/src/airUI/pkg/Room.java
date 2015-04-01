@@ -36,24 +36,23 @@ public class Room implements IDataReceiveListener {
 	private String name, lowerBound, upperBound;
 	private static Hashtable<String, Room> roomList = new Hashtable<String, Room>();
 	
-	public void setTemperature(String temperature) {
+    public void setTemperature(String temperature) {
 		this.temperature = temperature;
 	}
-
+    
 	public void setHumidity(String humidity) {
 		this.humidity = humidity;
 	}
-
+    
 	public void setCarbonDioxide(String carbonDioxide) {
 		this.carbonDioxide = carbonDioxide;
 	}
-
+    
 	public void setMethane(String methane) {
 		this.methane = methane;
 	}
 
-
-	/**
+     /**
 	 *constructor for new Room 
 	 * @param name name of new room
 	 * @param lowerBound lower boundary of temperature to be set
@@ -114,11 +113,12 @@ public class Room implements IDataReceiveListener {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-	} // end constructor
+	}
 
 	/**
 	 *creates new room object with the name, upper, and lower boundary for temperature reading
-	 * @param name name of room to add to hashtable
+	 * @param name name of room to add to hashtable	} // end constructor
+
 	 * @param lowerBound lower boundary for temperature to be set
 	 * @param upperBound upper boundary of temperature to be set
 	 */
