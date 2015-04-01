@@ -1,13 +1,13 @@
 package airUI.pkg;
 
+
 //layout for comments
 
 /*
-*****************************************************************************************************************
-*
-*****************************************************************************************************************
-*/
-
+ *****************************************************************************************************************
+ *
+ *****************************************************************************************************************
+ */
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +28,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerListModel;
 import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -38,7 +37,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
 	
 	Properties props;
-	//Room newRoom;
+	Room newRoom;
     
 	int TEMPRANGE = 27;
 	int TIMERANGE = 49;
@@ -60,7 +59,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	protected JLabel newR;
     
 	protected JTextField roomName;
-	//, roomTemp, roomMethane, roomHumid, roomCO2;
     
 	protected JSpinner lowTemp;
 	protected JSpinner highTemp;
@@ -72,16 +70,12 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	protected SpinnerListModel timeModel;
 	protected SpinnerListModel timeModel2;
     
-	protected JComboBox roomBox;
+	protected JComboBox<String> roomBox;
 	protected JButton addModRooms;
 	protected JButton backButton;
 	
 	protected MainDriver driver;
 	protected Room r;
-	private JTextField roomTemp;
-	private JTextField roomCO2;
-	private JTextField roomHumid;
-	private JTextField roomMethane;
     
 	public Customize(MainDriver driver)
 	{
@@ -99,17 +93,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		newR = new JLabel("New Room Name: ");
         
 		roomName = new JTextField();
-        roomName.setText("Room1");
-        
-        roomTemp = new JTextField();
-        roomMethane = new JTextField();
-        roomHumid = new JTextField();
-        roomCO2 = new JTextField();
-        
-        roomTemp.setText("0");
-        roomMethane.setText("0");
-        roomHumid.setText("0");
-        roomCO2.setText("0");
         
 		addModRooms = new JButton("Add/Modify");
 		backButton = new JButton("Back");
@@ -121,7 +104,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		
 		
 		//roomModel = new DefaultComboBoxModel(roomList);
-		roomBox = new JComboBox();
+		roomBox = new JComboBox<String>();
         
 		//this is to fill in for the Temperature settings range
 		int start = 60;
@@ -188,7 +171,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	{
 		//Window
 		mainWin.setSize(600, 600);
-		mainWin.getContentPane().add(mainPan);
+		mainWin.add(mainPan);
         
 		//Panel on the window
 		mainPan.setLayout(null);
@@ -226,7 +209,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		//the textfield that is blank for new Rooms
 		roomName.setBounds(295,150,120,30);
 		mainPan.add(roomName);
-		
         
 		//the button add or modify a rooms
 		addModRooms.setBounds(430,150,120,30);
@@ -235,7 +217,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
         
         
 		//the label "Sleep Schedule: "
-		SleepSch.setBounds(172,221, 150, 30);
+		SleepSch.setBounds(170,200, 150, 30);
 		mainPan.add(SleepSch);
         
 		//the Spinner on the left for time
@@ -253,42 +235,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		//the back button
 		backButton.setBounds(300,300,60,30);
 		mainPan.add(backButton);
-		
-		JLabel lblTemperature = new JLabel("Temperature");
-		lblTemperature.setBounds(20, 193, 80, 14);
-		mainPan.add(lblTemperature);
-		
-		roomTemp = new JTextField();
-		roomTemp.setBounds(105, 190, 86, 20);
-		mainPan.add(roomTemp);
-		roomTemp.setColumns(10);
-		
-		JLabel lblNewLabel = new JLabel("CO2");
-		lblNewLabel.setBounds(201, 191, 46, 14);
-		mainPan.add(lblNewLabel);
-		
-		roomCO2 = new JTextField();
-		roomCO2.setBounds(254, 191, 86, 20);
-		mainPan.add(roomCO2);
-		roomCO2.setColumns(10);
-		
-		JLabel lblNewLabel_1 = new JLabel("Humidity");
-		lblNewLabel_1.setBounds(350, 191, 46, 14);
-		mainPan.add(lblNewLabel_1);
-		
-		roomHumid = new JTextField();
-		roomHumid.setBounds(406, 191, 86, 20);
-		mainPan.add(roomHumid);
-		roomHumid.setColumns(10);
-		
-		JLabel lblNewLabel_2 = new JLabel("Methane");
-		lblNewLabel_2.setBounds(420, 229, 46, 14);
-		mainPan.add(lblNewLabel_2);
-		
-		roomMethane = new JTextField();
-		roomMethane.setBounds(476, 226, 86, 20);
-		mainPan.add(roomMethane);
-		roomMethane.setColumns(10);
 		backButton.addActionListener(driver);
         
 	}
@@ -304,7 +250,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		if(e.getSource() == addModRooms)
 		{
 			String lowTempRead = lowTemp.getModel().toString();
-			//roomName.setText(lowTempRead);
+			roomName.setText(lowTempRead);
 			addModRoomsButton();
 		}
         
@@ -353,14 +299,10 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String nameOfRoom = roomName.getText();
 			String lowEnd = lowTemp.getValue().toString();
 			String highEnd = highTemp.getValue().toString();
-			Room room = Room.createRoom(nameOfRoom, lowEnd, highEnd);
-			room.setCarbonDioxide(roomCO2.getText());
-			room.setTemperature(roomTemp.getText());
-			room.setHumidity(roomHumid.getText());
-			room.setMethane(roomMethane.getText());
+			newRoom.createRoom(nameOfRoom, lowEnd, highEnd);
 			
-			int sizeOfListRoom = Room.getSize();
-			ArrayList<String> roomList = Room.getroomList();
+			int sizeOfListRoom = newRoom.getSize();
+			ArrayList<String> roomList = newRoom.getroomList();
 			
 			if(sizeOfListRoom == roomList.size())
 			{
@@ -379,10 +321,9 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String highEnd = highTemp.getValue().toString();
 			String modRoom = roomName.getText();
             
-			if(Room.removeRoom(modRoom) == true)
+			if(newRoom.removeRoom(modRoom) == true)
 			{
-				Room.createRoom(modRoom, lowEnd, highEnd);
-				
+				newRoom.createRoom(modRoom, lowEnd, highEnd);
 				
 			}
 			
