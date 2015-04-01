@@ -6,6 +6,7 @@ package airUI.pkg;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,9 +28,10 @@ import com.digi.xbee.api.models.XBeeMessage;
 /**
  * Room object with sensor data
  */
-public class Room implements IDataReceiveListener {
+public class Room implements IDataReceiveListener
+{
 	private XBeeHandler xbeeHandler;
-	private RemoteXBeeDevice dragon;	
+	private RemoteXBeeDevice dragon;
 	private Properties roomProps, userProps;
 	private String tempThresholdLow, tempThresholdHigh, humidityThresholdLow, humidityThresholdHigh, carbonDioxideThreshold, methaneThreshold;
 	private String temperature, humidity, carbonDioxide, methane;
@@ -54,6 +56,8 @@ public class Room implements IDataReceiveListener {
 
      /**
 	 *constructor for new Room 
+	/**
+	 *constructor for new Room
 	 * @param name name of new room
 	 * @param lowerBound lower boundary of temperature to be set
 	 * @param upperBound upper boundary of temperature to be set
@@ -61,17 +65,17 @@ public class Room implements IDataReceiveListener {
 	private Room(String name, String lowerBound, String upperBound) {
 		try {
 			// initialize user properties from default
-			Properties userProps = new Properties(roomProps);
-
+			userProps = new Properties(roomProps);
 			this.name = name;
 			this.lowerBound = lowerBound;
 			this.upperBound = upperBound;
 
-			// reads in threshold values to base the automation of events 
+			// reads in threshold values to base the automation of events
 			// default settings for a room
 			try {
+				//File file = new File("room.properties");
 				this.roomProps = new Properties();
-				FileInputStream in = new FileInputStream("room.properties");
+				FileInputStream in = new FileInputStream("airAutomation/room.properties");
 				roomProps.load(in);
 				in.close();
 
@@ -81,15 +85,14 @@ public class Room implements IDataReceiveListener {
 				this.humidityThresholdHigh = roomProps.getProperty("humidityThresholdHigh");
 				this.carbonDioxideThreshold = roomProps.getProperty("carbonDioxideThreshold");
 				this.methaneThreshold = roomProps.getProperty("methaneThreshold");
-
 			} catch(IOException ioex) {
 				ioex.printStackTrace();
 			}
-
 			// load properties from last invocation
-			FileInputStream in = new FileInputStream("user.properties");
-			userProps.load(in);
-			in.close();
+			FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
+			userProps.load(inIt);
+			inIt.close();
+
 
 			// set the properties from user input
 			userProps.setProperty("roomName", name);
@@ -122,10 +125,12 @@ public class Room implements IDataReceiveListener {
 	 * @param lowerBound lower boundary for temperature to be set
 	 * @param upperBound upper boundary of temperature to be set
 	 */
-	public static Room createRoom(String name, String lowerBound, String upperBound) {
+	public static Room createRoom(String name, String lowerBound, String upperBound)
+	{
 		Room newRoom;
 
-		if (roomList.containsKey(name)) {
+		if (roomList.containsKey(name))
+		{
 			newRoom = roomList.get(name);
 		} else {
 			newRoom = new Room(name, lowerBound, upperBound);
@@ -166,7 +171,9 @@ public class Room implements IDataReceiveListener {
 			xbeeHandler.getXbee().removeDataListener(dataReceiveListener);
 			dragon.setDestinationAddress(priorDestination);
 			xbeeHandler.getXbee().close();
-		} catch(Exception e) {
+		}
+		catch(Exception e)
+		{
 			e.printStackTrace();
 		}
 	}
@@ -176,8 +183,10 @@ public class Room implements IDataReceiveListener {
 	 * @param name name of room
 	 * @return room object if found
 	 */
-	public static Room getRoom(String name) {
-		if (roomList.containsKey(name)) {
+	public static Room getRoom(String name)
+	{
+		if (roomList.containsKey(name))
+		{
 			return roomList.get(name);
 		} // end if
 
@@ -187,17 +196,20 @@ public class Room implements IDataReceiveListener {
 	 * creates ArrayList of room names from hashtable
 	 * @return ArrayList of room names
 	 */
-	public static ArrayList<String> getroomList() {
+	public static ArrayList<String> getroomList()
+	{
 		return Collections.list(roomList.keys());
 	}
 
 	/**
-	 * locates the rom specified and removes it
+	 * locates the room specified and removes it
 	 * @param name the name of the room to remove
 	 * @return true if removed, false otherwise
 	 */
-	public static Boolean removeRoom(String name) {
-		if (roomList.containsKey(name)) {
+	public static Boolean removeRoom(String name)
+	{
+		if (roomList.containsKey(name))
+		{
 			roomList.remove(name);
 			System.out.println("Removed: " + name + " from the room List.");
 
@@ -207,21 +219,16 @@ public class Room implements IDataReceiveListener {
 		return false;
 	}
 
-	public static int getSize() {
+	public static int getSize()
+	{
 		return roomList.size();
 	}
-
-	/**
-	 * @return the lowerBound
-	 */
-	public String getLowerBound() {
+	
+	public String getLowerBound(){
 		return lowerBound;
 	}
-
-	/**
-	 * @return the upperBound
-	 */
-	public String getUpperBound() {
+	
+	public String getUpperBound(){
 		return upperBound;
 	}
 
@@ -235,33 +242,27 @@ public class Room implements IDataReceiveListener {
 	/**
 	 * @return the humidity
 	 */
-	public String getHumidity() {
+	public String getHumidity()
+	{
 		return humidity;
 	}
 
 	/**
 	 * @return the carbonDioxide
 	 */
-	public String getCarbonDioxide() {
+	public String getCarbonDioxide()
+	{
 		return carbonDioxide;
 	}
 
 	/**
 	 * @return the methane
 	 */
-	public String getMethane() {
+	public String getMethane()
+	{
 		return methane;
 	}
 
 
-	public static void main(String[] args) throws Exception {
-		try {
-			Room room = createRoom("bryan", "65", "85");
-			System.out.println("Room value: " + room.toString());
-
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 }

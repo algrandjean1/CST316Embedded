@@ -3,11 +3,6 @@ package airUI.pkg;
 
 //layout for comments
 
-/*
- *****************************************************************************************************************
- *
- *****************************************************************************************************************
- */
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -27,7 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerListModel;
-import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -35,21 +29,22 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 {
 	Date time = new Date();
 	SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
-	
+
 	Properties props;
 	Room newRoom;
-    
-	int TEMPRANGE = 27;
+
+	int CURRENTTEMP = 60;
+	int CURRENTTEMP2 = 61;
 	int TIMERANGE = 49;
-    
+
 	ArrayList<String> tempRange = new ArrayList<String>();
 	ArrayList<String> tempRange2 = new ArrayList<String>();
 	ArrayList<String> timeRange = new ArrayList<String>();
 	ArrayList<String> timeRange2 = new ArrayList<String>();
-    
+
 	protected JFrame mainWin;
 	protected JPanel mainPan;
-    
+
 	protected JLabel rLabel;
 	protected JLabel Temp;
 	protected JLabel To;
@@ -57,33 +52,31 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	protected JLabel SleepSch;
 	protected JLabel RPre;
 	protected JLabel newR;
-    
+
 	protected JTextField roomName;
-    
 	protected JSpinner lowTemp;
 	protected JSpinner highTemp;
 	protected JSpinner lowTime;
 	protected JSpinner highTime;
-    
-	protected SpinnerListModel tempModel;
-	protected SpinnerListModel tempModel2;
+
+	protected SpinnerNumberModel tempModel;
+	protected SpinnerNumberModel tempModel2;
+
 	protected SpinnerListModel timeModel;
 	protected SpinnerListModel timeModel2;
-    
 	protected JComboBox<String> roomBox;
 	protected JButton addModRooms;
 	protected JButton backButton;
-	
+
 	protected MainDriver driver;
 	protected Room r;
-    
 	public Customize(MainDriver driver)
 	{
 		this.driver = driver;
-		
+
 		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
-        
+
 		Temp = new JLabel("Temp: ");
 		rLabel = new JLabel("Rooms: ");
 		To = new JLabel(" to ");
@@ -91,40 +84,24 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		SleepSch = new JLabel("Sleep Schedule: ");
 		RPre = new JLabel("Room's Preset: ");
 		newR = new JLabel("New Room Name: ");
-        
+
 		roomName = new JTextField();
-        
+
+		tempModel = new SpinnerNumberModel(CURRENTTEMP, 60, 85, 1);
+		tempModel2 = new SpinnerNumberModel(CURRENTTEMP2, 60, 85, 1);
+
+		lowTemp = new JSpinner(tempModel);
+		highTemp = new JSpinner(tempModel2);
+
+		roomBox = new JComboBox<String>();
+
 		addModRooms = new JButton("Add/Modify");
 		backButton = new JButton("Back");
-        
-		lowTime = new JSpinner();
-		highTime = new JSpinner();
-		lowTemp = new JSpinner();
-		highTemp = new JSpinner();
-		
-		
-		//roomModel = new DefaultComboBoxModel(roomList);
-		roomBox = new JComboBox<String>();
-        
-		//this is to fill in for the Temperature settings range
-		int start = 60;
-		tempRange.add("None");
-		tempRange2.add("None");
-		for(int i = 1; i < TEMPRANGE; i++)
-		{
-			tempRange.add(Integer.toString(start));
-			tempRange2.add(Integer.toString(start));
-			start++;
-		}
-		
-		
-		tempModel = new SpinnerListModel(tempRange);
-		tempModel = new SpinnerListModel(tempRange2);
-		
-        
+
+		//This is used to fill in the time
+		int k = 1;
 		String am = "AM";
 		String pm = "PM";
-		int k = 1;
 		String odd = "00";
 		String even = "30";
 		timeRange.add("0:00");
@@ -159,180 +136,226 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				}
 			}
 		}
-        
 		timeModel = new SpinnerListModel(timeRange);
 		timeModel2 = new SpinnerListModel(timeRange2);
-		
+
+		lowTime = new JSpinner(timeModel);
+		highTime = new JSpinner(timeModel2);
+
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layOut();
 	}
-    
+
 	public void layOut()
 	{
 		//Window
 		mainWin.setSize(600, 600);
 		mainWin.add(mainPan);
-        
+
 		//Panel on the window
 		mainPan.setLayout(null);
 		mainPan.setSize(600, 600);
-        
+
 		//The label "Room: "
 		rLabel.setBounds(10,100,80,30);
 		mainPan.add(rLabel);
-        
+
 		//the combobox with the Rooms
 		roomBox.setBounds(60, 100, 100, 25);
 		roomBox.addItemListener(this);
 		mainPan.add(roomBox);
-        
+
 		//the label "Temp: "
 		Temp.setBounds(170,100,60,30);
 		mainPan.add(Temp);
-        
+
 		//the Spinner on left for temp
 		lowTemp.setBounds(220, 100, 120, 30);
 		mainPan.add(lowTemp);
-        
+
 		//the label " to "
 		To.setBounds(350,100,40,30);
 		mainPan.add(To);
-        
+
 		//the Spinner on the right for temp
 		highTemp.setBounds(420,100,120,30);
 		mainPan.add(highTemp);
-        
+
 		//The label "New Rooms Name: "
 		newR.setBounds(170, 150, 120, 30);
 		mainPan.add(newR);
-        
+
 		//the textfield that is blank for new Rooms
 		roomName.setBounds(295,150,120,30);
 		mainPan.add(roomName);
-        
+
 		//the button add or modify a rooms
 		addModRooms.setBounds(430,150,120,30);
 		mainPan.add(addModRooms);
 		addModRooms.addActionListener(this);
-        
-        
+
 		//the label "Sleep Schedule: "
 		SleepSch.setBounds(170,200, 150, 30);
 		mainPan.add(SleepSch);
-        
+
 		//the Spinner on the left for time
 		lowTime.setBounds(170,250,80,30);
 		mainPan.add(lowTime);
-        
+
 		//Second label " to "
 		To2.setBounds(260,250,40,30);
 		mainPan.add(To2);
-        
+
 		//the spinner on the right for time
 		highTime.setBounds(290,250,80,30);
 		mainPan.add(highTime);
-        
+
 		//the back button
 		backButton.setBounds(300,300,60,30);
 		mainPan.add(backButton);
 		backButton.addActionListener(driver);
-        
+
 	}
-    /*
-     public static void main(String[] args)
-     {
-     Customize run = new Customize();
-     run.setUp();
-     }
-     */
+
 	public void actionPerformed(ActionEvent e)
 	{
+		//System.out.println("Action Performed");
 		if(e.getSource() == addModRooms)
 		{
-			String lowTempRead = lowTemp.getModel().toString();
-			roomName.setText(lowTempRead);
-			addModRoomsButton();
+			String nameOfRoom = roomName.getText();
+			String lowEnd = lowTemp.getValue().toString();
+			String highEnd = highTemp.getValue().toString();
+
+			addModRoomsButton(nameOfRoom, lowEnd, highEnd);
 		}
-        
+
 	}
-    
+
 	public void itemStateChanged(ItemEvent event)
 	{
+		//System.out.println("item state change");
 		if(event.getStateChange() == ItemEvent.SELECTED)
 		{
 			Object compare = event.getSource();
 			if(roomBox==compare)
 			{
+				String keyToget = roomBox.getSelectedItem().toString();
+				int setLow = Integer.parseInt(newRoom.getRoom(keyToget).getLowerBound());
+				int setHigh = Integer.parseInt(newRoom.getRoom(keyToget).getUpperBound());
+				setRoomValues(keyToget, setLow, setHigh);
 				roomBox.revalidate();
 			}
 		}
 	}
-	
+
+	@Override
 	public void stateChanged(ChangeEvent e)
 	{
-		if (tempModel instanceof SpinnerListModel || tempModel2 instanceof SpinnerListModel)
-		{
-            correctRange();
-        }
-	}
-	
-	
-	public void correctRange()
-	{
+		//System.out.println("State change");
+		String name = roomName.getText();
 		int lowEnd = Integer.parseInt(lowTemp.getValue().toString());
 		int highEnd = Integer.parseInt(highTemp.getValue().toString());
-		
-		if(lowEnd >= highEnd)
+
+		if (tempModel instanceof SpinnerNumberModel || tempModel2 instanceof SpinnerNumberModel)
 		{
-			tempModel2.setValue(tempModel.getNextValue());
-		}
-		else if(highEnd <= lowEnd)
-		{
-			tempModel.setValue(tempModel2.getPreviousValue());
-		}
+			//System.out.println("go inside state change");
+            correctRange(name, lowEnd, highEnd);
+        }
 	}
-	
-	public void addModRoomsButton()
+
+
+	public boolean correctRange(String N, int L, int H)
 	{
-		if(roomName.getText() != null)
+		boolean corrected = false;
+		//System.out.println("Correct Range");
+		if(L >= H)
 		{
-			String nameOfRoom = roomName.getText();
+			//System.out.println("Has been Corrected 1");
+			setRoomValues(N,H,L);
+			corrected = true;
+		}
+		else if(H <= L)
+		{
+			//System.out.println("Has been Corrected 2");
+			setRoomValues(N,H,L);
+			corrected = true;
+		}
+		return corrected;
+	}
+
+	public boolean addModRoomsButton(String N, String L, String H)
+	{
+		boolean added = false;
+		//System.out.println("Add Modify Room Buttons");
+
+		int low = Integer.parseInt(L);
+		int high = Integer.parseInt(H);
+				
+		boolean cR = correctRange(N,low,high);
+		if(cR)
+		{
+			System.out.println("Corrected");
+		}
+
+		if(N.equals("") || N.equals(" "))
+		{
+			//System.out.println("Blank");
+			boolean comapre = false;
+
+			String modRoom = roomBox.getSelectedItem().toString();
+			String lowCompare = newRoom.getRoom(modRoom).getLowerBound();
+			String highCompare = newRoom.getRoom(modRoom).getUpperBound();
 			String lowEnd = lowTemp.getValue().toString();
 			String highEnd = highTemp.getValue().toString();
-			newRoom.createRoom(nameOfRoom, lowEnd, highEnd);
-			
-			int sizeOfListRoom = newRoom.getSize();
-			ArrayList<String> roomList = newRoom.getroomList();
-			
-			if(sizeOfListRoom == roomList.size())
+
+			if(lowCompare.equalsIgnoreCase(lowEnd) && highCompare.equalsIgnoreCase(highEnd))
 			{
-				for(int i = 0; i < sizeOfListRoom;++i)
+				added = false;
+			}
+			else
+			{
+				comapre = newRoom.removeRoom(modRoom);
+				if(comapre == true)
 				{
-					roomBox.addItem(roomList.get(i));
+					newRoom.createRoom(modRoom, lowEnd, highEnd);
+					added = true;
+				}
+				else
+				{
+					added = false;
 				}
 			}
 		}
 		else
 		{
-			//Need to create room object, then get lowerBound and upperBound
-			//to compare to current low and high end to see if modify necessary
-			
-			String lowEnd = lowTemp.getValue().toString();
-			String highEnd = highTemp.getValue().toString();
-			String modRoom = roomName.getText();
-            
-			if(newRoom.removeRoom(modRoom) == true)
+			//System.out.println("text not null");
+			if(newRoom.getRoom(N) == null)
 			{
-				newRoom.createRoom(modRoom, lowEnd, highEnd);
-				
+				newRoom.createRoom(N, L, H);
+				roomBox.addItem(N);
+				added = true;
 			}
-			
+			else if(roomName.getText().equalsIgnoreCase(N))
+			{
+				addModRoomsButton("",L, H);
+			}
 		}
+		return added;
 	}
+
+	public void setRoomValues(String na, int lo, int hi)
+	{
+		System.out.println("Setting all room values");
+		roomName.setText(na);
+		tempModel.setValue(lo);
+		tempModel2.setValue(hi);
+	}
+
+
 	public void showcustomize(){
 		mainWin.setVisible(true);
 	}
-    
+
 	public void hidecustomize(){
 		mainWin.setVisible(false);
 	}
