@@ -23,20 +23,21 @@ import javax.swing.event.ChangeListener;
 
 public class Customize implements ActionListener, ItemListener, ChangeListener
 {
-	Date time = new Date();
-	SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+	//Date time = new Date();
+	//SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
 
 	Properties props;
 	Room newRoom;
 
 	int CURRENTTEMP = 60;
 	int CURRENTTEMP2 = 61;
-	int TIMERANGE = 49;
+	int LOWRANGE = 60;
+	int HIGHRANGE = 85;
+	int STEPS = 1;
+	//int TIMERANGE = 49;
 
-	ArrayList<String> tempRange = new ArrayList<String>();
-	ArrayList<String> tempRange2 = new ArrayList<String>();
-	ArrayList<String> timeRange = new ArrayList<String>();
-	ArrayList<String> timeRange2 = new ArrayList<String>();
+	//ArrayList<String> timeRange = new ArrayList<String>();
+	//ArrayList<String> timeRange2 = new ArrayList<String>();
 
 	protected JFrame mainWin;
 	protected JPanel mainPan;
@@ -44,8 +45,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	protected JLabel rLabel;
 	protected JLabel Temp;
 	protected JLabel To;
-	protected JLabel To2;
-	protected JLabel SleepSch;
+	//protected JLabel To2;
+	//protected JLabel SleepSch;
 	protected JLabel RPre;
 	protected JLabel newR;
 
@@ -58,8 +59,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	protected SpinnerNumberModel tempModel;
 	protected SpinnerNumberModel tempModel2;
 
-	protected SpinnerListModel timeModel;
-	protected SpinnerListModel timeModel2;
+	//protected SpinnerListModel timeModel;
+	//protected SpinnerListModel timeModel2;
 	protected JComboBox<String> roomBox;
 	protected JButton addModRooms;
 	protected JButton backButton;
@@ -74,18 +75,18 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
 
-		Temp = new JLabel("Temp: ");
+		Temp = new JLabel("Temperature: ");
 		rLabel = new JLabel("Rooms: ");
 		To = new JLabel(" to ");
-		To2 = new JLabel(" to ");
-		SleepSch = new JLabel("Sleep Schedule: ");
+		//To2 = new JLabel(" to ");
+		//SleepSch = new JLabel("Sleep Schedule: ");
 		RPre = new JLabel("Room's Preset: ");
 		newR = new JLabel("New Room Name: ");
 
 		roomName = new JTextField();
 
-		tempModel = new SpinnerNumberModel(CURRENTTEMP, 60, 85, 1);
-		tempModel2 = new SpinnerNumberModel(CURRENTTEMP2, 60, 85, 1);
+		tempModel = new SpinnerNumberModel(CURRENTTEMP, LOWRANGE, HIGHRANGE, STEPS);
+		tempModel2 = new SpinnerNumberModel(CURRENTTEMP2, LOWRANGE, HIGHRANGE, STEPS);
 
 		lowTemp = new JSpinner(tempModel);
 		highTemp = new JSpinner(tempModel2);
@@ -95,6 +96,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		addModRooms = new JButton("Add/Modify");
 		backButton = new JButton("Back");
 
+		/*
 		//This is used to fill in the time
 		int k = 1;
 		String am = "AM";
@@ -138,7 +140,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 		lowTime = new JSpinner(timeModel);
 		highTime = new JSpinner(timeModel2);
-
+		*/
+		
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layOut();
 	}
@@ -162,20 +165,20 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		roomBox.addItemListener(this);
 		mainPan.add(roomBox);
 
-		//the label "Temp: "
-		Temp.setBounds(170,100,60,30);
+		//the label "Temperature: "
+		Temp.setBounds(170,100,90,30);
 		mainPan.add(Temp);
 
 		//the Spinner on left for temp
-		lowTemp.setBounds(220, 100, 120, 30);
+		lowTemp.setBounds(250, 100, 120, 30);
 		mainPan.add(lowTemp);
 
 		//the label " to "
-		To.setBounds(350,100,40,30);
+		To.setBounds(375,100,25,30);
 		mainPan.add(To);
 
 		//the Spinner on the right for temp
-		highTemp.setBounds(420,100,120,30);
+		highTemp.setBounds(405,100,120,30);
 		mainPan.add(highTemp);
 
 		//The label "New Rooms Name: "
@@ -190,7 +193,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		addModRooms.setBounds(430,150,120,30);
 		mainPan.add(addModRooms);
 		addModRooms.addActionListener(this);
-
+		
+		/*
 		//the label "Sleep Schedule: "
 		SleepSch.setBounds(170,200, 150, 30);
 		mainPan.add(SleepSch);
@@ -206,7 +210,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		//the spinner on the right for time
 		highTime.setBounds(290,250,80,30);
 		mainPan.add(highTime);
-
+		*/
+		
 		//the back button
 		backButton.setBounds(300,300,60,30);
 		mainPan.add(backButton);
