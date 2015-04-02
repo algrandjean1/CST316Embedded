@@ -1,9 +1,5 @@
 package airUI.pkg;
 
-
-//layout for comments
-
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -70,6 +66,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 	protected MainDriver driver;
 	protected Room r;
+	
 	public Customize(MainDriver driver)
 	{
 		this.driver = driver;
@@ -267,16 +264,10 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	public boolean correctRange(String N, int L, int H)
 	{
 		boolean corrected = false;
-		//System.out.println("Correct Range");
-		if(L >= H)
+		System.out.println("Correct Range");
+		if(L >= H || H <= L)
 		{
-			//System.out.println("Has been Corrected 1");
-			setRoomValues(N,H,L);
-			corrected = true;
-		}
-		else if(H <= L)
-		{
-			//System.out.println("Has been Corrected 2");
+			System.out.println("Has been Corrected");
 			setRoomValues(N,H,L);
 			corrected = true;
 		}
@@ -286,20 +277,23 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	public boolean addModRoomsButton(String N, String L, String H)
 	{
 		boolean added = false;
-		//System.out.println("Add Modify Room Buttons");
+		System.out.println("Add Modify Room Buttons");
+		
+		String n = N;
+		String l = L;
+		String h = H;
 
-		int low = Integer.parseInt(L);
-		int high = Integer.parseInt(H);
-				
-		boolean cR = correctRange(N,low,high);
-		if(cR)
+		int low = Integer.parseInt(l);
+		int high = Integer.parseInt(h);
+	
+		if(correctRange(N,low,high))
 		{
-			System.out.println("Corrected");
+			addModRoomsButton(n,h,l);
 		}
 
 		if(N.equals("") || N.equals(" "))
 		{
-			//System.out.println("Blank");
+			System.out.println("Blank");
 			boolean comapre = false;
 
 			String modRoom = roomBox.getSelectedItem().toString();
@@ -317,6 +311,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				comapre = newRoom.removeRoom(modRoom);
 				if(comapre == true)
 				{
+					correctRange(N,low,high);
 					newRoom.createRoom(modRoom, lowEnd, highEnd);
 					added = true;
 				}
@@ -328,7 +323,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		}
 		else
 		{
-			//System.out.println("text not null");
+			System.out.println("text not null");
 			if(newRoom.getRoom(N) == null)
 			{
 				newRoom.createRoom(N, L, H);
