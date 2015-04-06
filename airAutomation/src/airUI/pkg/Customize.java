@@ -4,6 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,6 +41,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 	//ArrayList<String> timeRange = new ArrayList<String>();
 	//ArrayList<String> timeRange2 = new ArrayList<String>();
+	ArrayList<String> keys = new ArrayList<String>();
 
 	protected JFrame mainWin;
 	protected JPanel mainPan;
@@ -351,6 +355,42 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		tempModel2.setValue(hi);
 	}
 
+	
+	public void readUserSettings()
+	{
+		try
+		{
+		// load properties from last invocation
+		FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
+		props.load(inIt);
+		inIt.close();
+		
+		
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeUserSettings(String na, String lb, String ub)
+	{
+		try
+		{
+			FileOutputStream out = new FileOutputStream("user.properties");
+			
+			props.setProperty("roomName", na);
+			props.setProperty("tempThresholdLow", lb);
+			props.setProperty("tempThresholdHigh", ub);
+			
+			props.store(out, "User settings saved");
+			out.close();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	public void showcustomize(){
 		mainWin.setVisible(true);

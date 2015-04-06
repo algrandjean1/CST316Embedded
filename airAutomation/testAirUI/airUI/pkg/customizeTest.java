@@ -33,7 +33,7 @@ public class customizeTest
 	{
 		//Return false if nothing is wrong
 		assertFalse(c.correctRange("Alain", 66,75));
-		//Return True if 
+		//Return True if low is higher than high or high is lower than low
 		assertTrue(c.correctRange("Bryan", 85,75));
 	}
 
@@ -47,8 +47,12 @@ public class customizeTest
 		r.createRoom("Temo", 68,78);
 		r.createRoom("Bryan", 65,80);
 		r.createRoom("Alain", 60,70);
+		
+		//return true is added a new user without problems
 		assertTrue(c.addModRoomsButton("Gary", 63,73));
+		//return true if able to modify user ranges
 		assertTrue(c.addModRoomsButton("Fatimah", 63,73));
+		//return false if not need to modify existing model
 		assertFalse(c.addModRoomsButton("Temo", 68,78));
 	}
 
