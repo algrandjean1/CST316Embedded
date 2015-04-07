@@ -60,7 +60,7 @@
     <target name="test" depends="compile.test" description="Execute Unit Tests">
         <!-- Run Junit tests -->
     	<property name="junit.path" refid="test.class.path"/>
-        <junit printsummary="true" fork="true" haltonfailure="yes">
+        <junit printsummary="true" fork="true" haltonfailure="no">
             <classpath refid="test.class.path" />
             <classpath>
                 <pathelement location="${test.dir}" />
