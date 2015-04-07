@@ -1,13 +1,12 @@
 package airUI.pkg;
 
-
-//layout for comments
-
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,20 +26,22 @@ import javax.swing.event.ChangeListener;
 
 public class Customize implements ActionListener, ItemListener, ChangeListener
 {
-	Date time = new Date();
-	SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+	//Date time = new Date();
+	//SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
 
 	Properties props;
 	Room newRoom;
 
 	int CURRENTTEMP = 60;
 	int CURRENTTEMP2 = 61;
-	int TIMERANGE = 49;
+	int LOWRANGE = 60;
+	int HIGHRANGE = 85;
+	int STEPS = 1;
+	//int TIMERANGE = 49;
 
-	ArrayList<String> tempRange = new ArrayList<String>();
-	ArrayList<String> tempRange2 = new ArrayList<String>();
-	ArrayList<String> timeRange = new ArrayList<String>();
-	ArrayList<String> timeRange2 = new ArrayList<String>();
+	//ArrayList<String> timeRange = new ArrayList<String>();
+	//ArrayList<String> timeRange2 = new ArrayList<String>();
+	ArrayList<String> keys = new ArrayList<String>();
 
 	protected JFrame mainWin;
 	protected JPanel mainPan;
@@ -48,8 +49,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	protected JLabel rLabel;
 	protected JLabel Temp;
 	protected JLabel To;
-	protected JLabel To2;
-	protected JLabel SleepSch;
+	//protected JLabel To2;
+	//protected JLabel SleepSch;
 	protected JLabel RPre;
 	protected JLabel newR;
 
@@ -62,14 +63,15 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	protected SpinnerNumberModel tempModel;
 	protected SpinnerNumberModel tempModel2;
 
-	protected SpinnerListModel timeModel;
-	protected SpinnerListModel timeModel2;
+	//protected SpinnerListModel timeModel;
+	//protected SpinnerListModel timeModel2;
 	protected JComboBox<String> roomBox;
 	protected JButton addModRooms;
 	protected JButton backButton;
 
 	protected MainDriver driver;
 	protected Room r;
+	
 	public Customize(MainDriver driver)
 	{
 		this.driver = driver;
@@ -77,18 +79,18 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
 
-		Temp = new JLabel("Temp: ");
+		Temp = new JLabel("Temperature: ");
 		rLabel = new JLabel("Rooms: ");
 		To = new JLabel(" to ");
-		To2 = new JLabel(" to ");
-		SleepSch = new JLabel("Sleep Schedule: ");
+		//To2 = new JLabel(" to ");
+		//SleepSch = new JLabel("Sleep Schedule: ");
 		RPre = new JLabel("Room's Preset: ");
 		newR = new JLabel("New Room Name: ");
 
 		roomName = new JTextField();
 
-		tempModel = new SpinnerNumberModel(CURRENTTEMP, 60, 85, 1);
-		tempModel2 = new SpinnerNumberModel(CURRENTTEMP2, 60, 85, 1);
+		tempModel = new SpinnerNumberModel(CURRENTTEMP, LOWRANGE, HIGHRANGE, STEPS);
+		tempModel2 = new SpinnerNumberModel(CURRENTTEMP2, LOWRANGE, HIGHRANGE, STEPS);
 
 		lowTemp = new JSpinner(tempModel);
 		highTemp = new JSpinner(tempModel2);
@@ -98,6 +100,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		addModRooms = new JButton("Add/Modify");
 		backButton = new JButton("Back");
 
+		/*
 		//This is used to fill in the time
 		int k = 1;
 		String am = "AM";
@@ -141,7 +144,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 		lowTime = new JSpinner(timeModel);
 		highTime = new JSpinner(timeModel2);
-
+		*/
+		
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		layOut();
 	}
@@ -165,20 +169,20 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		roomBox.addItemListener(this);
 		mainPan.add(roomBox);
 
-		//the label "Temp: "
-		Temp.setBounds(170,100,60,30);
+		//the label "Temperature: "
+		Temp.setBounds(170,100,90,30);
 		mainPan.add(Temp);
 
 		//the Spinner on left for temp
-		lowTemp.setBounds(220, 100, 120, 30);
+		lowTemp.setBounds(250, 100, 120, 30);
 		mainPan.add(lowTemp);
 
 		//the label " to "
-		To.setBounds(350,100,40,30);
+		To.setBounds(375,100,25,30);
 		mainPan.add(To);
 
 		//the Spinner on the right for temp
-		highTemp.setBounds(420,100,120,30);
+		highTemp.setBounds(405,100,120,30);
 		mainPan.add(highTemp);
 
 		//The label "New Rooms Name: "
@@ -193,7 +197,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		addModRooms.setBounds(430,150,120,30);
 		mainPan.add(addModRooms);
 		addModRooms.addActionListener(this);
-
+		
+		/*
 		//the label "Sleep Schedule: "
 		SleepSch.setBounds(170,200, 150, 30);
 		mainPan.add(SleepSch);
@@ -209,7 +214,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		//the spinner on the right for time
 		highTime.setBounds(290,250,80,30);
 		mainPan.add(highTime);
-
+		*/
+		
 		//the back button
 		backButton.setBounds(300,300,60,30);
 		mainPan.add(backButton);
@@ -267,16 +273,10 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	public boolean correctRange(String N, int L, int H)
 	{
 		boolean corrected = false;
-		//System.out.println("Correct Range");
-		if(L >= H)
+		System.out.println("Correct Range");
+		if(L >= H || H <= L)
 		{
-			//System.out.println("Has been Corrected 1");
-			setRoomValues(N,H,L);
-			corrected = true;
-		}
-		else if(H <= L)
-		{
-			//System.out.println("Has been Corrected 2");
+			System.out.println("Has been Corrected");
 			setRoomValues(N,H,L);
 			corrected = true;
 		}
@@ -286,20 +286,23 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	public boolean addModRoomsButton(String N, String L, String H)
 	{
 		boolean added = false;
-		//System.out.println("Add Modify Room Buttons");
+		System.out.println("Add Modify Room Buttons");
+		
+		String n = N;
+		String l = L;
+		String h = H;
 
-		int low = Integer.parseInt(L);
-		int high = Integer.parseInt(H);
-				
-		boolean cR = correctRange(N,low,high);
-		if(cR)
+		int low = Integer.parseInt(l);
+		int high = Integer.parseInt(h);
+	
+		if(correctRange(N,low,high))
 		{
-			System.out.println("Corrected");
+			addModRoomsButton(n,h,l);
 		}
 
 		if(N.equals("") || N.equals(" "))
 		{
-			//System.out.println("Blank");
+			System.out.println("Blank");
 			boolean comapre = false;
 
 			String modRoom = roomBox.getSelectedItem().toString();
@@ -317,6 +320,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				comapre = newRoom.removeRoom(modRoom);
 				if(comapre == true)
 				{
+					correctRange(N,low,high);
 					newRoom.createRoom(modRoom, lowEnd, highEnd);
 					added = true;
 				}
@@ -328,7 +332,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		}
 		else
 		{
-			//System.out.println("text not null");
+			System.out.println("text not null");
 			if(newRoom.getRoom(N) == null)
 			{
 				newRoom.createRoom(N, L, H);
@@ -351,6 +355,42 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		tempModel2.setValue(hi);
 	}
 
+	
+	public void readUserSettings()
+	{
+		try
+		{
+		// load properties from last invocation
+		FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
+		props.load(inIt);
+		inIt.close();
+		
+		
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeUserSettings(String na, String lb, String ub)
+	{
+		try
+		{
+			FileOutputStream out = new FileOutputStream("user.properties");
+			
+			props.setProperty("roomName", na);
+			props.setProperty("tempThresholdLow", lb);
+			props.setProperty("tempThresholdHigh", ub);
+			
+			props.store(out, "User settings saved");
+			out.close();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	public void showcustomize(){
 		mainWin.setVisible(true);
