@@ -1,8 +1,9 @@
 /**
  * whitebox unit tests on the Room class 
  */
-package airAutomation.airUI.pkg;
+package testAirUI.airUI.pkg;
 
+import airUI.pkg.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
