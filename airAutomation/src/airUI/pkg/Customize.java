@@ -334,6 +334,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				{
 					correctRange(N,low,high);
 					newRoom.createRoom(modRoom, lowEnd, highEnd);
+					modifyKeys(keys, modRoom, lowEnd, highEnd);
+					populateRoomBox(keys);
 					added = true;
 					roomBox.revalidate();
 				}
@@ -349,6 +351,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			if(newRoom.getRoom(N) == null)
 			{
 				keys.add(newRoom.createRoom(N, L, H));
+				populateRoomBox(keys);
 				roomBox.revalidate();
 				added = true;
 			}
@@ -376,7 +379,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
 			props.load(inIt);
 			inIt.close();
-		
+			//to set array to populate roomBox and hashtable
 		
 		}
 		catch(IOException e)
@@ -394,7 +397,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String lowAndHigh = lb + "," + ub;
 			
 			props.setProperty(nameToSet, lowAndHigh);
-			
 			props.store(out, "User settings saved");
 			out.close();
 		}
@@ -425,7 +427,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		}
 	}
 	
-	public void modifyKeys(ArrayList<Room> mv, String toModName)
+	public void modifyKeys(ArrayList<Room> mv, String toModName, String newLow, String newHigh)
 	{
 		Room temp;
 		int SIZE = mv.size();
@@ -435,9 +437,9 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String name = temp.getName();
 			if(name.equalsIgnoreCase(toModName))
 			{
-				//remove whole room 
-				//then add the new room
-				;
+				mv.remove(i);
+				temp.removeRoom(toModName);
+				addModRoomsButton(toModName, newLow, newHigh);
 			}
 		}
 		
