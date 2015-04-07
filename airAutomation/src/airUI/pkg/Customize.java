@@ -41,7 +41,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 	//ArrayList<String> timeRange = new ArrayList<String>();
 	//ArrayList<String> timeRange2 = new ArrayList<String>();
-	ArrayList<String> keys = new ArrayList<String>();
+	ArrayList<Room> keys = new ArrayList<Room>();
 
 	protected JFrame mainWin;
 	protected JPanel mainPan;
@@ -65,9 +65,11 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 	//protected SpinnerListModel timeModel;
 	//protected SpinnerListModel timeModel2;
-	protected JComboBox<String> roomBox;
+	protected JComboBox roomBox;
 	protected JButton addModRooms;
+	
 	protected JButton backButton;
+	protected JButton saveButton;
 
 	protected MainDriver driver;
 	protected Room r;
@@ -95,10 +97,11 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		lowTemp = new JSpinner(tempModel);
 		highTemp = new JSpinner(tempModel2);
 
-		roomBox = new JComboBox<String>();
+		roomBox = new JComboBox(keys.toArray());
 
 		addModRooms = new JButton("Add/Modify");
 		backButton = new JButton("Back");
+		saveButton = new JButton("Save");
 
 		/*
 		//This is used to fill in the time
@@ -220,6 +223,11 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		backButton.setBounds(300,300,60,30);
 		mainPan.add(backButton);
 		backButton.addActionListener(driver);
+		
+		//the save button
+		saveButton.setBounds(230,300,60,30);
+		mainPan.add(saveButton);
+		saveButton.addActionListener(this);
 
 	}
 
@@ -233,6 +241,10 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String highEnd = highTemp.getValue().toString();
 
 			addModRoomsButton(nameOfRoom, lowEnd, highEnd);
+		}
+		else if(e.getSource() == saveButton)
+		{
+			//have all the user's settings written to be saved;
 		}
 
 	}
@@ -323,6 +335,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 					correctRange(N,low,high);
 					newRoom.createRoom(modRoom, lowEnd, highEnd);
 					added = true;
+					roomBox.revalidate();
 				}
 				else
 				{
@@ -335,8 +348,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			System.out.println("text not null");
 			if(newRoom.getRoom(N) == null)
 			{
-				newRoom.createRoom(N, L, H);
-				roomBox.addItem(N);
+				keys.add(newRoom.createRoom(N, L, H));
+				roomBox.revalidate();
 				added = true;
 			}
 			else if(roomName.getText().equalsIgnoreCase(N))
@@ -360,10 +373,9 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	{
 		try
 		{
-		// load properties from last invocation
-		FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
-		props.load(inIt);
-		inIt.close();
+			FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
+			props.load(inIt);
+			inIt.close();
 		
 		
 		}
@@ -378,10 +390,10 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		try
 		{
 			FileOutputStream out = new FileOutputStream("user.properties");
+			String nameToSet = na;
+			String lowAndHigh = lb + "," + ub;
 			
-			props.setProperty("roomName", na);
-			props.setProperty("tempThresholdLow", lb);
-			props.setProperty("tempThresholdHigh", ub);
+			props.setProperty(nameToSet, lowAndHigh);
 			
 			props.store(out, "User settings saved");
 			out.close();
@@ -390,6 +402,45 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	public void populateRoomBox(ArrayList<Room> toPop)
+	{
+		int toPopSize = toPop.size();
+		removeAllItems(toPop);
+		String name;
+		for(int i = 0; i < toPopSize; i++)
+		{
+			name = toPop.get(i).getName();
+			roomBox.addItem(name);
+		}
+	}
+	
+	public void removeAllItems(ArrayList<Room> rm)
+	{
+		int Size = rm.size();
+		for(int i = 0; i < Size; i++)
+		{
+			rm.remove(i);
+		}
+	}
+	
+	public void modifyKeys(ArrayList<Room> mv, String toModName)
+	{
+		Room temp;
+		int SIZE = mv.size();
+		for(int i = 0; i < SIZE; i++)
+		{
+			temp = mv.get(i);
+			String name = temp.getName();
+			if(name.equalsIgnoreCase(toModName))
+			{
+				//remove whole room 
+				//then add the new room
+				;
+			}
+		}
+		
 	}
 
 	public void showcustomize(){

@@ -231,6 +231,11 @@ public class Room implements IDataReceiveListener
 	public String getUpperBound(){
 		return upperBound;
 	}
+	
+	public String getName()
+	{
+		return name;
+	}
 
 	/**
 	 * @return the temperature

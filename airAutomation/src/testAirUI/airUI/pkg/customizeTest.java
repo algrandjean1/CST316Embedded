@@ -45,8 +45,10 @@ public class customizeTest
 		
 		//return true is added a new user without problems
 		assertTrue(c.addModRoomsButton("Gary", "63","73"));
-		//return true if able to modify user ranges
-		assertTrue(c.addModRoomsButton("Fatimah", "63","73"));
+		
+		//return false if able to modify user ranges
+		assertFalse(c.addModRoomsButton("Fatimah", "63","73"));
+		
 		//return false if not need to modify existing model
 		assertFalse(c.addModRoomsButton("Temo", "68","78"));
 	}
