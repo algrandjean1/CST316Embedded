@@ -256,7 +256,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			for(int j = 0; j < keySize; j++)
 			{
 				save = keys.get(j);
-				//writeUserSettings(save.getName(),save.getLowerBound(), save.getUpperBound());
+				writeUserSettings(save.getName(),save.getLowerBound(), save.getUpperBound());
 			}
 		}
 
@@ -439,28 +439,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			roomBox.addItem(name);
 		}
 	}
-	
-	/*
-	public void removeAllItems(ArrayList<Room> rm)
-	{
-		System.out.println("Remove all Rooms");
-		int Size = rm.size();
-		
-		if(Size == 0)
-		{
-			System.out.println("Nothing to remove");
-		}
-		else
-		{
-			Iterator<Room> itr = rm.iterator();
-			while(itr.hasNext())
-			{
-				itr.next();
-				itr.remove();
-			}
-		}
-	}
-	*/
 	
 	public void modifyKeys(ArrayList<Room> mv, String toModName, String newLow, String newHigh)
 	{
