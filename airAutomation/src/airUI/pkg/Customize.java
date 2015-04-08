@@ -179,7 +179,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		*/
 		
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		layOut();
 	}
 
 	public void layOut()
@@ -501,8 +500,10 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	}
 	
 
-	public void showcustomize(){
+	public void showcustomize()
+	{
 		mainWin.setVisible(true);
+		layOut();
 	}
 
 	public void hidecustomize(){
