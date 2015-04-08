@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -31,15 +32,15 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	//SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
 
 	Properties props;
+	Properties roomProps;
 	Room newRoom;
 	//Room emptyRoom;
-
-	int CURRENTTEMP = 60;
-	int CURRENTTEMP2 = 61;
-	int LOWRANGE = 60;
-	int HIGHRANGE = 85;
+	
 	int STEPS = 1;
 	//int TIMERANGE = 49;
+	
+	String lowFromProp;
+	String highFromProp;
 
 	//ArrayList<String> timeRange = new ArrayList<String>();
 	//ArrayList<String> timeRange2 = new ArrayList<String>();
@@ -79,8 +80,26 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	public Customize(MainDriver driver)
 	{
 		this.driver = driver;
-
-		//keys.add(emptyRoom.createRoom("NONE", "60", "61"));
+		
+		this.roomProps = new Properties();
+		FileInputStream in;
+		try 
+		{
+			in = new FileInputStream("airAutomation/room.properties");
+			roomProps.load(in);
+			in.close();
+			
+			lowFromProp = roomProps.getProperty("tempThresholdLow");
+			highFromProp = roomProps.getProperty("tempThresholdHigh");
+			
+		} 
+		catch (FileNotFoundException e) 
+		{
+			e.printStackTrace();
+		} catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
 		
 		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
@@ -94,7 +113,13 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		newR = new JLabel("New Room Name: ");
 
 		roomName = new JTextField();
-
+		
+		int LOWRANGE = Integer.parseInt(lowFromProp);
+		int HIGHRANGE = Integer.parseInt(highFromProp);
+		
+		int CURRENTTEMP = LOWRANGE;
+		int CURRENTTEMP2 = LOWRANGE+1;
+		
 		tempModel = new SpinnerNumberModel(CURRENTTEMP, LOWRANGE, HIGHRANGE, STEPS);
 		tempModel2 = new SpinnerNumberModel(CURRENTTEMP2, LOWRANGE, HIGHRANGE, STEPS);
 
@@ -252,12 +277,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			System.out.println("Save Button");
 			Room save;
 			String LAH;
-			int keySize = keys.size();
-			for(int j = 0; j < keySize; j++)
-			{
-				save = keys.get(j);
-				writeUserSettings(save.getName(),save.getLowerBound(), save.getUpperBound());
-			}
+			writeUserSettings(keys);
 		}
 
 	}
@@ -394,7 +414,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		System.out.println("read user Settings");
 		try
 		{
-			FileInputStream inIt = new FileInputStream("airAutomation/src/airUI/pkg/userSettings.properties");
+			FileInputStream inIt = new FileInputStream("airAutomation/userSettings.properties");
 			props.load(inIt);
 			inIt.close();
 			//to set array to populate roomBox and hashtable
@@ -406,16 +426,30 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		}
 	}
 	
-	public void writeUserSettings(String na, String lb, String ub)
+	public void writeUserSettings(ArrayList<Room> From)
 	{
 		System.out.println("Writing User Setting");
 		try
 		{
-			FileOutputStream out = new FileOutputStream("airAutomation/src/airUI/pkg/userSettings.properties");
-			String nameToSet = na;
-			String lowAndHigh = lb + "," + ub;
+			FileOutputStream out = new FileOutputStream("airAutomation/userSettings.properties");
+			Room getAtt;
+			int s = From.size();
 			
-			props.setProperty(nameToSet, lowAndHigh);
+			if(s == 0)
+			{
+				System.out.println("There is nothing to save");
+			}
+			else
+			{
+				for(int k=0;k<s;k++)
+				{
+					getAtt = From.get(k);
+					String nameToSet = getAtt.getName();
+					String lowAndHigh = getAtt.getLowerBound() + "," + getAtt.getUpperBound();
+					props.setProperty(nameToSet, lowAndHigh);
+				}	
+			}
+			
 			props.store(out, "User settings saved");
 			out.close();
 		}
