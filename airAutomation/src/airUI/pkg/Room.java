@@ -101,13 +101,13 @@ public class Room implements IDataReceiveListener
 
 			// reads in last values stored, to be overridden by serial data from XBee
 			this.temperature = userProps.getProperty("temperature");
-			System.out.println("Temperature: " + temperature);;
+			System.out.println("Temperature: " + temperature);
 			this.humidity = userProps.getProperty("humidity");
-			System.out.println("Humidity: " + humidity);;
+			System.out.println("Humidity: " + humidity);
 			this.carbonDioxide = userProps.getProperty("carbonDioxide");
-			System.out.println("Carbon Dioxide: " + carbonDioxide);;
+			System.out.println("Carbon Dioxide: " + carbonDioxide);
 			this.methane = userProps.getProperty("methane");
-			System.out.println("Methane: " + methane);;
+			System.out.println("Methane: " + methane);
 
 			// write user settings to properties file if they change
 			FileOutputStream out = new FileOutputStream("user.properties");
@@ -230,6 +230,11 @@ public class Room implements IDataReceiveListener
 
 	public String getUpperBound(){
 		return upperBound;
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 
 	/**
