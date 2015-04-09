@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -45,6 +46,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	//ArrayList<String> timeRange = new ArrayList<String>();
 	//ArrayList<String> timeRange2 = new ArrayList<String>();
 	ArrayList<Room> keys = new ArrayList<Room>();
+	ArrayList<String> loadList = new ArrayList<String>();
 
 	protected JFrame mainWin;
 	protected JPanel mainPan;
@@ -81,6 +83,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	{
 		this.driver = driver;
 		
+		this.props = new Properties();
 		this.roomProps = new Properties();
 		FileInputStream in;
 		try 
@@ -179,6 +182,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		*/
 		
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		readUserSettings();
 	}
 
 	public void layOut()
@@ -269,13 +273,11 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String lowEnd = lowTemp.getValue().toString();
 			String highEnd = highTemp.getValue().toString();
 
-			addModRoomsButton(nameOfRoom, lowEnd, highEnd);
+			populateKeysList(nameOfRoom, lowEnd, highEnd);
 		}
 		else if(e.getSource() == saveButton)
 		{
 			System.out.println("Save Button");
-			Room save;
-			String LAH;
 			writeUserSettings(keys);
 		}
 
@@ -329,7 +331,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		return corrected;
 	}
 
-	public boolean addModRoomsButton(String N, String L, String H)
+	public boolean populateKeysList(String N, String L, String H)
 	{
 		boolean added = false;
 		System.out.println("Add Modify Room Buttons");
@@ -343,7 +345,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	
 		if(correctRange(N,low,high))
 		{
-			addModRoomsButton(n,h,l);
+			populateKeysList(n,h,l);
 		}
 
 		if(N.equals("") || N.equals(" "))
@@ -393,7 +395,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			}
 			else if(roomName.getText().equalsIgnoreCase(N))
 			{
-				addModRoomsButton("",L, H);
+				populateKeysList("",L, H);
 			}
 		}
 		return added;
@@ -413,11 +415,33 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		System.out.println("read user Settings");
 		try
 		{
+			String name;
+			String lowandHigh;
+			String low;
+			String high;
+			
+			Room loadUsers;
 			FileInputStream inIt = new FileInputStream("airAutomation/userSettings.properties");
 			props.load(inIt);
-			inIt.close();
-			//to set array to populate roomBox and hashtable
-		
+			inIt.close();	
+			Enumeration keysToLoad = props.propertyNames();
+			
+			while(keysToLoad.hasMoreElements())
+			{
+				loadList.add((String) keysToLoad.nextElement());
+			}
+			
+			System.out.println(loadList.size());
+			for(int i=0;i<loadList.size();i++)
+			{
+				System.out.println(loadList.get(i));
+				name = loadList.get(i);
+				lowandHigh = props.getProperty(name);
+				String[] splitList = lowandHigh.split(",");
+				low = splitList[0];
+				high = splitList[1];
+				populateKeysList(name,low,high);
+			}
 		}
 		catch(IOException e)
 		{
@@ -433,7 +457,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			FileOutputStream out = new FileOutputStream("airAutomation/userSettings.properties");
 			Room getAtt;
 			int s = From.size();
-			
 			if(s == 0)
 			{
 				System.out.println("There is nothing to save");
@@ -448,7 +471,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 					props.setProperty(nameToSet, lowAndHigh);
 				}	
 			}
-			
 			props.store(out, "User settings saved");
 			out.close();
 		}
@@ -487,16 +509,10 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			{
 				mv.remove(i);
 				temp.removeRoom(toModName);
-				addModRoomsButton(toModName, newLow, newHigh);
+				populateKeysList(toModName, newLow, newHigh);
 			}
 		}
 		
-	}
-	
-	public String keysToString(ArrayList<Room> print)
-	{
-		String printOfKeys = print.toString();
-		return printOfKeys;
 	}
 	
 
