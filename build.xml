@@ -78,7 +78,7 @@
         </junit>
     <!-- Run PMD -->
 	<echo message="Running PMD"/>
-	<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="pmd.path" />
+	<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="pmd.classpath" />
 	<pmd shortFilenames="true">
 		<sourceLanguage name="java" version="1.8"/>
 		<ruleset>rulesets/java/design.xml</ruleset>
