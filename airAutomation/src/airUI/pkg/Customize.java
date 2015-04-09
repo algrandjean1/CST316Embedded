@@ -273,7 +273,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String lowEnd = lowTemp.getValue().toString();
 			String highEnd = highTemp.getValue().toString();
 
-			addModRoomsButton(nameOfRoom, lowEnd, highEnd);
+			populateKeysList(nameOfRoom, lowEnd, highEnd);
 		}
 		else if(e.getSource() == saveButton)
 		{
@@ -331,7 +331,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		return corrected;
 	}
 
-	public boolean addModRoomsButton(String N, String L, String H)
+	public boolean populateKeysList(String N, String L, String H)
 	{
 		boolean added = false;
 		System.out.println("Add Modify Room Buttons");
@@ -345,7 +345,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	
 		if(correctRange(N,low,high))
 		{
-			addModRoomsButton(n,h,l);
+			populateKeysList(n,h,l);
 		}
 
 		if(N.equals("") || N.equals(" "))
@@ -395,7 +395,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			}
 			else if(roomName.getText().equalsIgnoreCase(N))
 			{
-				addModRoomsButton("",L, H);
+				populateKeysList("",L, H);
 			}
 		}
 		return added;
@@ -440,7 +440,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				String[] splitList = lowandHigh.split(",");
 				low = splitList[0];
 				high = splitList[1];
-				addModRoomsButton(name,low,high);
+				populateKeysList(name,low,high);
 			}
 		}
 		catch(IOException e)
@@ -509,7 +509,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			{
 				mv.remove(i);
 				temp.removeRoom(toModName);
-				addModRoomsButton(toModName, newLow, newHigh);
+				populateKeysList(toModName, newLow, newHigh);
 			}
 		}
 		
