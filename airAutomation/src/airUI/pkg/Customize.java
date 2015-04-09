@@ -415,6 +415,11 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		System.out.println("read user Settings");
 		try
 		{
+			String name;
+			String lowandHigh;
+			String low;
+			String high;
+			
 			Room loadUsers;
 			FileInputStream inIt = new FileInputStream("airAutomation/userSettings.properties");
 			props.load(inIt);
@@ -425,13 +430,18 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			{
 				loadList.add((String) keysToLoad.nextElement());
 			}
+			
 			System.out.println(loadList.size());
 			for(int i=0;i<loadList.size();i++)
 			{
 				System.out.println(loadList.get(i));
+				name = loadList.get(i);
+				lowandHigh = props.getProperty(name);
+				String[] splitList = lowandHigh.split(",");
+				low = splitList[0];
+				high = splitList[1];
+				addModRoomsButton(name,low,high);
 			}
-			
-		
 		}
 		catch(IOException e)
 		{
@@ -461,15 +471,11 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 					props.setProperty(nameToSet, lowAndHigh);
 				}	
 			}
-			System.out.println("out of if-else block");
 			props.store(out, "User settings saved");
-			System.out.println("store");
 			out.close();
-			System.out.println("closed");
 		}
 		catch(IOException e)
 		{
-			System.out.println("catch block");
 			e.printStackTrace();
 		}
 	}	
@@ -507,12 +513,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			}
 		}
 		
-	}
-	
-	public String keysToString(ArrayList<Room> print)
-	{
-		String printOfKeys = print.toString();
-		return printOfKeys;
 	}
 	
 
