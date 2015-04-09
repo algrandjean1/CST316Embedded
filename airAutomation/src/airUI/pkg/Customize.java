@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -45,6 +46,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	//ArrayList<String> timeRange = new ArrayList<String>();
 	//ArrayList<String> timeRange2 = new ArrayList<String>();
 	ArrayList<Room> keys = new ArrayList<Room>();
+	ArrayList<String> loadList = new ArrayList<String>();
 
 	protected JFrame mainWin;
 	protected JPanel mainPan;
@@ -180,6 +182,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		*/
 		
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		readUserSettings();
 	}
 
 	public void layOut()
@@ -412,10 +415,22 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		System.out.println("read user Settings");
 		try
 		{
+			Room loadUsers;
 			FileInputStream inIt = new FileInputStream("airAutomation/userSettings.properties");
 			props.load(inIt);
-			inIt.close();
-			//to set array to populate roomBox and hashtable
+			inIt.close();	
+			Enumeration keysToLoad = props.propertyNames();
+			
+			while(keysToLoad.hasMoreElements())
+			{
+				loadList.add((String) keysToLoad.nextElement());
+			}
+			System.out.println(loadList.size());
+			for(int i=0;i<loadList.size();i++)
+			{
+				System.out.println(loadList.get(i));
+			}
+			
 		
 		}
 		catch(IOException e)
