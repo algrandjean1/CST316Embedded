@@ -81,6 +81,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	{
 		this.driver = driver;
 		
+		this.props = new Properties();
 		this.roomProps = new Properties();
 		FileInputStream in;
 		try 
@@ -274,8 +275,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		else if(e.getSource() == saveButton)
 		{
 			System.out.println("Save Button");
-			Room save;
-			String LAH;
 			writeUserSettings(keys);
 		}
 
@@ -433,7 +432,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			FileOutputStream out = new FileOutputStream("airAutomation/userSettings.properties");
 			Room getAtt;
 			int s = From.size();
-			
 			if(s == 0)
 			{
 				System.out.println("There is nothing to save");
@@ -448,12 +446,15 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 					props.setProperty(nameToSet, lowAndHigh);
 				}	
 			}
-			
+			System.out.println("out of if-else block");
 			props.store(out, "User settings saved");
+			System.out.println("store");
 			out.close();
+			System.out.println("closed");
 		}
 		catch(IOException e)
 		{
+			System.out.println("catch block");
 			e.printStackTrace();
 		}
 	}	
