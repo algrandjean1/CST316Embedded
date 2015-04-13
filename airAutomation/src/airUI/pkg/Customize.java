@@ -184,7 +184,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		mainPan.add(removeName);
 		
 		//the button to remove rooms
-		removeButton.setBounds(430,300,120,30);
+		removeButton.setBounds(295,300,120,30);
 		mainPan.add(removeButton);
 		removeButton.addActionListener(this);
 		
