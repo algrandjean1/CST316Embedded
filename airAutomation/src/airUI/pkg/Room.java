@@ -159,7 +159,7 @@ public class Room implements IDataReceiveListener
 
 				line = xbeeMessage.getDataString();
 				while(line != null) {
-					sensorData = line.split("\\s	");
+					sensorData = line.split(":");
 
 					this.temperature = sensorData[0];
 					this.humidity = sensorData[1];

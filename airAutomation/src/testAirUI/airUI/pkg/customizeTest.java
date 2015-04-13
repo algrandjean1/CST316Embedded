@@ -33,7 +33,7 @@ public class customizeTest
 	}
 
 	/**
-	 * Test method for {@link airUI.pkg.Customize#addModRoomsButton(java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test method for {@link airUI.pkg.Customize#populateKeysList(java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testAddModRoomsButton() 
@@ -44,13 +44,13 @@ public class customizeTest
 		r.createRoom("Alain", "60", "70");
 		
 		//return true is added a new user without problems
-		assertTrue(c.addModRoomsButton("Gary", "63","73"));
+		assertTrue(c.populateKeysList("Gary", "63","73"));
 		
 		//return false if able to modify user ranges
-		assertFalse(c.addModRoomsButton("Fatimah", "63","73"));
+		assertFalse(c.populateKeysList("Fatimah", "63","73"));
 		
 		//return false if not need to modify existing model
-		assertFalse(c.addModRoomsButton("Temo", "68","78"));
+		assertFalse(c.populateKeysList("Temo", "68","78"));
 	}
 
 }
