@@ -10,6 +10,7 @@ package airUI.pkg;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,34 +33,37 @@ public class MainPage
 	ArrayList<String> roomList;
     
 	//Read the values from properties files
-	String propFileName = "room.properties";
+	String propFileName = "airAutomation/room.properties";
 	Properties prop = new Properties();
+	//Properties roomProps = new Properties();
     
 	float tempThresholdLow;
 	float tempThresholdHigh;
 	float humidityThresholdLow;
 	float humidityThresholdHigh;
-	float carbonDioxideThresholdLow;
-	float carbonDioxideThresholdHigh;
-	float methaneThresholdLow;
-	float methaneThresholdHigh;
+	float carbonDioxideThreshold;
+	float methaneThreshold;
     
 	MainDriver driver;
+	
 	private String co2Read = "0";
 	private String methaneRead = "0";
 	private String tempRead = "0";
 	private String humidRead = "0";
+	
 	private float co2Parse = 0.0f;
 	private float methaneParse = 0.0f;
 	private float tempParse = 0.0f;
 	private float humidParse = 0.0f;
+	
 	JTextArea co2Print, methanePrint, tempPrint, humidPrint;
     
 	DefaultListModel room = new DefaultListModel();
 	DefaultListModel currOn = new DefaultListModel();
     
     
-	public MainPage(MainDriver driver){
+	public MainPage(MainDriver driver)
+	{
         
 		this.driver = driver;
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,28 +74,36 @@ public class MainPage
 		readRoomProperties();
 	}
     
-	private void readRoomProperties() {
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
-		try{
-            if (inputStream != null) {
-                prop.load(inputStream);
+	private void readRoomProperties() 
+	{
+		//InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+		FileInputStream in;
+		try
+		{
+			in = new FileInputStream(propFileName);
+			prop.load(in);
+			
+            if (in != null) 
+            {
+                prop.load(in);
+                
                 tempThresholdLow 	= Float.parseFloat(prop.getProperty("tempThresholdLow"));
                 tempThresholdHigh = Float.parseFloat(prop.getProperty("tempThresholdHigh"));
                 humidityThresholdLow = Float.parseFloat(prop.getProperty("humidityThresholdLow"));
                 humidityThresholdHigh= Float.parseFloat(prop.getProperty("humidityThresholdHigh"));
-                carbonDioxideThresholdLow= Float.parseFloat(prop.getProperty("carbonDioxideThresholdLow"));
-                carbonDioxideThresholdHigh= Float.parseFloat(prop.getProperty("carbonDioxideThresholdHigh"));
-                methaneThresholdLow= Float.parseFloat(prop.getProperty("methaneThresholdLow"));
-                methaneThresholdHigh = Float.parseFloat(prop.getProperty("methaneThresholdHigh"));
-                
-            } else {
+                carbonDioxideThreshold= Float.parseFloat(prop.getProperty("carbonDioxideThreshold"));
+                methaneThreshold= Float.parseFloat(prop.getProperty("methaneThreshold"));
+            } 
+            else 
+            {
                 throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
             }
-		}catch(IOException e){
-            
+            in.close();
 		}
-        
-        
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
     
 	public void addElements(Container pane)
@@ -101,7 +113,6 @@ public class MainPage
         
 		Font bigText = new Font("Serif",Font.BOLD,20);
         
-        //		String thisList[] = {"Living Room", "Master Room", "Gary's Room", "David's Room", "Kitchen"};
 		roomList = Room.getroomList();
         
         //	room.addElement(arg0)
@@ -286,21 +297,41 @@ public class MainPage
 		tempParse = Float.parseFloat(tempRead);
 		humidParse = Float.parseFloat(humidRead);
         
-		if(co2Parse <carbonDioxideThresholdLow){
+		/*
+		if(co2Parse < carbonDioxideThresholdLow){
 			co2Print.setBackground(Color.GREEN);
-		}else if(co2Parse >carbonDioxideThresholdLow && co2Parse <carbonDioxideThresholdHigh){
+		}else if(co2Parse > carbonDioxideThresholdLow && co2Parse < carbonDioxideThresholdHigh){
 			co2Print.setBackground(Color.ORANGE);
 		}else{
             co2Print.setBackground(Color.RED);
+		}*/
+		
+		if(co2Parse > carbonDioxideThreshold)
+		{
+			co2Print.setBackground(Color.RED);
+		}
+		else
+		{
+			co2Print.setBackground(Color.GREEN);
 		}
         
-        
+        /*
 		if(methaneParse <methaneThresholdLow){
 			methanePrint.setBackground(Color.GREEN);
 		}else if(methaneParse >methaneThresholdLow && methaneParse <methaneThresholdHigh){
 			methanePrint.setBackground(Color.ORANGE);
 		}else{
 			methanePrint.setBackground(Color.RED);
+		}
+		*/
+		
+		if(methaneParse > methaneThreshold)
+		{
+			co2Print.setBackground(Color.RED);
+		}
+		else
+		{
+			co2Print.setBackground(Color.GREEN);
 		}
         
         
