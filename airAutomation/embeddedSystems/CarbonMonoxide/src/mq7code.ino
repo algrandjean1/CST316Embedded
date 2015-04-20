@@ -73,3 +73,8 @@ unsigned int methaneLevel = analogRead(MQ4_ANALOG_IN_PIN);
   Serial.println(co2Level);
 Serial.println(methaneLevel);
 }
+
+void sendSerial() {
+    
+
+}
