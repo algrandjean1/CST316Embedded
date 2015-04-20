@@ -86,8 +86,6 @@ public class MainPage
 		}catch(IOException e){
 
 		}
-
-
 	}
 
 	public void addElements(Container pane)
