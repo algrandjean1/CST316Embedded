@@ -110,6 +110,34 @@ public class MainPage
 
 		currentRoomList.addListSelectionListener(new ListSelectionListener() {
 
+			public void valueChanged(ListSelectionEvent e) {
+
+				int lastIndex = e.getLastIndex();
+				Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
+				float co2Read = 0f;
+				float methaneRead = 0f;
+				float tempRead = 0f;
+				float humidRead = 0f;
+
+				if(!selectedRoom.getCarbonDioxide().trim().isEmpty()){
+					co2Read =Float.valueOf(selectedRoom.getCarbonDioxide());
+				}
+
+				if(!selectedRoom.getMethane().trim().isEmpty()){
+					methaneRead = Float.valueOf(selectedRoom.getMethane());
+				}
+
+				if(!selectedRoom.getTemperature().trim().isEmpty()){
+					tempRead = Float.valueOf(selectedRoom.getTemperature());
+				}
+
+				if(!selectedRoom.getHumidity().trim().isEmpty()){
+					humidRead = Float.valueOf(selectedRoom.getHumidity());
+				}
+
+                setData(co2Read, methaneRead, tempRead, humidRead);
+
+			}
 		});
 
 		roomListPane = new JScrollPane(currentRoomList);
@@ -284,34 +312,7 @@ public class MainPage
 
 	}
 
-	public void valueChanged(ListSelectionEvent e) {
 
-		int lastIndex = e.getLastIndex();
-		Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
-		float co2Read = 0f;
-		float methaneRead = 0f;
-		float tempRead = 0f;
-		float humidRead = 0f;
-
-		if(!selectedRoom.getCarbonDioxide().trim().isEmpty()){
-			co2Read =Float.valueOf(selectedRoom.getCarbonDioxide());
-		}
-
-		if(!selectedRoom.getMethane().trim().isEmpty()){
-			methaneRead = Float.valueOf(selectedRoom.getMethane());
-		}
-
-		if(!selectedRoom.getTemperature().trim().isEmpty()){
-			tempRead = Float.valueOf(selectedRoom.getTemperature());
-		}
-
-		if(!selectedRoom.getHumidity().trim().isEmpty()){
-			humidRead = Float.valueOf(selectedRoom.getHumidity());
-		}
-
-        setData(co2Read, methaneRead, tempRead, humidRead);
-
-	}
 
 
 	/*
