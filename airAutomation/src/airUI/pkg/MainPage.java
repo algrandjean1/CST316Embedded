@@ -95,10 +95,6 @@ public class MainPage
 		{
 			in = new FileInputStream(propFileName);
 			prop.load(in);
-			
-            if (in != null) 
-            {
-                prop.load(in);
                 
                 tempThresholdLow 	= Float.parseFloat(prop.getProperty("tempThresholdLow"));
                 tempThresholdHigh = Float.parseFloat(prop.getProperty("tempThresholdHigh"));
@@ -106,11 +102,6 @@ public class MainPage
                 humidityThresholdHigh= Float.parseFloat(prop.getProperty("humidityThresholdHigh"));
                 carbonDioxideThreshold= Float.parseFloat(prop.getProperty("carbonDioxideThreshold"));
                 methaneThreshold= Float.parseFloat(prop.getProperty("methaneThreshold"));
-            } 
-            else 
-            {
-                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-            }
             in.close();
 		}catch(FileNotFoundException e){
 			//throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
