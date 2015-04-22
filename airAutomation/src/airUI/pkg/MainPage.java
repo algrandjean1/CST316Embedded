@@ -277,9 +277,6 @@ public class MainPage
 	/*	size = onLabel.getPreferredSize();
 		onLabel.setBounds(260 + insets.left,250 + insets.right, size.width, size.height); */
         
-		size = onLabel.getPreferredSize();
-		onLabel.setBounds(260 + insets.left,250 + insets.right, size.width, size.height);
-        
 		size = co2Print.getPreferredSize();
 		co2Print.setBounds(10 + insets.left, 2 + insets.right, size.width + 65, size.height + 60);
         
