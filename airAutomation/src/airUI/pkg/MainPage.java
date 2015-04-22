@@ -191,26 +191,6 @@ public class MainPage
 					ex.printStackTrace();
 				}
 				
-                //setData(co2Read, methaneRead, tempRead, humidRead);
-                
-                /*
-				if(!selectedRoom.getCarbonDioxide().trim().isEmpty()){
-					co2Read = selectedRoom.getCarbonDioxide();
-				}
-                
-				if(!selectedRoom.getMethane().trim().isEmpty()){
-					methaneRead = selectedRoom.getMethane();
-				}
-                
-				if(!selectedRoom.getTemperature().trim().isEmpty()){
-					tempRead = selectedRoom.getTemperature();
-				}
-                
-				if(!selectedRoom.getHumidity().trim().isEmpty()){
-					humidRead = selectedRoom.getHumidity();
-				}
-				*/
-                
 			}
 		});
         
@@ -410,10 +390,7 @@ public class MainPage
 		}
         
 	}
-    
-    
-    
-    
+     
 	/*
      public static void main(String[] args)
      {
