@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -32,11 +33,13 @@ public class Room implements IDataReceiveListener
 {
 	private XBeeHandler xbeeHandler;
 	private RemoteXBeeDevice dragon;
-	private Properties roomProps, userProps;
+	private Properties roomProps, userProps, props;
 	private String tempThresholdLow, tempThresholdHigh, humidityThresholdLow, humidityThresholdHigh, carbonDioxideThreshold, methaneThreshold;
 	private String temperature, humidity, carbonDioxide, methane;
 	private String name, lowerBound, upperBound;
 	private static Hashtable<String, Room> roomList = new Hashtable<String, Room>();
+	
+	private ArrayList<String> usersReadings = new ArrayList<String>();
 
     public void setTemperature(String temperature) {
 		this.temperature = temperature;
@@ -98,23 +101,26 @@ public class Room implements IDataReceiveListener
 			FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
 			userProps.load(inIt);
 			inIt.close();
-
-
-			// set the properties from user input
+			/*
+			popUserReadingsArray();
+			int sizeOfReadings = usersReadings.size();
+			
+			for(int i=0;i<sizeOfReadings;i++)
+			{
+				System.out.print(usersReadings.get(i) + "\n");
+				String THCM = getTemperature() + "," +  getHumidity() + "," + getCarbonDioxide() + "," + getMethane();
+				System.out.println(THCM);
+				userProps.setProperty(usersReadings.get(i),THCM);
+			}
+			*/
 			userProps.setProperty("roomName", name);
 			userProps.setProperty("tempThresholdLow", lowerBound);
 			userProps.setProperty("tempThresholdHigh", upperBound);
-
-			// reads in last values stored, to be overridden by serial data from XBee
-			this.temperature = userProps.getProperty("temperature");
-			System.out.println("Temperature: " + temperature);
-			this.humidity = userProps.getProperty("humidity");
-			System.out.println("Humidity: " + humidity);
-			this.carbonDioxide = userProps.getProperty("carbonDioxide");
-			System.out.println("Carbon Dioxide: " + carbonDioxide);
-			this.methane = userProps.getProperty("methane");
-			System.out.println("Methane: " + methane);
-
+			//userProps.setProperty("Temprature", temperature);
+			//userProps.setProperty("Humidity", humidity);
+			//userProps.setProperty("CarbonDioxide", carbonDioxide);
+			//userProps.setProperty("Methane", methane);
+			
 			// write user settings to properties file if they change
 			FileOutputStream out = new FileOutputStream("user.properties");
 			userProps.store(out, "User settings saved");
@@ -188,6 +194,52 @@ public class Room implements IDataReceiveListener
 			e.printStackTrace();
 		}
 	}
+	
+	public void popUserReadingsArray()
+	{
+		FileInputStream inIt;
+		props = new Properties();
+		try 
+		{
+			inIt = new FileInputStream("airAutomation/userSettings.properties");
+			props.load(inIt);
+			inIt.close();
+			
+			Enumeration e = props.propertyNames();
+			
+			while(e.hasMoreElements())
+			{
+				usersReadings.add((String) e.nextElement());
+			}
+			
+		} 
+		catch (FileNotFoundException e) 
+		{
+			e.printStackTrace();
+		} catch (IOException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void writeUsers(String temp, String Humid, String CO2, String Me)
+	{
+		String names;
+		String tempHumCOMe = temp + "," + Humid + "," + CO2 + "," + Me;
+		
+		try
+		{
+			FileOutputStream out = new FileOutputStream("user.properties");
+			userProps.setProperty(name, tempHumCOMe);
+			userProps.store(out, "User settings saved");
+			out.close();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 
 	/**
 	 * searches list for room
