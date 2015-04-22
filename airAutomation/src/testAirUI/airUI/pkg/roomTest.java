@@ -122,7 +122,7 @@ Assert.assertEquals(4, listSize);
 	//@Test
 	public void testGetHumidity() {
 		Room bryan = Room.createRoom("bryan", "65", "85");
-		Assert.assertEquals("\"\"", bryan.getHumidity());
+Assert.assertEquals("\"\"", bryan.getHumidity());
 	}
 
 	/**
