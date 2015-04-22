@@ -161,7 +161,6 @@ public class Room implements IDataReceiveListener
 	}
 
 	public void dataReceived(XBeeMessage xbeeMessage) {
-		try {
 			String line;
 			String[] sensorData;
 
