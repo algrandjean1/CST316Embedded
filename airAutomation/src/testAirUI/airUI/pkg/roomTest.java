@@ -17,13 +17,10 @@ public class roomTest {
 	private static Room room;
 	XBeeHandler xbeeHandler;
 
-<<<<<<< HEAD:airAutomation/src/testAirUI/airUI/pkg/roomTest.java
-	//@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-=======
+
 	@BeforeClass
 	public void setUpBeforeClass() throws Exception {
->>>>>>> bd/embeded:airAutomation/testAirUI/airUI/pkg/roomTest.java
+
 		try {
 		Room.createRoom("", "", "", xbeeHandler);
 		} catch (Exception e) {
