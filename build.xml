@@ -19,6 +19,7 @@
     <path id="compile.class.path">
         <pathelement location="${build}" />
         <pathelement location="airAutomation/lib/xbjlib-1.0.1.jar" />
+        <pathelement location="airAutomation/lib/junit-4.12.jar" />
     </path>
 
     <target name="targets">
