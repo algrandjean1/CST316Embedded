@@ -9,14 +9,33 @@ package airUI.pkg;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import com.digi.xbee.api.exceptions.XBeeException;
+
 public class MainDriver implements ActionListener
 {
 	static MainPage mp = new MainPage(new MainDriver());
 	static Reports fr = new Reports(new MainDriver());
 	static Customize run = new Customize(new MainDriver());
 
-	public static void main(String[] args)
+	/*
+     *****************************************************************************************************************
+     *  Here is where the MainPage.java will be called to display the GUI that will be using.
+     *****************************************************************************************************************
+     */
+
+	public static void main(String[] args) throws Exception
 	{
+		/*
+		 * calling the XBeeHandler to set up the XBeeNetwork
+		 */
+		try {
+			XBeeHandler xbeeHandler = new XBeeHandler();
+		} catch(Exception e) {
+			System.err.println(e);
+		}
+		
+		
+		
 		// This is for the main page
 		mp.showMainGUI();
 	}

@@ -5,7 +5,7 @@
 * Modified and reused bye 316 Air project team
 */
 
-
+#include <string.h>
 #define VOLTAGE_REGULATOR_DIGITAL_OUT_PIN 8
 #define MQ7_ANALOG_IN_PIN 0
 #define MQ4_ANALOG_IN_PIN 1
@@ -68,13 +68,9 @@ void readGasLevel(){
 unsigned int methaneLevel = analogRead(MQ4_ANALOG_IN_PIN);
   unsigned int time = (millis() - startMillis) / 1000;
   
-  Serial.print(time);
-  Serial.print(",");
-  Serial.println(co2Level);
-Serial.println(methaneLevel);
+  Serial.write(String(time));
+
+  Serial.write(String(co2Level));
+Serial.write(String(methaneLevel));
 }
 
-void sendSerial() {
-    
-
-}
