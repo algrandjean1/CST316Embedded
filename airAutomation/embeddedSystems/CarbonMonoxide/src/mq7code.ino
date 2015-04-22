@@ -20,7 +20,7 @@ unsigned long switchTimeMillis;
 boolean heaterInHighPhase;
 
 void setup() {
-  Serial.begin(155200);
+  Serial.begin(9600);
   
   pinMode(VOLTAGE_REGULATOR_DIGITAL_OUT_PIN, OUTPUT);
   
@@ -68,9 +68,15 @@ void readGasLevel(){
 unsigned int methaneLevel = analogRead(MQ4_ANALOG_IN_PIN);
   unsigned int time = (millis() - startMillis) / 1000;
   
-  Serial.write(String(time));
-
-  Serial.write(String(co2Level));
-Serial.write(String(methaneLevel));
+  char timeString[20];
+  Serial.println(sprintf(timeString,"%d",time));
+  Serial.write(sprintf(timeString,"%d",time));
+  
+  char co2LevelString[20];
+  Serial.println(sprintf(co2LevelString,"%d",co2Level));
+  Serial.write(sprintf(co2LevelString,"%d",co2Level));
+  char methaneLevelString[20];
+  Serial.println(sprintf(methaneLevelString,"%d",methaneLevel));
+  Serial.write(sprintf(methaneLevelString,"%d",methaneLevel));
 }
 
