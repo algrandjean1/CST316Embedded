@@ -102,7 +102,9 @@ public class MainPage
                 humidityThresholdHigh= Float.parseFloat(prop.getProperty("humidityThresholdHigh"));
                 carbonDioxideThreshold= Float.parseFloat(prop.getProperty("carbonDioxideThreshold"));
                 methaneThreshold= Float.parseFloat(prop.getProperty("methaneThreshold"));
+                
             in.close();
+            
 		}catch(FileNotFoundException e){
 			//throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
 			System.out.println("property file '" + propFileName + "' not found in the classpath");
