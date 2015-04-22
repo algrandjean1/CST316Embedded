@@ -2,12 +2,15 @@
  * 
  */
 package testAirUI.airUI.pkg;
-import airUI.pkg.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
 import org.junit.Test;
+
+import airUI.pkg.Customize;
+import airUI.pkg.MainDriver;
+import airUI.pkg.Room;
+import airUI.pkg.XBeeHandler;
 
 /**
  * @author Cuahuc
@@ -15,7 +18,7 @@ import org.junit.Test;
  */
 public class customizeTest 
 {
-
+private XBeeHandler xbHandler;
 	Customize c = new Customize(new MainDriver());
 	Room r;
 	
@@ -36,12 +39,13 @@ public class customizeTest
 	 * Test method for {@link airUI.pkg.Customize#populateKeysList(java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
-	public void testAddModRoomsButton() 
+	public void testAddModRoomsButton() throws Exception
 	{
-		r.createRoom("Fatimah", "65","75");
-		r.createRoom("Temo", "68","78");
-		r.createRoom("Bryan", "65","80");
-		r.createRoom("Alain", "60", "70");
+		XBeeHandler xbeeHandler = new XBeeHandler();
+		r.createRoom("Fatimah", "65","75", xbHandler);
+		r.createRoom("Temo", "68","78", xbeeHandler);
+		r.createRoom("Bryan", "65","80", xbeeHandler);
+		r.createRoom("Alain", "60", "70", xbeeHandler);
 		
 		//return true is added a new user without problems
 		assertTrue(c.populateKeysList("Gary", "63","73"));

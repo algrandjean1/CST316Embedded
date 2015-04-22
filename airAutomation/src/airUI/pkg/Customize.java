@@ -8,11 +8,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Properties;
 
 import javax.swing.JButton;
@@ -22,13 +19,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SpinnerListModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class Customize implements ActionListener, ItemListener, ChangeListener
 {
+	private XBeeHandler xbeeHandler;
 	Properties props;
 	Properties roomProps;
 	Room newRoom;
@@ -313,7 +310,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				{
 					//System.out.println("Modify existing file");
 					correctRange(N,low,high);
-					newRoom.createRoom(modRoom, lowEnd, highEnd);
+					newRoom.createRoom(modRoom, lowEnd, highEnd, xbeeHandler);
 					modifyKeys(keys, modRoom, lowEnd, highEnd);
 					populateRoomBox(keys);
 					added = true;
@@ -331,7 +328,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			if(!newRoom.containsRoom(N))
 			{
 				//System.out.println("Create new Room");
-				keys.add(newRoom.createRoom(N, L, H));
+				keys.add(newRoom.createRoom(N, L, H, xbeeHandler));
 				populateRoomBox(keys);
 				roomBox.revalidate();
 				added = true;
