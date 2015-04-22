@@ -17,9 +17,9 @@ public class roomTest {
 	XBeeHandler xbeeHandler;
 
 	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	public void setUpBeforeClass() throws Exception {
 		try {
-		Room.createRoom("", "", "");
+		Room.createRoom("", "", "", xbeeHandler);
 		} catch (Exception e) {
 			System.err.println(e);
 		}
@@ -28,8 +28,8 @@ public class roomTest {
 	@Before
 	public void setUp() throws Exception {
 		try {
-		Room.createRoom("master", "65", "85");
-		Room.createRoom("kids", "65", "85");
+		Room.createRoom("master", "65", "85", xbeeHandler);
+		Room.createRoom("kids", "65", "85", xbeeHandler);
 		} catch(Exception e) {
 			System.err.println(e);
 		}
@@ -40,7 +40,7 @@ public class roomTest {
 	 */
 	@Test
 	public void testCreateRoom() {
-		Room bryan = Room.createRoom("bryan", "65", "85");
+		Room bryan = Room.createRoom("bryan", "65", "85", xbeeHandler);
 		
 		// does the room exist
 		Assert.assertNotNull(Room.getRoom("bryan"));
@@ -52,7 +52,7 @@ public class roomTest {
 		Assert.assertEquals(4, Room.getSize());
 		
 		// try to create a room that already exists
-		Assert.assertEquals(bryan, Room.createRoom("bryan", "65", "85"));
+		Assert.assertEquals(bryan, Room.createRoom("bryan", "65", "85", xbeeHandler));
 		
 		bryan = null;
 		Assert.assertNull(bryan);
@@ -72,7 +72,7 @@ public class roomTest {
 	 */
 	@Test
 	public void testGetRoom() {
-		Room danielle = Room.createRoom("dani", "65", "85");
+		Room danielle = Room.createRoom("dani", "65", "85", xbeeHandler);
 		Assert.assertEquals(danielle, Room.getRoom("dani"));
 	}
 
@@ -99,7 +99,7 @@ Assert.assertEquals(4, listSize);
  */
 	@Test
 	public void testGetTemperature() {
-		Room bryan = Room.createRoom("", "", "");
+		Room bryan = Room.createRoom("", "", "", xbeeHandler);
 		Assert.assertEquals("\"\"", bryan.getTemperature());
 	}
 	
@@ -108,7 +108,7 @@ Assert.assertEquals(4, listSize);
 	 */
 	@Test
 	public void testGetHumidity() {
-		Room bryan = Room.createRoom("bryan", "65", "85");
+		Room bryan = Room.createRoom("bryan", "65", "85", xbeeHandler);
 Assert.assertEquals("\"\"", bryan.getHumidity());
 	}
 
@@ -117,7 +117,7 @@ Assert.assertEquals("\"\"", bryan.getHumidity());
 	 */
 	@Test
 	public void testGetCarbonDioxide() {
-		Room bryan = Room.createRoom("bryan", "65", "85");
+		Room bryan = Room.createRoom("bryan", "65", "85", xbeeHandler);
 		Assert.assertEquals("\"\"", bryan.getCarbonDioxide());
 	}
 
@@ -126,7 +126,7 @@ Assert.assertEquals("\"\"", bryan.getHumidity());
 	 */
 	@Test
 	public void testGetMethane() {
-		Room bryan = Room.createRoom("", "", "");
+		Room bryan = Room.createRoom("", "", "", xbeeHandler);
 		Assert.assertEquals("\"\"", bryan.getMethane());
 	}
 

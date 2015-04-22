@@ -42,8 +42,12 @@ public class Room implements IDataReceiveListener {
 	 * @param lowerBound lower boundary of temperature to be set
 	 * @param upperBound upper boundary of temperature to be set
 	 */
-	private Room(String name, String lowerBound, String upperBound) {
+	private Room(String name, String lowerBound, String upperBound, XBeeHandler xbeeHandler) {
 		try {
+			// initializes the XBee listener
+			this.xbeeHandler = xbeeHandler;
+			xbeeHandler.getXbee().addDataListener(this);
+
 			// initialize user properties from default
 			Properties userProps = new Properties(roomProps);
 
@@ -105,34 +109,26 @@ public class Room implements IDataReceiveListener {
 	 * @param lowerBound lower boundary for temperature to be set
 	 * @param upperBound upper boundary of temperature to be set
 	 */
-	public static Room createRoom(String name, String lowerBound, String upperBound) {
+	public static Room createRoom(String name, String lowerBound, String upperBound, XBeeHandler xbeeHandler) {
 		Room newRoom;
 
 		if (roomList.containsKey(name)) {
 			newRoom = roomList.get(name);
 		} else {
-			newRoom = new Room(name, lowerBound, upperBound);
+			newRoom = new Room(name, lowerBound, upperBound, xbeeHandler);
 			roomList.put(name, newRoom);
 			System.out.println("Added: " + name + " to the room List.");
 		} // end if
 		return newRoom;
 	}
 
-	/**
-	 * IDataReceiveListener is an interface for setting up a listener
-	 * @method dataReceived: access the data being transmitted from XBee
-	 */
-	IDataReceiveListener dataReceiveListener = Room.getRoom("");
-
 	public void dataReceived(XBeeMessage xbeeMessage) {
 		try {
-			dragon = xbeeHandler.getXbeeNetwork().getDevice("DRAGON");
-			xbeeHandler.getXbee().addDataListener(dataReceiveListener);
-			XBee64BitAddress priorDestination = dragon.getDestinationAddress();
 			String line;
 			String[] sensorData;
 
-			if (xbeeMessage.getDevice().get64BitAddress().equals(dragon.get64BitAddress())) {
+			// in the future this will allow for other rooms to receive
+			//if (xbeeMessage.getDevice().get64BitAddress().equals(dragon.get64BitAddress())) {
 				System.out.println("Dragon: " + xbeeMessage.getDataString());
 
 				line = xbeeMessage.getDataString();
@@ -144,16 +140,13 @@ public class Room implements IDataReceiveListener {
 					this.carbonDioxide = sensorData[2];
 					this.methane = sensorData[3];
 				} // end while parsing data
-			} // end if
 
-			xbeeHandler.getXbee().removeDataListener(dataReceiveListener);
-			dragon.setDestinationAddress(priorDestination);
-			xbeeHandler.getXbee().close();
 		} catch(Exception e) {
+			System.out.println("Data Received method");
 			e.printStackTrace();
 		}
-	}
 
+	}
 	/**
 	 * searches list for room
 	 * @param name name of room
@@ -237,14 +230,5 @@ public class Room implements IDataReceiveListener {
 	}
 
 
-	public static void main(String[] args) throws Exception {
-		try {
-			Room room = createRoom("bryan", "65", "85");
-			System.out.println("Room value: " + room.toString());
-
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 }

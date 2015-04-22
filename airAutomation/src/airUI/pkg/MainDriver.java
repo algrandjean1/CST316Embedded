@@ -9,6 +9,8 @@ package airUI.pkg;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import com.digi.xbee.api.exceptions.XBeeException;
+
 public class MainDriver implements ActionListener
 {
 
@@ -24,11 +26,20 @@ public class MainDriver implements ActionListener
      *****************************************************************************************************************
      */
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
 	{
+		/*
+		 * calling the XBeeHandler to set up the XBeeNetwork
+		 */
+		try {
+			XBeeHandler xbeeHandler = new XBeeHandler();
+		} catch(Exception e) {
+			System.err.println(e);
+		}
+		
+		
+		
 		// This is for the main page
-
-
 		mp.showMainGUI();
 
         /*		javax.swing.SwingUtilities.invokeLater(new Runnable()

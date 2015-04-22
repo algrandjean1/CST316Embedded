@@ -5,6 +5,7 @@ void loop();
 void turnHeaterHigh();
 void turnHeaterLow();
 void readGasLevel();
+void sendSerial();
 #line 1 "src/mq7code.ino"
 
 /* Original author Posted by David Houlding at 2:10 PM 36 
@@ -80,4 +81,9 @@ unsigned int methaneLevel = analogRead(MQ4_ANALOG_IN_PIN);
   Serial.print(",");
   Serial.println(co2Level);
 Serial.println(methaneLevel);
+}
+
+void sendSerial() {
+    
+
 }
