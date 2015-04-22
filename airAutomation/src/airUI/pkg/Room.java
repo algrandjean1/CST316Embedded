@@ -7,7 +7,6 @@ package airUI.pkg;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,9 +92,15 @@ public class Room implements IDataReceiveListener
 				this.humidityThresholdHigh = roomProps.getProperty("humidityThresholdHigh");
 				this.carbonDioxideThreshold = roomProps.getProperty("carbonDioxideThreshold");
 				this.methaneThreshold = roomProps.getProperty("methaneThreshold");
-			} catch(IOException ioex) {
+			}catch(FileNotFoundException e){
+				System.out.println("The property file was not found in the classpath");
+			}catch(IOException ioex){
+				System.out.println("IOException Error occured while reading from the property file.");
 				ioex.printStackTrace();
+			}catch(NullPointerException e){
+				System.out.println("One of the properties in the property file is missing.");
 			}
+			
 			// load properties from last invocation
 			FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
 			userProps.load(inIt);
@@ -124,8 +129,13 @@ public class Room implements IDataReceiveListener
 			FileOutputStream out = new FileOutputStream("user.properties");
 			userProps.store(out, "User settings saved");
 			out.close();
-		} catch(IOException e) {
+		}catch(FileNotFoundException e){
+			System.out.println("The property file was not found in the classpath");
+		}catch(IOException e){
+			System.out.println("IOException Error occured while reading from the property file.");
 			e.printStackTrace();
+		}catch(NullPointerException e){
+			System.out.println("One of the properties in the property file is missing.");
 		}
 	} // end constructor
 
@@ -231,6 +241,17 @@ public class Room implements IDataReceiveListener
 
 		return null;
 	}
+	
+	/**
+	 * check if a specific room is in the list
+	 * @param name name of room
+	 * @return true if it is
+	 */
+	public static boolean containsRoom(String name)
+	{
+		return roomList.containsKey(name);
+	}
+	
 	/**
 	 * creates ArrayList of room names from hashtable
 	 * @return ArrayList of room names

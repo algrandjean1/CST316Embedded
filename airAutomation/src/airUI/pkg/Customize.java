@@ -328,7 +328,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		else
 		{
 			//System.out.println("text not null");
-			if(newRoom.getRoom(N) == null)
+			if(!newRoom.containsRoom(N))
 			{
 				//System.out.println("Create new Room");
 				keys.add(newRoom.createRoom(N, L, H));

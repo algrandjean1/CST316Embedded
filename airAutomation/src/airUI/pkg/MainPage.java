@@ -7,19 +7,30 @@ package airUI.pkg;
  * http://www.macs.hw.ac.uk/cs/java-swing-guidebook/?name=JList&page=3
  */
 
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -75,7 +86,7 @@ public class MainPage
 		//Read Properties File
 		readRoomProperties();
 	}
-    
+
 	private void readRoomProperties() 
 	{
 		//InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
@@ -84,10 +95,6 @@ public class MainPage
 		{
 			in = new FileInputStream(propFileName);
 			prop.load(in);
-			
-            if (in != null) 
-            {
-                prop.load(in);
                 
                 tempThresholdLow 	= Float.parseFloat(prop.getProperty("tempThresholdLow"));
                 tempThresholdHigh = Float.parseFloat(prop.getProperty("tempThresholdHigh"));
@@ -95,15 +102,18 @@ public class MainPage
                 humidityThresholdHigh= Float.parseFloat(prop.getProperty("humidityThresholdHigh"));
                 carbonDioxideThreshold= Float.parseFloat(prop.getProperty("carbonDioxideThreshold"));
                 methaneThreshold= Float.parseFloat(prop.getProperty("methaneThreshold"));
-            } 
-            else 
-            {
-                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-            }
             in.close();
+		}catch(FileNotFoundException e){
+			//throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+			System.out.println("property file '" + propFileName + "' not found in the classpath");
+		}catch(NumberFormatException e){
+			System.out.println("An Invalid format existes in one of the properties in the property file " + propFileName);
+		}catch(NullPointerException e){
+			System.out.println("One of the properties in the property file " + propFileName + " is missing.");
 		}
 		catch(IOException e)
 		{
+			System.out.println("IOException Error occured while reading from property file '" + propFileName);
 			e.printStackTrace();
 		}
 	}
