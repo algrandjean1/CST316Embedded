@@ -16,7 +16,6 @@ import java.util.Properties;
 
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.listeners.IDataReceiveListener;
-import com.digi.xbee.api.models.XBee64BitAddress;
 import com.digi.xbee.api.models.XBeeMessage;
 
 
@@ -57,8 +56,6 @@ public class Room implements IDataReceiveListener
 		this.methane = methane;
 	}
 
-     /**
-	 *constructor for new Room
 	/**
 	 *constructor for new Room
 	 * @param name name of new room
