@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.Properties;
 
 import javax.swing.*;
@@ -31,11 +32,12 @@ public class MainPage
 	JList currentRoomList, currentlyOnListPane;
 	JScrollPane roomListPane;
 	ArrayList<String> roomList;
+	ArrayList<String> loadList = new ArrayList<String>();
     
 	//Read the values from properties files
 	String propFileName = "airAutomation/room.properties";
 	Properties prop = new Properties();
-	//Properties roomProps = new Properties();
+	Properties roomProps = new Properties();
     
 	float tempThresholdLow;
 	float tempThresholdHigh;
@@ -128,14 +130,58 @@ public class MainPage
 		currentRoomList.addListSelectionListener(new ListSelectionListener() {
             
 			public void valueChanged(ListSelectionEvent e) {
-                
+				
+				
 				int lastIndex = e.getLastIndex();
 				Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
 				String co2Read = "0";
 				String methaneRead = "0";
 				String tempRead = "0";
 				String humidRead = "0";
+				
+				try
+				{
+					String name;
+					String lowandHigh;
+					String low;
+					String high;
+					
+					Room loadUsers;
+					FileInputStream inIt = new FileInputStream("airAutomation/userSettings.properties");
+					roomProps.load(inIt);
+					inIt.close();	
+					Enumeration keysToLoad = roomProps.propertyNames();
+					
+					while(keysToLoad.hasMoreElements())
+					{
+						loadList.add((String) keysToLoad.nextElement());
+					}
+					
+					//System.out.println(loadList.size());
+					for(int i=0;i<loadList.size();i++)
+					{
+						//System.out.println(loadList.get(i));
+						name = loadList.get(i);
+						lowandHigh = roomProps.getProperty(name);
+						String[] splitList = lowandHigh.split(",");
+						low = splitList[0];
+						high = splitList[1];
+						tempRead = splitList[2];
+						humidRead = splitList[3];
+						co2Read = splitList[4];
+						methaneRead = splitList[5];
+						
+						setData(co2Read, methaneRead, tempRead, humidRead);
+					}
+				}
+				catch(IOException ex)
+				{
+					ex.printStackTrace();
+				}
+				
+                //setData(co2Read, methaneRead, tempRead, humidRead);
                 
+                /*
 				if(!selectedRoom.getCarbonDioxide().trim().isEmpty()){
 					co2Read = selectedRoom.getCarbonDioxide();
 				}
@@ -151,8 +197,7 @@ public class MainPage
 				if(!selectedRoom.getHumidity().trim().isEmpty()){
 					humidRead = selectedRoom.getHumidity();
 				}
-                
-                setData(co2Read, methaneRead, tempRead, humidRead);
+				*/
                 
 			}
 		});
@@ -282,13 +327,13 @@ public class MainPage
 		this.methaneRead = ch4;
 		this.tempRead = temp;
 		this.humidRead = humid;
-        
+		
 		updateData();
-        
 	}
+	
 	public void updateData(){
-		co2Print.setText("CO2: \n"+ co2Read + "F");
-		methanePrint.setText("CH4: \n" + methaneRead + "F");
+		co2Print.setText("CO2: \n"+ co2Read + "%");
+		methanePrint.setText("CH4: \n" + methaneRead + "%");
 		tempPrint.setText("Temperature: \n" + tempRead + "F");
 		humidPrint.setText("Humidity: \n" + humidRead + "%");
 		
