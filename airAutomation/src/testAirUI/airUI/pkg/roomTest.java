@@ -76,6 +76,18 @@ public class roomTest {
 		Room danielle = Room.createRoom("dani", "65", "85");
 		Assert.assertEquals(danielle, Room.getRoom("dani"));
 	}
+	
+	/**
+	 * Test method for {@link airUI.pkg.Room#containsRoom(java.lang.String)}.
+	 */
+	//@Test
+	public void testContainsRoom() {
+		Assert.assertTrue(Room.containsRoom("master"));
+		Assert.assertTrue(Room.containsRoom("kids"));
+		Assert.assertTrue(Room.containsRoom("KIDS"));
+		Assert.assertTrue(!Room.containsRoom("m aster"));
+		Assert.assertTrue(!Room.containsRoom("Mohammed"));
+	}
 
 	/**
 	 * Test method for {@link airUI.pkg.Room#getroomList()}.
@@ -110,7 +122,7 @@ Assert.assertEquals(4, listSize);
 	//@Test
 	public void testGetHumidity() {
 		Room bryan = Room.createRoom("bryan", "65", "85");
-Assert.assertEquals("\"\"", bryan.getHumidity());
+		Assert.assertEquals("\"\"", bryan.getHumidity());
 	}
 
 	/**

@@ -7,17 +7,26 @@ package airUI.pkg;
  * http://www.macs.hw.ac.uk/cs/java-swing-guidebook/?name=JList&page=3
  */
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -32,7 +41,7 @@ public class MainPage
 	ArrayList<String> roomList;
 
 	//Read the values from properties files
-	String propFileName = "room.properties";
+	String propFileName = "airAutomation/room.properties";
 	Properties prop = new Properties();
 
 	float tempThresholdLow;
@@ -67,24 +76,30 @@ public class MainPage
 	}
 
 	private void readRoomProperties() {
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
 		try{
-            if (inputStream != null) {
-                prop.load(inputStream);
-                tempThresholdLow 	= Float.parseFloat(prop.getProperty("tempThresholdLow"));
-                tempThresholdHigh = Float.parseFloat(prop.getProperty("tempThresholdHigh"));
-                humidityThresholdLow = Float.parseFloat(prop.getProperty("humidityThresholdLow"));
-                humidityThresholdHigh= Float.parseFloat(prop.getProperty("humidityThresholdHigh"));
-                carbonDioxideThresholdLow= Float.parseFloat(prop.getProperty("carbonDioxideThresholdLow"));
-                carbonDioxideThresholdHigh= Float.parseFloat(prop.getProperty("carbonDioxideThresholdHigh"));
-                methaneThresholdLow= Float.parseFloat(prop.getProperty("methaneThresholdLow"));
-                methaneThresholdHigh = Float.parseFloat(prop.getProperty("methaneThresholdHigh"));
-
-            } else {
-                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-            }
+			FileInputStream inputStream = new FileInputStream(propFileName);
+			prop.load(inputStream);
+			inputStream.close();
+			
+            tempThresholdLow 	= Float.parseFloat(prop.getProperty("tempThresholdLow"));
+            tempThresholdHigh = Float.parseFloat(prop.getProperty("tempThresholdHigh"));
+            humidityThresholdLow = Float.parseFloat(prop.getProperty("humidityThresholdLow"));
+            humidityThresholdHigh= Float.parseFloat(prop.getProperty("humidityThresholdHigh"));
+            carbonDioxideThresholdLow= Float.parseFloat(prop.getProperty("carbonDioxideThresholdLow"));
+            carbonDioxideThresholdHigh= Float.parseFloat(prop.getProperty("carbonDioxideThresholdHigh"));
+            methaneThresholdLow= Float.parseFloat(prop.getProperty("methaneThresholdLow"));
+            methaneThresholdHigh = Float.parseFloat(prop.getProperty("methaneThresholdHigh"));
+			
+		}catch(FileNotFoundException e){
+			//throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
+			System.out.println("property file '" + propFileName + "' not found in the classpath");
 		}catch(IOException e){
-
+			System.out.println("IOException Error occured while reading from property file '" + propFileName);
+			e.printStackTrace();
+		}catch(NumberFormatException e){
+			System.out.println("An Invalid format existes in one of the properties in the property file " + propFileName);
+		}catch(NullPointerException e){
+			System.out.println("One of the properties in the property file " + propFileName + " is missing.");
 		}
 	}
 
