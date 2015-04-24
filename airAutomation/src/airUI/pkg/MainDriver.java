@@ -9,8 +9,6 @@ package airUI.pkg;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import com.digi.xbee.api.exceptions.XBeeException;
-
 public class MainDriver implements ActionListener
 {
 
@@ -36,8 +34,6 @@ public class MainDriver implements ActionListener
 		} catch(Exception e) {
 			System.err.println(e);
 		}
-		
-		
 		
 		// This is for the main page
 		mp.showMainGUI();
