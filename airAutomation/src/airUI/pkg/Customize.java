@@ -77,7 +77,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		FileInputStream in;
 		try 
 		{
-			in = new FileInputStream("airAutomation/room.properties");
+			in = new FileInputStream("src/room.properties");
 			roomProps.load(in);
 			in.close();
 			
