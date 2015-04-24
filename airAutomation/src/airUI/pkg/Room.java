@@ -102,25 +102,10 @@ public class Room implements IDataReceiveListener
 			FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
 			userProps.load(inIt);
 			inIt.close();
-			/*
-			popUserReadingsArray();
-			int sizeOfReadings = usersReadings.size();
 			
-			for(int i=0;i<sizeOfReadings;i++)
-			{
-				System.out.print(usersReadings.get(i) + "\n");
-				String THCM = getTemperature() + "," +  getHumidity() + "," + getCarbonDioxide() + "," + getMethane();
-				System.out.println(THCM);
-				userProps.setProperty(usersReadings.get(i),THCM);
-			}
-			*/
 			userProps.setProperty("roomName", name);
 			userProps.setProperty("tempThresholdLow", lowerBound);
 			userProps.setProperty("tempThresholdHigh", upperBound);
-			//userProps.setProperty("Temprature", temperature);
-			//userProps.setProperty("Humidity", humidity);
-			//userProps.setProperty("CarbonDioxide", carbonDioxide);
-			//userProps.setProperty("Methane", methane);
 			
 			// write user settings to properties file if they change
 			FileOutputStream out = new FileOutputStream("user.properties");

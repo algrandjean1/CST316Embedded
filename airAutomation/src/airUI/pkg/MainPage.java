@@ -102,7 +102,9 @@ public class MainPage
                 humidityThresholdHigh= Float.parseFloat(prop.getProperty("humidityThresholdHigh"));
                 carbonDioxideThreshold= Float.parseFloat(prop.getProperty("carbonDioxideThreshold"));
                 methaneThreshold= Float.parseFloat(prop.getProperty("methaneThreshold"));
+                
             in.close();
+            
 		}catch(FileNotFoundException e){
 			//throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
 			System.out.println("property file '" + propFileName + "' not found in the classpath");
@@ -189,26 +191,6 @@ public class MainPage
 					ex.printStackTrace();
 				}
 				
-                //setData(co2Read, methaneRead, tempRead, humidRead);
-                
-                /*
-				if(!selectedRoom.getCarbonDioxide().trim().isEmpty()){
-					co2Read = selectedRoom.getCarbonDioxide();
-				}
-                
-				if(!selectedRoom.getMethane().trim().isEmpty()){
-					methaneRead = selectedRoom.getMethane();
-				}
-                
-				if(!selectedRoom.getTemperature().trim().isEmpty()){
-					tempRead = selectedRoom.getTemperature();
-				}
-                
-				if(!selectedRoom.getHumidity().trim().isEmpty()){
-					humidRead = selectedRoom.getHumidity();
-				}
-				*/
-                
 			}
 		});
         
@@ -408,10 +390,7 @@ public class MainPage
 		}
         
 	}
-    
-    
-    
-    
+     
 	/*
      public static void main(String[] args)
      {
