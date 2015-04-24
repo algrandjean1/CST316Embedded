@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -25,7 +26,10 @@ import javax.swing.event.ChangeListener;
 
 public class Customize implements ActionListener, ItemListener, ChangeListener
 {
-	private XBeeHandler xbeeHandler;
+        
+	String roomProp = "room.properties";
+    String userSetsProp = "userSettings.properties";
+    private XBeeHandler xbeeHandler;
 	Properties props;
 	Properties roomProps;
 	Room newRoom;
@@ -74,22 +78,31 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		
 		this.props = new Properties();
 		this.roomProps = new Properties();
-		FileInputStream in;
+		//FileInputStream in;
 		try 
 		{
-			in = new FileInputStream("airAutomation/room.properties");
-			roomProps.load(in);
-			in.close();
+			InputStream inStream = Customize.class.getResourceAsStream(roomProp);
+			//in = new FileInputStream("airAutomation/room.properties");
+			roomProps.load(inStream);
+			inStream.close();
 			
 			lowFromProp = roomProps.getProperty("tempThresholdLow");
 			highFromProp = roomProps.getProperty("tempThresholdHigh");
 			
 		} 
 		catch (FileNotFoundException e) 
-		{
+		{	
+			System.out.println("File is not Found");
 			e.printStackTrace();
-		} catch (IOException e) 
+		}
+		catch(NullPointerException e)
 		{
+			System.out.println("File is null");
+			e.printStackTrace();
+		}
+		catch (IOException e) 
+		{
+			System.out.print("General Error");
 			e.printStackTrace();
 		}
 		
@@ -311,7 +324,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 					//System.out.println("Modify existing file");
 					correctRange(N,low,high);
 					newRoom.createRoom(modRoom, lowEnd, highEnd, xbeeHandler);
-					modifyKeys(keys, modRoom, lowEnd, highEnd);
+					modifyKeys(keys, modRoom, lowEnd,highEnd);
 					populateRoomBox(keys);
 					added = true;
 					roomBox.revalidate();
@@ -361,9 +374,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String high;
 			
 			Room loadUsers;
-			FileInputStream inIt = new FileInputStream("airAutomation/userSettings.properties");
-			props.load(inIt);
-			inIt.close();	
+			//FileInputStream inIt = new FileInputStream("airAutomation/userSettings.properties");
+			InputStream inIt = Customize.class.getResourceAsStream(userSetsProp);	
 			Enumeration keysToLoad = props.propertyNames();
 			
 			while(keysToLoad.hasMoreElements())
@@ -382,9 +394,23 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				high = splitList[1];
 				populateKeysList(name,low,high);
 			}
+			
+			props.load(inIt);
+			inIt.close();
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("File is not found");
+			e.printStackTrace();
+		}
+		catch(NullPointerException e)
+		{
+			System.out.println("File is null");
+			e.printStackTrace();
 		}
 		catch(IOException e)
 		{
+			System.out.println("General IOException");
 			e.printStackTrace();
 		}
 	}
@@ -394,7 +420,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		//System.out.println("Writing User Setting");
 		try
 		{
-			FileOutputStream out = new FileOutputStream("airAutomation/userSettings.properties");
+			FileOutputStream out = new FileOutputStream("airAutomation/classes/userSettings.properties");
+			//InputStream out = Customize.class.getResourceAsStream(userSetsProp);
 			Room getAtt;
 			int s = From.size();
 			if(s == 0)
@@ -413,6 +440,16 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			}
 			props.store(out, "User settings saved");
 			out.close();
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("File is not Found");
+			e.printStackTrace();
+		}
+		catch(NullPointerException e)
+		{
+			System.out.println("File is null");
+			e.printStackTrace();
 		}
 		catch(IOException e)
 		{

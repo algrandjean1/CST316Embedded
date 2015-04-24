@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -30,6 +31,9 @@ import com.digi.xbee.api.models.XBeeMessage;
  */
 public class Room implements IDataReceiveListener
 {
+	private String room = "room.properties";
+	private String user = "user.properties";
+	private String userS = "userSettings.properties";
 	private XBeeHandler xbeeHandler;
 	private RemoteXBeeDevice dragon;
 	private Properties roomProps, userProps, props;
@@ -79,7 +83,8 @@ public class Room implements IDataReceiveListener
 			try {
 				//File file = new File("room.properties");
 				this.roomProps = new Properties();
-				FileInputStream in = new FileInputStream("airAutomation/room.properties");
+				//FileInputStream in = new FileInputStream("airAutomation/room.properties");
+				InputStream in = Room.class.getResourceAsStream(room);
 				roomProps.load(in);
 				in.close();
 
@@ -99,7 +104,8 @@ public class Room implements IDataReceiveListener
 			}
 			
 			// load properties from last invocation
-			FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
+			//FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
+			InputStream inIt = Room.class.getResourceAsStream(user);
 			userProps.load(inIt);
 			inIt.close();
 			
@@ -162,52 +168,7 @@ public class Room implements IDataReceiveListener
 
 	}
 	
-	public void popUserReadingsArray()
-	{
-		FileInputStream inIt;
-		props = new Properties();
-		try 
-		{
-			inIt = new FileInputStream("airAutomation/userSettings.properties");
-			props.load(inIt);
-			inIt.close();
-			
-			Enumeration e = props.propertyNames();
-			
-			while(e.hasMoreElements())
-			{
-				usersReadings.add((String) e.nextElement());
-			}
-			
-		} 
-		catch (FileNotFoundException e) 
-		{
-			e.printStackTrace();
-		} catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
-	}
 	
-	public void writeUsers(String temp, String Humid, String CO2, String Me)
-	{
-		String names;
-		String tempHumCOMe = temp + "," + Humid + "," + CO2 + "," + Me;
-		
-		try
-		{
-			FileOutputStream out = new FileOutputStream("user.properties");
-			userProps.setProperty(name, tempHumCOMe);
-			userProps.store(out, "User settings saved");
-			out.close();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-
 	/**
 	 * searches list for room
 	 * @param name name of room

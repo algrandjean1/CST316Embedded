@@ -7,17 +7,13 @@ package airUI.pkg;
  * http://www.macs.hw.ac.uk/cs/java-swing-guidebook/?name=JList&page=3
  */
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -46,7 +42,8 @@ public class MainPage
 	ArrayList<String> loadList = new ArrayList<String>();
     
 	//Read the values from properties files
-	String propFileName = "airAutomation/room.properties";
+	String propFileName = "room.properties";
+	String userPropFile = "userSettings.properties";
 	Properties prop = new Properties();
 	Properties roomProps = new Properties();
     
@@ -89,19 +86,19 @@ public class MainPage
 
 	private void readRoomProperties() 
 	{
-		//InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
-		FileInputStream in;
+		//FileInputStream in;
 		try
 		{
-			in = new FileInputStream(propFileName);
+			InputStream in = MainPage.class.getResourceAsStream(propFileName);
+			//in = new FileInputStream(propFileName);
 			prop.load(in);
                 
-                tempThresholdLow 	= Float.parseFloat(prop.getProperty("tempThresholdLow"));
+                tempThresholdLow = Float.parseFloat(prop.getProperty("tempThresholdLow"));
                 tempThresholdHigh = Float.parseFloat(prop.getProperty("tempThresholdHigh"));
                 humidityThresholdLow = Float.parseFloat(prop.getProperty("humidityThresholdLow"));
                 humidityThresholdHigh= Float.parseFloat(prop.getProperty("humidityThresholdHigh"));
                 carbonDioxideThreshold= Float.parseFloat(prop.getProperty("carbonDioxideThreshold"));
-                methaneThreshold= Float.parseFloat(prop.getProperty("methaneThreshold"));
+                methaneThreshold = Float.parseFloat(prop.getProperty("methaneThreshold"));
                 
             in.close();
             
@@ -159,7 +156,8 @@ public class MainPage
 					String high;
 					
 					Room loadUsers;
-					FileInputStream inIt = new FileInputStream("airAutomation/userSettings.properties");
+					InputStream inIt = MainPage.class.getResourceAsStream(userPropFile);
+					//FileInputStream inIt = new FileInputStream("airAutomation/userSettings.properties");
 					roomProps.load(inIt);
 					inIt.close();	
 					Enumeration keysToLoad = roomProps.propertyNames();
