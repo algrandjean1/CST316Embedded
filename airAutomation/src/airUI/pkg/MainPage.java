@@ -146,10 +146,10 @@ public class MainPage
 				
 				int lastIndex = e.getLastIndex();
 				Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
-				String co2Read = "0";
-				String methaneRead = "0";
-				String tempRead = "0";
-				String humidRead = "0";
+				String co2Read = selectedRoom.getCarbonDioxide();
+				String methaneRead = selectedRoom.getMethane();
+				String tempRead = selectedRoom.getTemperature();
+				String humidRead = selectedRoom.getHumidity();
 				
 				try
 				{
