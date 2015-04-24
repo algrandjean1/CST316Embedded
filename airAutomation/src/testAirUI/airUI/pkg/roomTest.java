@@ -5,22 +5,22 @@ package testAirUI.airUI.pkg;
 
 import airUI.pkg.*;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import airUI.pkg.Room;
+import airUI.pkg.XBeeHandler;
 
 /**
  * @author BMosAir
  *
  */
 public class roomTest {
-	private static Room room;
-	XBeeHandler xbeeHandler;
-
+	private Room room;
+	private XBeeHandler xbeeHandler;
 
 	@BeforeClass
 	public void setUpBeforeClass() throws Exception {
-
 		try {
 		Room.createRoom("", "", "", xbeeHandler);
 		} catch (Exception e) {
@@ -81,7 +81,6 @@ public class roomTest {
 	
 	/**
 	 * Test method for {@link airUI.pkg.Room#containsRoom(java.lang.String)}.
-	 */
 	//@Test
 	public void testContainsRoom() {
 		Assert.assertTrue(Room.containsRoom("master"));
@@ -90,6 +89,7 @@ public class roomTest {
 		Assert.assertTrue(!Room.containsRoom("m aster"));
 		Assert.assertTrue(!Room.containsRoom("Mohammed"));
 	}
+	 */
 
 	/**
 	 * Test method for {@link airUI.pkg.Room#getroomList()}.
