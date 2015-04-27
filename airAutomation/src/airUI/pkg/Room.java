@@ -41,7 +41,7 @@ public class Room implements IDataReceiveListener
 	private String temperature, humidity, carbonDioxide, methane;
 	private String name, lowerBound, upperBound;
 	private static Hashtable<String, Room> roomList = new Hashtable<String, Room>();
-	
+
 	private ArrayList<String> usersReadings = new ArrayList<String>();
 
     public void setTemperature(String temperature) {
@@ -68,9 +68,13 @@ public class Room implements IDataReceiveListener
 	 */
 	private Room(String name, String lowerBound, String upperBound, XBeeHandler xbeeHandler) {
 		try {
-			// initializes the XBee listener
-			this.xbeeHandler = xbeeHandler;
-			xbeeHandler.getXbee().addDataListener(this);
+			try{
+				// initializes the XBee listener
+				this.xbeeHandler = xbeeHandler;
+				xbeeHandler.getXbee().addDataListener(this);
+			}catch(NullPointerException e){
+				//System.out.println("NullPointerException detected: XBee object was not found.");
+			}
 
 			// initialize user properties from default
 			userProps = new Properties(roomProps);
@@ -83,8 +87,7 @@ public class Room implements IDataReceiveListener
 			try {
 				//File file = new File("room.properties");
 				this.roomProps = new Properties();
-				//FileInputStream in = new FileInputStream("airAutomation/room.properties");
-				InputStream in = Room.class.getResourceAsStream(room);
+				FileInputStream in = new FileInputStream(MainDriver.ROOM_PROPERTIES_PATH);
 				roomProps.load(in);
 				in.close();
 
@@ -100,19 +103,18 @@ public class Room implements IDataReceiveListener
 				System.out.println("IOException Error occured while reading from the property file.");
 				ioex.printStackTrace();
 			}catch(NullPointerException e){
-				System.out.println("One of the properties in the property file is missing.");
+				System.out.println("One of the properties in the room property file is missing.");
 			}
-			
+
 			// load properties from last invocation
-			//FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
-			InputStream inIt = Room.class.getResourceAsStream(user);
+			FileInputStream inIt = new FileInputStream(MainDriver.USER_PROPERTIES_PATH);
 			userProps.load(inIt);
 			inIt.close();
-			
+
 			userProps.setProperty("roomName", name);
 			userProps.setProperty("tempThresholdLow", lowerBound);
 			userProps.setProperty("tempThresholdHigh", upperBound);
-			
+
 			// write user settings to properties file if they change
 			FileOutputStream out = new FileOutputStream("user.properties");
 			userProps.store(out, "User settings saved");
@@ -123,7 +125,7 @@ public class Room implements IDataReceiveListener
 			System.out.println("IOException Error occured while reading from the property file.");
 			e.printStackTrace();
 		}catch(NullPointerException e){
-			System.out.println("One of the properties in the property file is missing.");
+			System.out.println("One of the properties in the user property file is missing.");
 		}
 	} // end constructor
 
@@ -167,8 +169,34 @@ public class Room implements IDataReceiveListener
 				} // end while parsing data
 
 	}
-	
-	
+
+	public void popUserReadingsArray()
+	{
+		FileInputStream inIt;
+		props = new Properties();
+		try
+		{
+			inIt = new FileInputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
+			props.load(inIt);
+			inIt.close();
+
+			Enumeration e = props.propertyNames();
+
+			while(e.hasMoreElements())
+			{
+				usersReadings.add((String) e.nextElement());
+			}
+
+		}
+		catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * searches list for room
 	 * @param name name of room
@@ -183,7 +211,7 @@ public class Room implements IDataReceiveListener
 
 		return null;
 	}
-	
+
 	/**
 	 * check if a specific room is in the list
 	 * @param name name of room
@@ -193,7 +221,7 @@ public class Room implements IDataReceiveListener
 	{
 		return roomList.containsKey(name);
 	}
-	
+
 	/**
 	 * creates ArrayList of room names from hashtable
 	 * @return ArrayList of room names
@@ -233,7 +261,7 @@ public class Room implements IDataReceiveListener
 	public String getUpperBound(){
 		return upperBound;
 	}
-	
+
 	public String getName()
 	{
 		return name;

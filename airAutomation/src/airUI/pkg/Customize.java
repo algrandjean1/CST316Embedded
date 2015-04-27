@@ -81,7 +81,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		FileInputStream in;
 		try
 		{
-			in = new FileInputStream("airAutomation/src/room.properties");
+			in = new FileInputStream(MainDriver.ROOM_PROPERTIES_PATH);
 			roomProps.load(in);
 			in.close();
 
@@ -373,8 +373,9 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String high;
 
 			Room loadUsers;
-			FileInputStream inIt = new FileInputStream("airAutomation/src/userSettings.properties");
-			//InputStream inIt = Customize.class.getResourceAsStream(userSetsProp);
+			FileInputStream inIt = new FileInputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
+			props.load(inIt);
+			inIt.close();
 			Enumeration keysToLoad = props.propertyNames();
 
 			while(keysToLoad.hasMoreElements())
@@ -419,8 +420,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		//System.out.println("Writing User Setting");
 		try
 		{
-			FileOutputStream out = new FileOutputStream("airAutomation/classes/userSettings.properties");
-			//InputStream out = Customize.class.getResourceAsStream(userSetsProp);
+			FileOutputStream out = new FileOutputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
 			Room getAtt;
 			int s = From.size();
 			if(s == 0)

@@ -14,6 +14,10 @@ public class MainDriver implements ActionListener
 	static MainPage mp = new MainPage(new MainDriver());
 	static Reports fr = new Reports(new MainDriver());
 	static Customize run = new Customize(new MainDriver());
+	public static final String ROOM_PROPERTIES_PATH = "airAutomation/src/room.properties";
+	public static final String ROOM_VALUES_PROPERTIES_PATH = "airAutomation/src/roomValues.properties";
+	public static final String USER_PROPERTIES_PATH = "airAutomation/src/user.properties";
+	public static final String USER_SETTINGS_PROPERTIES_PATH = "airAutomation/src/userSettings.properties";
 
 	/*
      *****************************************************************************************************************
