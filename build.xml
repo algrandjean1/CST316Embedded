@@ -38,8 +38,9 @@
 
     <path id="compile.class.path">
         <pathelement location="${build}" />
-        <pathelement location="${lib}/xbjlib-1.0.1.jar" />
-        <pathelement location="${lib}/junit-4.12.jar" />
+        <fileset dir="${lib}">
+    		<include name="**/*.jar" />
+    	</fileset>
     </path>
 
     <target name="targets">
@@ -130,12 +131,28 @@
             <classpath refid="compile.class.path"/>
         </javac>
     </target>
+    
+    <target name="jar" depends="build" description="Package all files into jar">
+        <manifestclasspath property="jar.classpath" jarfile="airAutomation/airAutomation.jar">
+            <classpath refid="compile.class.path" />
+        </manifestclasspath>
+        <jar destfile="airAutomation/airAutomation.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="airUI.pkg.MainDriver" />
+                <attribute name="Class-Path" value="${jar.classpath}" />
+            </manifest>
+        </jar>
+    </target>
 
-    <target name="execute" depends="build" description="Run Program">
+    <target name="execute" depends="jar" description="Execute jar to run program">
         <!-- Execute The Program -->
         <echo message="Compile and execute AirUI Program" />
-        <java classname="airUI/pkg/MainDriver" fork="yes">
-            <classpath refid="compile.class.path"/>
+        <java classname="airUI.pkg.MainDriver" fork="true">
+            <arg value="-h"/>
+            <classpath>
+                <pathelement location="airAutomation/airAutomation.jar"/>
+                <pathelement path="${compile.class.path}"/>
+            </classpath>
         </java>
     </target>
 </project>
