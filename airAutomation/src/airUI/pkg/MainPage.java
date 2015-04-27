@@ -42,8 +42,8 @@ public class MainPage
 	ArrayList<String> loadList = new ArrayList<String>();
     
 	//Read the values from properties files
-	String propFileName = "room.properties";
-	String userPropFile = "userSettings.properties";
+	String propFileName = "airAutomation/src/room.properties";
+	String userPropFile = "airAutomation/src/userSettings.properties";
 	Properties prop = new Properties();
 	Properties roomProps = new Properties();
     
@@ -86,11 +86,11 @@ public class MainPage
 
 	private void readRoomProperties() 
 	{
-		//FileInputStream in;
+		FileInputStream in;
 		try
 		{
-			InputStream in = MainPage.class.getResourceAsStream(propFileName);
-			//in = new FileInputStream(propFileName);
+			//InputStream in = MainPage.class.getResourceAsStream(propFileName);
+			in = new FileInputStream(propFileName);
 			prop.load(in);
                 
                 tempThresholdLow = Float.parseFloat(prop.getProperty("tempThresholdLow"));
@@ -108,6 +108,7 @@ public class MainPage
 		}catch(NumberFormatException e){
 			System.out.println("An Invalid format existes in one of the properties in the property file " + propFileName);
 		}catch(NullPointerException e){
+			//System.out.println("here");
 			System.out.println("One of the properties in the property file " + propFileName + " is missing.");
 		}
 		catch(IOException e)
@@ -156,8 +157,8 @@ public class MainPage
 					String high;
 					
 					Room loadUsers;
-					InputStream inIt = MainPage.class.getResourceAsStream(userPropFile);
-					//FileInputStream inIt = new FileInputStream("airAutomation/userSettings.properties");
+					//InputStream inIt = MainPage.class.getResourceAsStream(userPropFile);
+					FileInputStream inIt = new FileInputStream("airAutomation/src/userSettings.properties");
 					roomProps.load(inIt);
 					inIt.close();	
 					Enumeration keysToLoad = roomProps.propertyNames();
