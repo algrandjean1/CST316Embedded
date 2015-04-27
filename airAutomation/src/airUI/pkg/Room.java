@@ -64,9 +64,13 @@ public class Room implements IDataReceiveListener
 	 */
 	private Room(String name, String lowerBound, String upperBound, XBeeHandler xbeeHandler) {
 		try {
-			// initializes the XBee listener
-			this.xbeeHandler = xbeeHandler;
-			xbeeHandler.getXbee().addDataListener(this);
+			try{
+				// initializes the XBee listener
+				this.xbeeHandler = xbeeHandler;
+				xbeeHandler.getXbee().addDataListener(this);
+			}catch(NullPointerException e){
+				//System.out.println("NullPointerException detected: XBee object was not found.");
+			}
 
 			// initialize user properties from default
 			userProps = new Properties(roomProps);
@@ -79,7 +83,7 @@ public class Room implements IDataReceiveListener
 			try {
 				//File file = new File("room.properties");
 				this.roomProps = new Properties();
-				FileInputStream in = new FileInputStream("airAutomation/room.properties");
+				FileInputStream in = new FileInputStream(MainDriver.ROOM_PROPERTIES_PATH);
 				roomProps.load(in);
 				in.close();
 
@@ -95,11 +99,11 @@ public class Room implements IDataReceiveListener
 				System.out.println("IOException Error occured while reading from the property file.");
 				ioex.printStackTrace();
 			}catch(NullPointerException e){
-				System.out.println("One of the properties in the property file is missing.");
+				System.out.println("One of the properties in the room property file is missing.");
 			}
 			
 			// load properties from last invocation
-			FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
+			FileInputStream inIt = new FileInputStream(MainDriver.USER_PROPERTIES_PATH);
 			userProps.load(inIt);
 			inIt.close();
 			
@@ -117,7 +121,7 @@ public class Room implements IDataReceiveListener
 			System.out.println("IOException Error occured while reading from the property file.");
 			e.printStackTrace();
 		}catch(NullPointerException e){
-			System.out.println("One of the properties in the property file is missing.");
+			System.out.println("One of the properties in the user property file is missing.");
 		}
 	} // end constructor
 
@@ -168,7 +172,7 @@ public class Room implements IDataReceiveListener
 		props = new Properties();
 		try 
 		{
-			inIt = new FileInputStream("airAutomation/userSettings.properties");
+			inIt = new FileInputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
 			props.load(inIt);
 			inIt.close();
 			

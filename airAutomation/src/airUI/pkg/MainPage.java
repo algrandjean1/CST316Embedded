@@ -7,11 +7,6 @@ package airUI.pkg;
  * http://www.macs.hw.ac.uk/cs/java-swing-guidebook/?name=JList&page=3
  */
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,7 +41,7 @@ public class MainPage
 	ArrayList<String> loadList = new ArrayList<String>();
     
 	//Read the values from properties files
-	String propFileName = "airAutomation/room.properties";
+	String propFileName = MainDriver.ROOM_PROPERTIES_PATH;
 	Properties prop = new Properties();
 	Properties roomProps = new Properties();
     
@@ -159,7 +154,7 @@ public class MainPage
 					String high;
 					
 					Room loadUsers;
-					FileInputStream inIt = new FileInputStream("airAutomation/userSettings.properties");
+					FileInputStream inIt = new FileInputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
 					roomProps.load(inIt);
 					inIt.close();	
 					Enumeration keysToLoad = roomProps.propertyNames();
