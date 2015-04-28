@@ -124,12 +124,14 @@ public class MainPage
             
 			public void valueChanged(ListSelectionEvent e) { //Begin timer for updating sensor readings
 				
+                int lastIndex = e.getLastIndex();
+                Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
                 Timer timer = new Timer();
                 timer.scheduleAtFixedRate(new TimerTask() {
                     @Override
                     public void run(){
-                        int lastIndex = e.getLastIndex();
-                        Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
+                        //int lastIndex = e.getLastIndex();
+                        //Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
                         String co2Read = "0";
                         String methaneRead = "0";
                         String tempRead = "0";
@@ -151,7 +153,6 @@ public class MainPage
 					{
 						loadList.add((String) keysToLoad.nextElement());
 					}
-					
 					//System.out.println(loadList.size());
 					for(int i=0;i<loadList.size();i++)
 					{
