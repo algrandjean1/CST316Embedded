@@ -34,7 +34,7 @@ public class Room implements IDataReceiveListener
 	private RemoteXBeeDevice dragon;
 	private Properties roomProps, userProps, props;
 	private String tempThresholdLow, tempThresholdHigh, humidityThresholdLow, humidityThresholdHigh, carbonDioxideThreshold, methaneThreshold;
-	private String temperature, humidity, carbonDioxide, methane;
+	private String temperature = "-1", humidity= "-1", carbonDioxide= "-1", methane= "-1";
 	private String name, lowerBound, upperBound;
 	private static Hashtable<String, Room> roomList = new Hashtable<String, Room>();
 	
@@ -69,7 +69,7 @@ public class Room implements IDataReceiveListener
 				this.xbeeHandler = xbeeHandler;
 				xbeeHandler.getXbee().addDataListener(this);
 			}catch(NullPointerException e){
-				//System.out.println("NullPointerException detected: XBee object was not found.");
+				System.out.println("NullPointerException detected: XBee object was not found.");
 			}
 
 			// initialize user properties from default
@@ -156,7 +156,7 @@ public class Room implements IDataReceiveListener
 
 				line = xbeeMessage.getDataString();
 				while(line != null) {
-					sensorData = line.split(":");
+					sensorData = line.split(",");
 
 					this.temperature = sensorData[0];
 					this.humidity = sensorData[1];

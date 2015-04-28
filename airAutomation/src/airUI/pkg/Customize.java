@@ -25,7 +25,7 @@ import javax.swing.event.ChangeListener;
 
 public class Customize implements ActionListener, ItemListener, ChangeListener
 {
-	private XBeeHandler xbeeHandler;
+	private XBeeHandler xbeeHandler = MainDriver.xbeeHandler;
 	Properties props;
 	Properties roomProps;
 	Room newRoom;
@@ -310,7 +310,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				{
 					//System.out.println("Modify existing file");
 					correctRange(N,low,high);
-					newRoom.createRoom(modRoom, lowEnd, highEnd, xbeeHandler);
+					newRoom.createRoom(modRoom, lowEnd, highEnd, MainDriver.xbeeHandler);
 					modifyKeys(keys, modRoom, lowEnd, highEnd);
 					populateRoomBox(keys);
 					added = true;
@@ -328,7 +328,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			if(!newRoom.containsRoom(N))
 			{
 				//System.out.println("Create new Room");
-				keys.add(newRoom.createRoom(N, L, H, xbeeHandler));
+				keys.add(newRoom.createRoom(N, L, H, MainDriver.xbeeHandler));
 				populateRoomBox(keys);
 				roomBox.revalidate();
 				added = true;

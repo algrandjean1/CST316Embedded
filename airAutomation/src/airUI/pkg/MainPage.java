@@ -145,8 +145,10 @@ public class MainPage
 				String methaneRead = selectedRoom.getMethane();
 				String tempRead = selectedRoom.getTemperature();
 				String humidRead = selectedRoom.getHumidity();
+				System.out.println(co2Read+" , "+methaneRead+" , "+tempRead+" , "+humidRead);
+				setData(co2Read, methaneRead, tempRead, humidRead);
 				
-				try
+				/*try
 				{
 					String name;
 					String lowandHigh;
@@ -184,7 +186,7 @@ public class MainPage
 				catch(IOException ex)
 				{
 					ex.printStackTrace();
-				}
+				}*/
 				
 			}
 		});
