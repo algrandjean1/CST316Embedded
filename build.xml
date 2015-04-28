@@ -54,6 +54,7 @@
         <delete dir="${build}" />
         <delete dir="${test.report.dir}" />
         <delete dir="${test.dir}" />
+        <delete file="airAutomation/airAutomation.jar" />
     </target>
 
     <target name="prepare">

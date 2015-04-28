@@ -15,6 +15,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -61,7 +63,6 @@ public class MainPage
 	JTextArea co2Print, methanePrint, tempPrint, humidPrint;
     
 	DefaultListModel room = new DefaultListModel();
-	//DefaultListModel currOn = new DefaultListModel();
 
 
 	public MainPage(MainDriver driver){
@@ -78,7 +79,6 @@ public class MainPage
     
 	private void readRoomProperties() 
 	{
-		//InputStream inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
 		FileInputStream in;
 		try
 		{
@@ -116,29 +116,24 @@ public class MainPage
 		Font bigText = new Font("Serif",Font.BOLD,20);
         
 		roomList = Room.getroomList();
-        
-        //	room.addElement(arg0)
-        /*	for(int i=0; i<thisList.length; i++){
-         room.addElement(thisList[i]);
-         currOn.addElement(thisList[i]);
-         }*/
-        
-		//currentRoomList = new JList(room);
+
 		currentRoomList = new JList(room);
 		currentRoomList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
 		currentRoomList.addListSelectionListener(new ListSelectionListener() {
             
-			public void valueChanged(ListSelectionEvent e) {
+			public void valueChanged(ListSelectionEvent e) { //Begin timer for updating sensor readings
 				
-				
-				int lastIndex = e.getLastIndex();
-				Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
-				String co2Read = "0";
-				String methaneRead = "0";
-				String tempRead = "0";
-				String humidRead = "0";
-				
+                Timer timer = new Timer();
+                timer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run(){
+                        int lastIndex = e.getLastIndex();
+                        Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
+                        String co2Read = "0";
+                        String methaneRead = "0";
+                        String tempRead = "0";
+                        String humidRead = "0";
 				try
 				{
 					String name;
@@ -178,39 +173,14 @@ public class MainPage
 				{
 					ex.printStackTrace();
 				}
-				
-                //setData(co2Read, methaneRead, tempRead, humidRead);
-                
-                /*
-				if(!selectedRoom.getCarbonDioxide().trim().isEmpty()){
-					co2Read = selectedRoom.getCarbonDioxide();
-				}
-                
-				if(!selectedRoom.getMethane().trim().isEmpty()){
-					methaneRead = selectedRoom.getMethane();
-				}
-                
-				if(!selectedRoom.getTemperature().trim().isEmpty()){
-					tempRead = selectedRoom.getTemperature();
-				}
-                
-				if(!selectedRoom.getHumidity().trim().isEmpty()){
-					humidRead = selectedRoom.getHumidity();
-				}
-				*/
-                
+                    }
+                }, 1000, 1000);
 			}
-		});
+		});     //End timer with data updates for sensors
         
 		roomListPane = new JScrollPane(currentRoomList);
 		roomListPane.setPreferredSize(new Dimension(100,200));
 		pane.add(roomListPane);
-
-	/*	currentlyOnListPane = new JList(currOn);
-		currentlyOnListPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		JScrollPane onList = new JScrollPane(currentlyOnListPane);
-		onList.setPreferredSize(new Dimension(100,200));
-		pane.add(onList); */
 
 		customizeButton = new JButton("Refresh");
 		pane.add(customizeButton);
@@ -226,9 +196,6 @@ public class MainPage
         
 		roomLabel = new JLabel("Current Room: ");
 		pane.add(roomLabel);
-
-	//	onLabel = new JLabel("Currently On: ");
-	//	pane.add(onLabel);
 
 		co2Print = new JTextArea();
 		co2Print.setFont(bigText);
@@ -250,19 +217,24 @@ public class MainPage
 		humidPrint.setText("Humidity: \n" + humidRead);
 		pane.add(humidPrint);
         
-		Date today = new Date();
-		dateLabel = new JLabel();
-		dateLabel.setFont(bigText);
-		dateLabel.setText(today.toString());
-		pane.add(dateLabel);
+        dateLabel = new JLabel();
+        dateLabel.setFont(bigText);
+        dateLabel.setText(new Date().toString());
+        pane.add(dateLabel);
+        pane.repaint();
+        
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run(){
+                dateLabel.setText(new Date().toString());
+            }
+        }, 1000, 1000);
         
 		Insets insets = pane.getInsets();
 		Dimension size = roomListPane.getPreferredSize();
         
 		roomListPane.setBounds(230 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
-
-		/*size = onList.getPreferredSize();
-		onList.setBounds(350 + insets.left, 250 + insets.right, size.width + 40, size.height + 20); */
         
 		size = customizeButton.getPreferredSize();
 		customizeButton.setBounds(110 + insets.left, 500 + insets.right, size.width + 5, size.height + 5);
@@ -274,9 +246,6 @@ public class MainPage
 
 		roomLabel.setBounds(130 + insets.left, 250 + insets.right, size.width, size.height);
 
-	/*	size = onLabel.getPreferredSize();
-		onLabel.setBounds(260 + insets.left,250 + insets.right, size.width, size.height); */
-        
 		size = co2Print.getPreferredSize();
 		co2Print.setBounds(10 + insets.left, 2 + insets.right, size.width + 65, size.height + 60);
         
@@ -306,17 +275,11 @@ public class MainPage
         
 		room.clear();
 
-		//currOn.clear();
 
         for(int i=0; i<roomList.size(); i++){
             room.addElement(roomList.get(i).toString());
-           // currOn.addElement(roomList.get(i).toString());
         }
         currentRoomList = new JList(room);
-
-       // currentlyOnListPane = new JList(currOn);
-
-        //fireContentsChanged();
         
 	}
     
@@ -344,15 +307,6 @@ public class MainPage
 		methaneParse = Float.parseFloat(methaneRead);
 		tempParse = Float.parseFloat(tempRead);
 		humidParse = Float.parseFloat(humidRead);
-        
-		/*
-		if(co2Parse < carbonDioxideThresholdLow){
-			co2Print.setBackground(Color.GREEN);
-		}else if(co2Parse > carbonDioxideThresholdLow && co2Parse < carbonDioxideThresholdHigh){
-			co2Print.setBackground(Color.ORANGE);
-		}else{
-            co2Print.setBackground(Color.RED);
-		}*/
 		
 		if(co2Parse > carbonDioxideThreshold)
 		{
@@ -362,16 +316,6 @@ public class MainPage
 		{
 			co2Print.setBackground(Color.GREEN);
 		}
-        
-        /*
-		if(methaneParse <methaneThresholdLow){
-			methanePrint.setBackground(Color.GREEN);
-		}else if(methaneParse >methaneThresholdLow && methaneParse <methaneThresholdHigh){
-			methanePrint.setBackground(Color.ORANGE);
-		}else{
-			methanePrint.setBackground(Color.RED);
-		}
-		*/
 		
 		if(methaneParse > methaneThreshold)
 		{
@@ -401,22 +345,4 @@ public class MainPage
 		}
         
 	}
-    
-    
-    
-    
-	/*
-     public static void main(String[] args)
-     {
-     
-     javax.swing.SwingUtilities.invokeLater(new Runnable()
-     {
-     public void run()
-     {
-     showGUI();
-     }
-     });
-     }*/
-    
-    
 }
