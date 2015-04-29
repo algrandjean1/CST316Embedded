@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -119,7 +121,8 @@ public class MainPage
 	public void addElements(Container pane)
 	{
 		pane.setLayout(null);
-		JLabel roomLabel, onLabel, dateLabel;
+		JLabel roomLabel, onLabel;
+		final JLabel dateLabel;
         
 		Font bigText = new Font("Serif",Font.BOLD,20);
         
@@ -191,11 +194,19 @@ public class MainPage
 		humidPrint.setText("Humidity: \n" + humidRead);
 		pane.add(humidPrint);
 
-		Date today = new Date();
+		//Date today = new Date();
 		dateLabel = new JLabel();
 		dateLabel.setFont(bigText);
-		dateLabel.setText(today.toString());
+		dateLabel.setText(new Date().toString());
 		pane.add(dateLabel);
+		
+		Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run(){
+                dateLabel.setText(new Date().toString());
+            }
+        }, 1000, 1000);
 
 		Insets insets = pane.getInsets();
 		Dimension size = roomListPane.getPreferredSize();
