@@ -15,10 +15,10 @@ public class MainDriver implements ActionListener
 	static MainPage mp;
 	static Reports fr;
 	static Customize run;
-	public static final String ROOM_PROPERTIES_PATH = "airAutomation/src/room.properties";
-	public static final String ROOM_VALUES_PROPERTIES_PATH = "airAutomation/src/roomValues.properties";
-	public static final String USER_PROPERTIES_PATH = "airAutomation/src/user.properties";
-	public static final String USER_SETTINGS_PROPERTIES_PATH = "airAutomation/src/userSettings.properties";
+	public static final String ROOM_PROPERTIES_PATH = "src/room.properties";
+	public static final String ROOM_VALUES_PROPERTIES_PATH = "src/roomValues.properties";
+	public static final String USER_PROPERTIES_PATH = "src/user.properties";
+	public static final String USER_SETTINGS_PROPERTIES_PATH = "src/userSettings.properties";
 
 	/*
      *****************************************************************************************************************
