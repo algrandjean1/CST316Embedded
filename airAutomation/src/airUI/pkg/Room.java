@@ -7,7 +7,6 @@ package airUI.pkg;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +16,6 @@ import java.util.Properties;
 
 import com.digi.xbee.api.RemoteXBeeDevice;
 import com.digi.xbee.api.listeners.IDataReceiveListener;
-import com.digi.xbee.api.models.XBee64BitAddress;
 import com.digi.xbee.api.models.XBeeMessage;
 
 
@@ -32,14 +30,18 @@ import com.digi.xbee.api.models.XBeeMessage;
  */
 public class Room implements IDataReceiveListener
 {
+	int counter = 0;
+	private String room = "room.properties";
+	private String user = "user.properties";
+	private String userS = "userSettings.properties";
 	private XBeeHandler xbeeHandler;
 	private RemoteXBeeDevice dragon;
 	private Properties roomProps, userProps, props;
 	private String tempThresholdLow, tempThresholdHigh, humidityThresholdLow, humidityThresholdHigh, carbonDioxideThreshold, methaneThreshold;
-	private String temperature, humidity, carbonDioxide, methane;
+	private String temperature = "-1", humidity= "-1", carbonDioxide= "-1", methane= "-1";
 	private String name, lowerBound, upperBound;
 	private static Hashtable<String, Room> roomList = new Hashtable<String, Room>();
-	
+
 	private ArrayList<String> usersReadings = new ArrayList<String>();
 
     public void setTemperature(String temperature) {
@@ -58,16 +60,22 @@ public class Room implements IDataReceiveListener
 		this.methane = methane;
 	}
 
-     /**
-	 *constructor for new Room
 	/**
 	 *constructor for new Room
 	 * @param name name of new room
 	 * @param lowerBound lower boundary of temperature to be set
 	 * @param upperBound upper boundary of temperature to be set
 	 */
-	private Room(String name, String lowerBound, String upperBound) {
+	private Room(String name, String lowerBound, String upperBound, XBeeHandler xbeeHandler) {
 		try {
+			try{
+				// initializes the XBee listener
+				this.xbeeHandler = xbeeHandler;
+				xbeeHandler.getXbee().addDataListener(this);
+			} catch(NullPointerException e){
+				System.out.println("NullPointerException detected: XBee object was not found.");
+			}
+
 			// initialize user properties from default
 			userProps = new Properties(roomProps);
 			this.name = name;
@@ -79,7 +87,7 @@ public class Room implements IDataReceiveListener
 			try {
 				//File file = new File("room.properties");
 				this.roomProps = new Properties();
-				FileInputStream in = new FileInputStream("airAutomation/room.properties");
+				FileInputStream in = new FileInputStream(MainDriver.ROOM_PROPERTIES_PATH);
 				roomProps.load(in);
 				in.close();
 
@@ -89,39 +97,35 @@ public class Room implements IDataReceiveListener
 				this.humidityThresholdHigh = roomProps.getProperty("humidityThresholdHigh");
 				this.carbonDioxideThreshold = roomProps.getProperty("carbonDioxideThreshold");
 				this.methaneThreshold = roomProps.getProperty("methaneThreshold");
-			} catch(IOException ioex) {
+			}catch(FileNotFoundException e){
+				System.out.println("The property file was not found in the classpath");
+			}catch(IOException ioex){
+				System.out.println("IOException Error occured while reading from the property file.");
 				ioex.printStackTrace();
+			}catch(NullPointerException e){
+				System.out.println("One of the properties in the room property file is missing.");
 			}
+
 			// load properties from last invocation
-			FileInputStream inIt = new FileInputStream("airAutomation/user.properties");
+			FileInputStream inIt = new FileInputStream(MainDriver.USER_PROPERTIES_PATH);
 			userProps.load(inIt);
 			inIt.close();
-			/*
-			popUserReadingsArray();
-			int sizeOfReadings = usersReadings.size();
-			
-			for(int i=0;i<sizeOfReadings;i++)
-			{
-				System.out.print(usersReadings.get(i) + "\n");
-				String THCM = getTemperature() + "," +  getHumidity() + "," + getCarbonDioxide() + "," + getMethane();
-				System.out.println(THCM);
-				userProps.setProperty(usersReadings.get(i),THCM);
-			}
-			*/
+
 			userProps.setProperty("roomName", name);
 			userProps.setProperty("tempThresholdLow", lowerBound);
 			userProps.setProperty("tempThresholdHigh", upperBound);
-			//userProps.setProperty("Temprature", temperature);
-			//userProps.setProperty("Humidity", humidity);
-			//userProps.setProperty("CarbonDioxide", carbonDioxide);
-			//userProps.setProperty("Methane", methane);
-			
+
 			// write user settings to properties file if they change
 			FileOutputStream out = new FileOutputStream("user.properties");
 			userProps.store(out, "User settings saved");
 			out.close();
-		} catch(IOException e) {
+		}catch(FileNotFoundException e){
+			System.out.println("The property file was not found in the classpath");
+		}catch(IOException e){
+			System.out.println("IOException Error occured while reading from the property file.");
 			e.printStackTrace();
+		}catch(NullPointerException e){
+			System.out.println("One of the properties in the user property file is missing.");
 		}
 	} // end constructor
 
@@ -132,104 +136,95 @@ public class Room implements IDataReceiveListener
 	 * @param lowerBound lower boundary for temperature to be set
 	 * @param upperBound upper boundary of temperature to be set
 	 */
-	public static Room createRoom(String name, String lowerBound, String upperBound)
-	{
+	public static Room createRoom(String name, String lowerBound, String upperBound, XBeeHandler xbeeHandler) {
 		Room newRoom;
 
 		if (roomList.containsKey(name))
 		{
 			newRoom = roomList.get(name);
 		} else {
-			newRoom = new Room(name, lowerBound, upperBound);
+			newRoom = new Room(name, lowerBound, upperBound, xbeeHandler);
 			roomList.put(name, newRoom);
 			System.out.println("Added: " + name + " to the room List.");
 		} // end if
 		return newRoom;
 	}
 
-	/**
-	 * IDataReceiveListener is an interface for setting up a listener
-	 * @method dataReceived: access the data being transmitted from XBee
-	 */
-	IDataReceiveListener dataReceiveListener = Room.getRoom("");
-
 	public void dataReceived(XBeeMessage xbeeMessage) {
-		try {
-			dragon = xbeeHandler.getXbeeNetwork().getDevice("DRAGON");
-			xbeeHandler.getXbee().addDataListener(dataReceiveListener);
-			XBee64BitAddress priorDestination = dragon.getDestinationAddress();
 			String line;
 			String[] sensorData;
 
-			if (xbeeMessage.getDevice().get64BitAddress().equals(dragon.get64BitAddress())) {
+			// in the future this will allow for other rooms to receive
+			//if (xbeeMessage.getDevice().get64BitAddress().equals(dragon.get64BitAddress())) {
 				System.out.println("Dragon: " + xbeeMessage.getDataString());
 
 				line = xbeeMessage.getDataString();
 				while(line != null) {
-					sensorData = line.split(":");
+					sensorData = line.split(",");
 
 					this.temperature = sensorData[0];
 					this.humidity = sensorData[1];
 					this.carbonDioxide = sensorData[2];
 					this.methane = sensorData[3];
 				} // end while parsing data
-			} // end if
 
-			xbeeHandler.getXbee().removeDataListener(dataReceiveListener);
-			dragon.setDestinationAddress(priorDestination);
-			xbeeHandler.getXbee().close();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 	
+	public void updateData() {
+		String line;
+		String[] sensorData;
+		XBeeMessage xbeeMessage;
+		try {
+		//xbeeMessage = xbeeHandler.getXbee().readData();
+			xbeeMessage = xbeeHandler.getXbee().readDataFrom(xbeeHandler.getDevices(), 1000);
+			
+			System.out.println("Dragon: " + xbeeMessage.getDataString());
+
+			line = xbeeMessage.getDataString();
+			if(line != null) {
+				sensorData = line.split(",");
+
+				this.temperature = sensorData[0];
+				this.humidity = sensorData[1];
+				this.carbonDioxide = sensorData[2];
+				this.methane = sensorData[3];
+			} // end while parsing datai
+
+		}
+		catch (Exception e)
+		{
+			System.out.println("error while retriving data");
+			e.printStackTrace();
+		}
+		
+	}
+
 	public void popUserReadingsArray()
 	{
 		FileInputStream inIt;
 		props = new Properties();
-		try 
+		try
 		{
-			inIt = new FileInputStream("airAutomation/userSettings.properties");
+			inIt = new FileInputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
 			props.load(inIt);
 			inIt.close();
-			
+
 			Enumeration e = props.propertyNames();
-			
+
 			while(e.hasMoreElements())
 			{
 				usersReadings.add((String) e.nextElement());
 			}
-			
-		} 
-		catch (FileNotFoundException e) 
+
+		}
+		catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
-		} catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	public void writeUsers(String temp, String Humid, String CO2, String Me)
-	{
-		String names;
-		String tempHumCOMe = temp + "," + Humid + "," + CO2 + "," + Me;
-		
-		try
-		{
-			FileOutputStream out = new FileOutputStream("user.properties");
-			userProps.setProperty(name, tempHumCOMe);
-			userProps.store(out, "User settings saved");
-			out.close();
-		}
-		catch(IOException e)
+		} catch (IOException e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
 
 	/**
 	 * searches list for room
@@ -245,6 +240,17 @@ public class Room implements IDataReceiveListener
 
 		return null;
 	}
+
+	/**
+	 * check if a specific room is in the list
+	 * @param name name of room
+	 * @return true if it is
+	 */
+	public static boolean containsRoom(String name)
+	{
+		return roomList.containsKey(name);
+	}
+
 	/**
 	 * creates ArrayList of room names from hashtable
 	 * @return ArrayList of room names
@@ -284,7 +290,7 @@ public class Room implements IDataReceiveListener
 	public String getUpperBound(){
 		return upperBound;
 	}
-	
+
 	public String getName()
 	{
 		return name;
@@ -294,7 +300,10 @@ public class Room implements IDataReceiveListener
 	 * @return the temperature
 	 */
 	public String getTemperature() {
-		return temperature;
+		counter++;
+		String test = counter + "";
+		//return temperature;
+		return test;
 	}
 
 	/**
@@ -321,15 +330,5 @@ public class Room implements IDataReceiveListener
 		return methane;
 	}
 
-
-/*	public static void main(String[] args) throws Exception {
-		try {
-			Room room = createRoom("bryan", "65", "85");
-			System.out.println("Room value: " + room.toString());
-
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}*/
 
 }

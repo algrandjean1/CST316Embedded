@@ -8,11 +8,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Properties;
 
 import javax.swing.JButton;
@@ -22,19 +20,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SpinnerListModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class Customize implements ActionListener, ItemListener, ChangeListener
 {
+	private XBeeHandler xbeeHandler = MainDriver.xbeeHandler;
 	Properties props;
 	Properties roomProps;
 	Room newRoom;
-	
+
 	int STEPS = 1;
-	
+
 	String lowFromProp;
 	String highFromProp;
 
@@ -52,7 +50,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 	protected JTextField roomName;
 	protected JTextField removeName;
-	
+
 	protected JSpinner lowTemp;
 	protected JSpinner highTemp;
 	protected JSpinner lowTime;
@@ -63,39 +61,47 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 	protected JComboBox<String> roomBox;
 	protected JButton addModRooms;
-	
+
 	protected JButton backButton;
 	protected JButton saveButton;
 	protected JButton removeButton;
 
 	protected MainDriver driver;
 	protected Room r;
-	
+
 	public Customize(MainDriver driver)
 	{
 		this.driver = driver;
-		
+
 		this.props = new Properties();
 		this.roomProps = new Properties();
 		FileInputStream in;
-		try 
+		try
 		{
-			in = new FileInputStream("airAutomation/room.properties");
+			in = new FileInputStream(MainDriver.ROOM_PROPERTIES_PATH);
 			roomProps.load(in);
 			in.close();
-			
+
 			lowFromProp = roomProps.getProperty("tempThresholdLow");
 			highFromProp = roomProps.getProperty("tempThresholdHigh");
-			
-		} 
-		catch (FileNotFoundException e) 
+
+		}
+		catch (FileNotFoundException e)
 		{
-			e.printStackTrace();
-		} catch (IOException e) 
-		{
+			System.out.println("File is not Found");
 			e.printStackTrace();
 		}
-		
+		catch(NullPointerException e)
+		{
+			System.out.println("File is null");
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			System.out.print("General Error");
+			e.printStackTrace();
+		}
+
 		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
 
@@ -107,13 +113,13 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 		roomName = new JTextField();
 		removeName = new JTextField();
-		
+
 		int LOWRANGE = Integer.parseInt(lowFromProp);
 		int HIGHRANGE = Integer.parseInt(highFromProp);
-		
+
 		int CURRENTTEMP = LOWRANGE;
 		int CURRENTTEMP2 = LOWRANGE+1;
-		
+
 		tempModel = new SpinnerNumberModel(CURRENTTEMP, LOWRANGE, HIGHRANGE, STEPS);
 		tempModel2 = new SpinnerNumberModel(CURRENTTEMP2, LOWRANGE, HIGHRANGE, STEPS);
 
@@ -126,7 +132,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		backButton = new JButton("Back");
 		saveButton = new JButton("Save");
 		removeButton = new JButton("remove");
-		
+
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		readUserSettings();
 	}
@@ -178,23 +184,23 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		addModRooms.setBounds(430,150,120,30);
 		mainPan.add(addModRooms);
 		addModRooms.addActionListener(this);
-		
+
 		//the textfield that is blank for rooms to remove
 		removeName.setBounds(170,300,120,30);
 		mainPan.add(removeName);
-		
+
 		//the button to remove rooms
 		removeButton.setBounds(295,300,120,30);
 		mainPan.add(removeButton);
 		removeButton.addActionListener(this);
-		
+
 		//the back button
-		backButton.setBounds(300,500,60,30);
+		backButton.setBounds(300,500,120,30);
 		mainPan.add(backButton);
 		backButton.addActionListener(driver);
-		
+
 		//the save button
-		saveButton.setBounds(230,500,60,30);
+		saveButton.setBounds(170,500,120,30);
 		mainPan.add(saveButton);
 		saveButton.addActionListener(this);
 
@@ -223,7 +229,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String rmItem = removeName.getText();
 			rmFromKeysList(rmItem);
 		}
-		
+
 	}
 
 	public void itemStateChanged(ItemEvent event)
@@ -240,7 +246,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				int setHigh = Integer.parseInt(newRoom.getRoom(keyToget).getUpperBound());
 				setRoomValues(keyToget, setLow, setHigh);
 				roomBox.revalidate();
-				
+
 			}
 		}
 	}
@@ -278,14 +284,14 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	{
 		boolean added = false;
 		//System.out.println("Add Modify Room Buttons");
-		
+
 		String n = N;
 		String l = L;
 		String h = H;
 
 		int low = Integer.parseInt(l);
 		int high = Integer.parseInt(h);
-	
+
 		if(correctRange(N,low,high))
 		{
 			populateKeysList(n,h,l);
@@ -313,7 +319,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				{
 					//System.out.println("Modify existing file");
 					correctRange(N,low,high);
-					newRoom.createRoom(modRoom, lowEnd, highEnd);
+					newRoom.createRoom(modRoom, lowEnd, highEnd, MainDriver.xbeeHandler);
 					modifyKeys(keys, modRoom, lowEnd, highEnd);
 					populateRoomBox(keys);
 					added = true;
@@ -328,10 +334,10 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		else
 		{
 			//System.out.println("text not null");
-			if(newRoom.getRoom(N) == null)
+			if(!newRoom.containsRoom(N))
 			{
 				//System.out.println("Create new Room");
-				keys.add(newRoom.createRoom(N, L, H));
+				keys.add(newRoom.createRoom(N, L, H, MainDriver.xbeeHandler));
 				populateRoomBox(keys);
 				roomBox.revalidate();
 				added = true;
@@ -362,18 +368,18 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			String lowandHigh;
 			String low;
 			String high;
-			
+
 			Room loadUsers;
-			FileInputStream inIt = new FileInputStream("airAutomation/userSettings.properties");
+			FileInputStream inIt = new FileInputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
 			props.load(inIt);
-			inIt.close();	
+			inIt.close();
 			Enumeration keysToLoad = props.propertyNames();
-			
+
 			while(keysToLoad.hasMoreElements())
 			{
 				loadList.add((String) keysToLoad.nextElement());
 			}
-			
+
 			//System.out.println(loadList.size());
 			for(int i=0;i<loadList.size();i++)
 			{
@@ -385,19 +391,31 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				high = splitList[1];
 				populateKeysList(name,low,high);
 			}
+
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("File is not found");
+			e.printStackTrace();
+		}
+		catch(NullPointerException e)
+		{
+			System.out.println("File is null");
+			e.printStackTrace();
 		}
 		catch(IOException e)
 		{
+			System.out.println("General IOException");
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void writeUserSettings(ArrayList<Room> From)
 	{
 		//System.out.println("Writing User Setting");
 		try
 		{
-			FileOutputStream out = new FileOutputStream("airAutomation/userSettings.properties");
+			FileOutputStream out = new FileOutputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
 			Room getAtt;
 			int s = From.size();
 			if(s == 0)
@@ -412,17 +430,27 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 					String nameToSet = getAtt.getName();
 					String lowAndHigh = getAtt.getLowerBound() + "," + getAtt.getUpperBound();
 					props.setProperty(nameToSet, lowAndHigh);
-				}	
+				}
 			}
 			props.store(out, "User settings saved");
 			out.close();
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("File is not Found");
+			e.printStackTrace();
+		}
+		catch(NullPointerException e)
+		{
+			System.out.println("File is null");
+			e.printStackTrace();
 		}
 		catch(IOException e)
 		{
 			e.printStackTrace();
 		}
-	}	
-	
+	}
+
 	public void populateRoomBox(ArrayList<Room> toPop)
 	{
 		//System.out.println("Populate Room Box");
@@ -437,7 +465,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			roomBox.addItem(name);
 		}
 	}
-	
+
 	public void modifyKeys(ArrayList<Room> mv, String toModName, String newLow, String newHigh)
 	{
 		//System.out.println("Modify keys");
@@ -454,22 +482,22 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				temp.removeRoom(toModName);
 				populateKeysList(toModName, newLow, newHigh);
 			}
-		}	
+		}
 	}
-	
-	
+
+
 	public void rmFromKeysList(String rm)
 	{
 		Room toRm = newRoom.getRoom(rm);
 		if(keys.remove(toRm) && newRoom.removeRoom(rm))
 		{
-			
+
 			//System.out.println(rm + " is removed");
 			props.remove(rm);
 			populateRoomBox(keys);
 		}
 	}
-	
+
 
 	public void showcustomize()
 	{
