@@ -1,0 +1,14 @@
+
+
+
+
+
+.build/uno/src/mq7code.cpp : src/mq7code.ino
+	@mkdir -p .build/uno/src
+	@echo [93msrc/mq7code.ino[0m
+	@/usr/local/bin/ino preproc  -o $@ $^
+
+
+all : .build/uno/src/mq7code.cpp
+	@true
+
