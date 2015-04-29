@@ -2,12 +2,12 @@
 <project name="Embedded CST316 Project Test Build" default="targets" basedir=".">
     
     <!-- Set Global Properties For This Build -->
-    <property name="src" location="airAutomation/src" />
-	<property name="lib" location="airAutomation/lib" />
-	<property name="test" location="airAutomation/src/testAirUI/airUI/pkg" />
-    <property name="build" location="airAutomation/classes" />
-    <property name="test.dir" location="airAutomation/classes/tests" />
-    <property name="test.report.dir" location="airAutomation/testreport" />
+    <property name="src" location="src" />
+	<property name="lib" location="lib" />
+	<property name="test" location="src/testAirUI/airUI/pkg" />
+    <property name="build" location="classes" />
+    <property name="test.dir" location="classes/tests" />
+    <property name="test.report.dir" location="testreport" />
     
     <path id="test.class.path">
         <pathelement location="${build}" />
@@ -41,6 +41,9 @@
         <fileset dir="${lib}">
     		<include name="**/*.jar" />
     	</fileset>
+        <fileset dir="${src}">
+            <include name="**/*.properties" />
+        </fileset>
     </path>
     
     <target name="targets">
@@ -54,7 +57,7 @@
         <delete dir="${build}" />
         <delete dir="${test.report.dir}" />
         <delete dir="${test.dir}" />
-        <delete file="airAutomation/airAutomation.jar" />
+        <delete file="airAutomation.jar" />
     </target>
     
     <target name="prepare">
@@ -134,10 +137,10 @@
     </target>
     
     <target name="jar" depends="build" description="Package all files into jar">
-        <manifestclasspath property="jar.classpath" jarfile="airAutomation/airAutomation.jar">
+        <manifestclasspath property="jar.classpath" jarfile="airAutomation.jar">
             <classpath refid="compile.class.path" />
         </manifestclasspath>
-        <jar destfile="airAutomation/airAutomation.jar" basedir="${build}">
+        <jar destfile="airAutomation.jar" basedir="${build}">
             <manifest>
                 <attribute name="Main-Class" value="airUI.pkg.MainDriver" />
                 <attribute name="Class-Path" value="${jar.classpath}" />
@@ -151,7 +154,7 @@
         <java classname="airUI.pkg.MainDriver" fork="true">
             <arg value="-h"/>
             <classpath>
-                <pathelement location="airAutomation/airAutomation.jar"/>
+                <pathelement location="airAutomation.jar"/>
                 <pathelement path="${compile.class.path}"/>
             </classpath>
         </java>
