@@ -354,9 +354,9 @@ public class MainPage
 
 	public void updateData()
 	{
-		co2Print.setText("CO2: \n"+ co2Read + "%");
+		co2Print.setText("CO: \n"+ co2Read + "ppm");
 		methanePrint.setText("CH4: \n" + methaneRead + "%");
-		tempPrint.setText("Temperature: \n" + tempRead + "F");
+		tempPrint.setText("Temperature: \n" + tempRead + "\u00b0" + "C");
 		humidPrint.setText("Humidity: \n" + humidRead + "%");
 
 		co2Parse = Float.parseFloat(co2Read);
