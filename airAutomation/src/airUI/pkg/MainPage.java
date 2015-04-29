@@ -71,7 +71,6 @@ public class MainPage
 	JTextArea co2Print, methanePrint, tempPrint, humidPrint;
 
 	DefaultListModel room = new DefaultListModel();
-	DefaultListModel currOn = new DefaultListModel();
 
 
 	public MainPage(MainDriver driver)
@@ -204,14 +203,8 @@ public class MainPage
 						setData(co2Read, methaneRead, tempRead, humidRead);
 					}
 
-				},10000,10000);
+				},0,5000);
 
-				//String co2Read = selectedRoom.getCarbonDioxide();
-				//String methaneRead = selectedRoom.getMethane();
-				//String tempRead = selectedRoom.getTemperature();
-				//String humidRead = selectedRoom.getHumidity();
-				//System.out.println(co2Read+" , "+methaneRead+" , "+tempRead+" , "+humidRead);
-				//setData(co2Read, methaneRead, tempRead, humidRead);
 			}
 		});
 
@@ -323,19 +316,33 @@ public class MainPage
 
 		frame.setVisible(true);
 		roomList = Room.getroomList();
-
+		
+		loadListModel(room, roomList);
+		
+		/*
 		room.clear();
-		currOn.clear();
+		//currOn.clear();
 
         for(int i=0; i<roomList.size(); i++){
             room.addElement(roomList.get(i).toString());
-            currOn.addElement(roomList.get(i).toString());
+            //currOn.addElement(roomList.get(i).toString());
         }
         currentRoomList = new JList(room);
         //currentlyOnListPane = new JList(currOn);
 
         //fireContentsChanged();
-
+		*/
+	}
+	
+	public void loadListModel(DefaultListModel r, ArrayList<String> rL)
+	{
+		r.clear();
+		int s = rL.size();
+		for(int i=0; i<s; i++){
+            r.addElement(rL.get(i).toString());
+            //currOn.addElement(roomList.get(i).toString());
+        }
+        currentRoomList = new JList(r);
 	}
 
 	public void hideMainGUI(){
