@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -72,7 +71,7 @@ public class Room implements IDataReceiveListener
 				// initializes the XBee listener
 				this.xbeeHandler = xbeeHandler;
 				xbeeHandler.getXbee().addDataListener(this);
-			}catch(NullPointerException e){
+			} catch(NullPointerException e){
 				System.out.println("NullPointerException detected: XBee object was not found.");
 			}
 
@@ -173,29 +172,30 @@ public class Room implements IDataReceiveListener
 	public void updateData() {
 		String line;
 		String[] sensorData;
-		
-		XBeeMessage xbeeMessage = xbeeHandler.getXbee().readData();
-		/*try
-		{
-			XBeeMessage xbeeMessage = xbeeHandler.getXbee().readDataFrom(xbeeHandler.getDevices());
+		XBeeMessage xbeeMessage;
+		try {
+		//xbeeMessage = xbeeHandler.getXbee().readData();
+			xbeeMessage = xbeeHandler.getXbee().readDataFrom(xbeeHandler.getDevices(), 1000);
+			
+			System.out.println("Dragon: " + xbeeMessage.getDataString());
+
+			line = xbeeMessage.getDataString();
+			if(line != null) {
+				sensorData = line.split(",");
+
+				this.temperature = sensorData[0];
+				this.humidity = sensorData[1];
+				this.carbonDioxide = sensorData[2];
+				this.methane = sensorData[3];
+			} // end while parsing datai
+
 		}
 		catch (Exception e)
 		{
 			System.out.println("error while retriving data");
 			e.printStackTrace();
-		}*/
+		}
 		
-		System.out.println("Dragon: " + xbeeMessage.getDataString());
-
-		line = xbeeMessage.getDataString();
-		while(line != null) {
-			sensorData = line.split(",");
-
-			this.temperature = sensorData[0];
-			this.humidity = sensorData[1];
-			this.carbonDioxide = sensorData[2];
-			this.methane = sensorData[3];
-		} // end while parsing data
 	}
 
 	public void popUserReadingsArray()
