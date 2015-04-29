@@ -45,8 +45,8 @@ public class MainPage
 
 	//Read the values from properties files
 	String propFileName = MainDriver.ROOM_PROPERTIES_PATH;
-	Properties prop = new Properties();
-	Properties roomProps = new Properties();
+	Properties roomProp = new Properties();
+	Properties userProp = new Properties();
 
 	float tempThresholdLow;
 	float tempThresholdHigh;
@@ -93,14 +93,14 @@ public class MainPage
 		{
 			//InputStream in = MainPage.class.getResourceAsStream(propFileName);
 			in = new FileInputStream(propFileName);
-			prop.load(in);
+			roomProp.load(in);
 
-                tempThresholdLow = Float.parseFloat(prop.getProperty("tempThresholdLow"));
-                tempThresholdHigh = Float.parseFloat(prop.getProperty("tempThresholdHigh"));
-                humidityThresholdLow = Float.parseFloat(prop.getProperty("humidityThresholdLow"));
-                humidityThresholdHigh= Float.parseFloat(prop.getProperty("humidityThresholdHigh"));
-                carbonDioxideThreshold= Float.parseFloat(prop.getProperty("carbonDioxideThreshold"));
-                methaneThreshold = Float.parseFloat(prop.getProperty("methaneThreshold"));
+                tempThresholdLow = Float.parseFloat(roomProp.getProperty("tempThresholdLow"));
+                tempThresholdHigh = Float.parseFloat(roomProp.getProperty("tempThresholdHigh"));
+                humidityThresholdLow = Float.parseFloat(roomProp.getProperty("humidityThresholdLow"));
+                humidityThresholdHigh= Float.parseFloat(roomProp.getProperty("humidityThresholdHigh"));
+                carbonDioxideThreshold= Float.parseFloat(roomProp.getProperty("carbonDioxideThreshold"));
+                methaneThreshold = Float.parseFloat(roomProp.getProperty("methaneThreshold"));
 
             in.close();
 
@@ -114,6 +114,49 @@ public class MainPage
 			System.out.println("One of the properties in the property file " + propFileName + " is missing.");
 		}catch(IOException e){
 			System.out.println("IOException Error occured while reading from property file '" + propFileName);
+			e.printStackTrace();
+		}
+	}
+	
+	public void addToListModel(String ele)
+	{
+		room.addElement(ele);
+	}
+	
+	public void readUserSettings()
+	{
+		//System.out.println("read user Settings");
+		try
+		{
+			String name;
+			String lowandHigh;
+			String low;
+			String high;
+
+			Room loadUsers;
+			FileInputStream inIt = new FileInputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
+			userProp.load(inIt);
+			inIt.close();
+			Enumeration keysToLoad = userProp.propertyNames();
+
+			while(keysToLoad.hasMoreElements())
+			{
+				loadList.add((String) keysToLoad.nextElement());
+			}
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("File is not found");
+			e.printStackTrace();
+		}
+		catch(NullPointerException e)
+		{
+			System.out.println("File is null");
+			e.printStackTrace();
+		}
+		catch(IOException e)
+		{
+			System.out.println("General IOException");
 			e.printStackTrace();
 		}
 	}
@@ -136,13 +179,35 @@ public class MainPage
 
 
 				int lastIndex = e.getLastIndex();
-				Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
-				String co2Read = selectedRoom.getCarbonDioxide();
-				String methaneRead = selectedRoom.getMethane();
-				String tempRead = selectedRoom.getTemperature();
-				String humidRead = selectedRoom.getHumidity();
+				final Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
+				
+				
+				Timer timer = new Timer();
+				timer.scheduleAtFixedRate(new TimerTask()
+				{
+					public void run()
+					{
+						
+						readUserSettings();
+						String[] listArray = loadList.toArray(new String[loadList.size()]);
+						
+						
+						String co2Read = selectedRoom.getCarbonDioxide();
+						String methaneRead = selectedRoom.getMethane();
+						String tempRead = selectedRoom.getTemperature();
+						String humidRead = selectedRoom.getHumidity();
+						//System.out.println(co2Read+" , "+methaneRead+" , "+tempRead+" , "+humidRead);
+						setData(co2Read, methaneRead, tempRead, humidRead);
+					}
+					
+				},10000,10000);
+				
+				//String co2Read = selectedRoom.getCarbonDioxide();
+				//String methaneRead = selectedRoom.getMethane();
+				//String tempRead = selectedRoom.getTemperature();
+				//String humidRead = selectedRoom.getHumidity();
 				//System.out.println(co2Read+" , "+methaneRead+" , "+tempRead+" , "+humidRead);
-				setData(co2Read, methaneRead, tempRead, humidRead);
+				//setData(co2Read, methaneRead, tempRead, humidRead);
 			}
 		});
 
@@ -253,14 +318,15 @@ public class MainPage
 	public void showMainGUI(){
 
 		frame.setVisible(true);
-		roomList = Room.getroomList();
-
+		//roomList = Room.getroomList();
+		readUserSettings();
+		
 		room.clear();
 		currOn.clear();
 
         for(int i=0; i<roomList.size(); i++){
-            room.addElement(roomList.get(i).toString());
-            currOn.addElement(roomList.get(i).toString());
+            room.addElement(loadList.get(i).toString());
+            //currOn.addElement(roomList.get(i).toString());
         }
         currentRoomList = new JList(room);
         currentlyOnListPane = new JList(currOn);
