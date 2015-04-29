@@ -90,7 +90,10 @@ void readGasLevel(){
   unsigned int co2Level = analogRead(MQ7_ANALOG_IN_PIN);
   unsigned int methaneLevel = analogRead(MQ4_ANALOG_IN_PIN);
   unsigned int time = (millis() - startMillis) / 1000;
-  int wholeT = (int) T_C;
+  
+  float tem = (((T_C*9)/5)+32);
+  
+  int wholeT = (int) tem;
   int wholeH = (int) RH;
   
   String message = String(wholeT)+","+String(wholeH)+","+String(co2Level)+","+String(methaneLevel);
