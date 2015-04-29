@@ -38,7 +38,7 @@ public class MainPage
 	JButton customizeButton;
 	JButton reportsButton;
 	JButton refreshButton;
-	JList currentRoomList, currentlyOnListPane;
+	JList currentRoomList; //currentlyOnListPane;
 	JScrollPane roomListPane;
 	ArrayList<String> roomList;
 	ArrayList<String> loadList = new ArrayList<String>();
@@ -215,11 +215,11 @@ public class MainPage
 		roomListPane.setPreferredSize(new Dimension(100,200));
 		pane.add(roomListPane);
 
-		currentlyOnListPane = new JList(currOn);
-		currentlyOnListPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		JScrollPane onList = new JScrollPane(currentlyOnListPane);
-		onList.setPreferredSize(new Dimension(100,200));
-		pane.add(onList);
+		//currentlyOnListPane = new JList(currOn);
+		//currentlyOnListPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		//JScrollPane onList = new JScrollPane(currentlyOnListPane);
+		//onList.setPreferredSize(new Dimension(100,200));
+		//pane.add(onList);
 
 		customizeButton = new JButton("Refresh");
 		pane.add(customizeButton);
@@ -236,8 +236,8 @@ public class MainPage
 		roomLabel = new JLabel("Current Room: ");
 		pane.add(roomLabel);
 
-		onLabel = new JLabel("Currently On: ");
-		pane.add(onLabel);
+		//onLabel = new JLabel("Currently On: ");
+		//pane.add(onLabel);
 
 		co2Print = new JTextArea();
 		co2Print.setFont(bigText);
@@ -275,11 +275,11 @@ public class MainPage
 
 		Insets insets = pane.getInsets();
 		Dimension size = roomListPane.getPreferredSize();
-		roomListPane.setBounds(100 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
+		roomListPane.setBounds(230 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
 
 
-		size = onList.getPreferredSize();
-		onList.setBounds(350 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
+		//size = onList.getPreferredSize();
+		//onList.setBounds(350 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
 
 		size = customizeButton.getPreferredSize();
 		customizeButton.setBounds(110 + insets.left, 500 + insets.right, size.width + 5, size.height + 5);
@@ -288,10 +288,10 @@ public class MainPage
 		reportsButton.setBounds(360 + insets.left, 500 + insets.right, size.width + 5, size.height + 5);
 
 		size = roomLabel.getPreferredSize();
-		roomLabel.setBounds(5 + insets.left, 250 + insets.right, size.width, size.height);
+		roomLabel.setBounds(130 + insets.left, 250 + insets.right, size.width, size.height);
 
-		size = onLabel.getPreferredSize();
-		onLabel.setBounds(260 + insets.left,250 + insets.right, size.width, size.height);
+		//size = onLabel.getPreferredSize();
+		//onLabel.setBounds(260 + insets.left,250 + insets.right, size.width, size.height);
 
 		size = co2Print.getPreferredSize();
 		co2Print.setBounds(10 + insets.left, 2 + insets.right, size.width + 65, size.height + 60);
@@ -328,7 +328,7 @@ public class MainPage
             currOn.addElement(roomList.get(i).toString());
         }
         currentRoomList = new JList(room);
-        currentlyOnListPane = new JList(currOn);
+        //currentlyOnListPane = new JList(currOn);
 
         //fireContentsChanged();
 
