@@ -363,7 +363,7 @@ public class MainPage
 	{
 		co2Print.setText("CO: \n"+ co2Read + " PPM");
 		methanePrint.setText("CH4: \n" + methaneRead + " PPM");
-		tempPrint.setText("Temperature: \n" + tempRead + "\u00b0" + "C");
+		tempPrint.setText("Temperature: \n" + tempRead + "\u00b0" + "F");
 		humidPrint.setText("Humidity: \n" + humidRead + " %");
 
 		co2Parse = Float.parseFloat(co2Read);
