@@ -1,3 +1,14 @@
+#include <Arduino.h>
+#include <string.h>
+#include <Wire.h> //I2C library
+void setup();
+void loop();
+void turnHeaterHigh();
+void turnHeaterLow();
+void readGasLevel();
+byte fetch_humidity_temperature(unsigned int *p_H_dat, unsigned int *p_T_dat);
+void print_float(float f, int num_digits);
+#line 1 "src/mq7code.ino"
 
 /* Original author Posted by David Houlding at 2:10 PM 36 
 *  original source code found at
@@ -5,8 +16,8 @@
 * Modified and reused bye 316 Air project team
 */
 
-#include <string.h>
-#include <Wire.h> //I2C library
+//#include <string.h>
+//#include <Wire.h> //I2C library
 
 byte fetch_humidity_temperature(unsigned int *p_Humidity, unsigned int *p_Temperature);
 void print_float(float f, int num_digits);
@@ -90,9 +101,9 @@ void readGasLevel(){
   unsigned int co2Level = analogRead(MQ7_ANALOG_IN_PIN);
   unsigned int methaneLevel = analogRead(MQ4_ANALOG_IN_PIN);
   unsigned int time = (millis() - startMillis) / 1000;
-  
-  float tem = (((T_C*9)/5)+32);
-  
+
+    float tem = (((T_C*9)/5)+32);
+
   int wholeT = (int) tem;
   int wholeH = (int) RH;
   

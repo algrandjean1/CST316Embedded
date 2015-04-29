@@ -191,9 +191,9 @@ public class MainPage
 						//String[] listArray = loadList.toArray(new String[loadList.size()]);
 
 
-						/*System.out.println("Updating room data at: "+new Date().toString());
+						System.out.println("Updating room data at: "+new Date().toString());
 						selectedRoom.updateData();
-						System.out.println("Room data updated at: "+new Date().toString());*/
+						System.out.println("Room data updated at: "+new Date().toString());
 						
 						String co2Read = selectedRoom.getCarbonDioxide();
 						String methaneRead = selectedRoom.getMethane();
