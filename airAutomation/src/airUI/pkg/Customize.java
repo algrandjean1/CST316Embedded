@@ -195,12 +195,12 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		removeButton.addActionListener(this);
 
 		//the back button
-		backButton.setBounds(300,500,60,30);
+		backButton.setBounds(300,500,120,30);
 		mainPan.add(backButton);
 		backButton.addActionListener(driver);
 
 		//the save button
-		saveButton.setBounds(230,500,60,30);
+		saveButton.setBounds(170,500,120,30);
 		mainPan.add(saveButton);
 		saveButton.addActionListener(this);
 
