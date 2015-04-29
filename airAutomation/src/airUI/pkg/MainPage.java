@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -43,8 +45,8 @@ public class MainPage
 
 	//Read the values from properties files
 	String propFileName = MainDriver.ROOM_PROPERTIES_PATH;
-	Properties prop = new Properties();
-	Properties roomProps = new Properties();
+	Properties roomProp = new Properties();
+	Properties userProp = new Properties();
 
 	float tempThresholdLow;
 	float tempThresholdHigh;
@@ -54,6 +56,7 @@ public class MainPage
 	float methaneThreshold;
 
 	MainDriver driver;
+	Room ro;
 
 	private String co2Read = "0";
 	private String methaneRead = "0";
@@ -90,14 +93,14 @@ public class MainPage
 		{
 			//InputStream in = MainPage.class.getResourceAsStream(propFileName);
 			in = new FileInputStream(propFileName);
-			prop.load(in);
+			roomProp.load(in);
 
-                tempThresholdLow = Float.parseFloat(prop.getProperty("tempThresholdLow"));
-                tempThresholdHigh = Float.parseFloat(prop.getProperty("tempThresholdHigh"));
-                humidityThresholdLow = Float.parseFloat(prop.getProperty("humidityThresholdLow"));
-                humidityThresholdHigh= Float.parseFloat(prop.getProperty("humidityThresholdHigh"));
-                carbonDioxideThreshold= Float.parseFloat(prop.getProperty("carbonDioxideThreshold"));
-                methaneThreshold = Float.parseFloat(prop.getProperty("methaneThreshold"));
+                tempThresholdLow = Float.parseFloat(roomProp.getProperty("tempThresholdLow"));
+                tempThresholdHigh = Float.parseFloat(roomProp.getProperty("tempThresholdHigh"));
+                humidityThresholdLow = Float.parseFloat(roomProp.getProperty("humidityThresholdLow"));
+                humidityThresholdHigh= Float.parseFloat(roomProp.getProperty("humidityThresholdHigh"));
+                carbonDioxideThreshold= Float.parseFloat(roomProp.getProperty("carbonDioxideThreshold"));
+                methaneThreshold = Float.parseFloat(roomProp.getProperty("methaneThreshold"));
 
             in.close();
 
@@ -109,10 +112,51 @@ public class MainPage
 		}catch(NullPointerException e){
 			//System.out.println("here");
 			System.out.println("One of the properties in the property file " + propFileName + " is missing.");
+		}catch(IOException e){
+			System.out.println("IOException Error occured while reading from property file '" + propFileName);
+			e.printStackTrace();
+		}
+	}
+
+	public void addToListModel(String ele)
+	{
+		room.addElement(ele);
+	}
+
+	public void readUserSettings()
+	{
+		//System.out.println("read user Settings");
+		try
+		{
+			String name;
+			String lowandHigh;
+			String low;
+			String high;
+
+			Room loadUsers;
+			FileInputStream inIt = new FileInputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
+			userProp.load(inIt);
+			inIt.close();
+			Enumeration keysToLoad = userProp.propertyNames();
+
+			while(keysToLoad.hasMoreElements())
+			{
+				loadList.add((String) keysToLoad.nextElement());
+			}
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("File is not found");
+			e.printStackTrace();
+		}
+		catch(NullPointerException e)
+		{
+			System.out.println("File is null");
+			e.printStackTrace();
 		}
 		catch(IOException e)
 		{
-			System.out.println("IOException Error occured while reading from property file '" + propFileName);
+			System.out.println("General IOException");
 			e.printStackTrace();
 		}
 	}
@@ -120,74 +164,50 @@ public class MainPage
 	public void addElements(Container pane)
 	{
 		pane.setLayout(null);
-		JLabel roomLabel, onLabel, dateLabel;
+		JLabel roomLabel, onLabel;
+		final JLabel dateLabel;
 
 		Font bigText = new Font("Serif",Font.BOLD,20);
 
 		roomList = Room.getroomList();
 
-        //	room.addElement(arg0)
-        /*	for(int i=0; i<thisList.length; i++){
-         room.addElement(thisList[i]);
-         currOn.addElement(thisList[i]);
-         }*/
-
-		//currentRoomList = new JList(room);
 		currentRoomList = new JList(room);
 		currentRoomList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		currentRoomList.addListSelectionListener(new ListSelectionListener() {
-
 			public void valueChanged(ListSelectionEvent e) {
 
 
 				int lastIndex = e.getLastIndex();
-				Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
-				String co2Read = selectedRoom.getCarbonDioxide();
-				String methaneRead = selectedRoom.getMethane();
-				String tempRead = selectedRoom.getTemperature();
-				String humidRead = selectedRoom.getHumidity();
+				final Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
 
-				try
+
+				Timer timer = new Timer();
+				timer.scheduleAtFixedRate(new TimerTask()
 				{
-					String name;
-					String lowandHigh;
-					String low;
-					String high;
-
-					Room loadUsers;
-					FileInputStream inIt = new FileInputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
-					roomProps.load(inIt);
-					inIt.close();
-					Enumeration keysToLoad = roomProps.propertyNames();
-
-					while(keysToLoad.hasMoreElements())
+					public void run()
 					{
-						loadList.add((String) keysToLoad.nextElement());
-					}
 
-					//System.out.println(loadList.size());
-					for(int i=0;i<loadList.size();i++)
-					{
-						//System.out.println(loadList.get(i));
-						name = loadList.get(i);
-						lowandHigh = roomProps.getProperty(name);
-						String[] splitList = lowandHigh.split(",");
-						low = splitList[0];
-						high = splitList[1];
-						tempRead = splitList[2];
-						humidRead = splitList[3];
-						co2Read = splitList[4];
-						methaneRead = splitList[5];
+						//readUserSettings();
+						//String[] listArray = loadList.toArray(new String[loadList.size()]);
 
+
+						String co2Read = selectedRoom.getCarbonDioxide();
+						String methaneRead = selectedRoom.getMethane();
+						String tempRead = selectedRoom.getTemperature();
+						String humidRead = selectedRoom.getHumidity();
+						//System.out.println(co2Read+" , "+methaneRead+" , "+tempRead+" , "+humidRead);
 						setData(co2Read, methaneRead, tempRead, humidRead);
 					}
-				}
-				catch(IOException ex)
-				{
-					ex.printStackTrace();
-				}
 
+				},10000,10000);
+
+				//String co2Read = selectedRoom.getCarbonDioxide();
+				//String methaneRead = selectedRoom.getMethane();
+				//String tempRead = selectedRoom.getTemperature();
+				//String humidRead = selectedRoom.getHumidity();
+				//System.out.println(co2Read+" , "+methaneRead+" , "+tempRead+" , "+humidRead);
+				//setData(co2Read, methaneRead, tempRead, humidRead);
 			}
 		});
 
@@ -239,11 +259,19 @@ public class MainPage
 		humidPrint.setText("Humidity: \n" + humidRead);
 		pane.add(humidPrint);
 
-		Date today = new Date();
+		//Date today = new Date();
 		dateLabel = new JLabel();
 		dateLabel.setFont(bigText);
-		dateLabel.setText(today.toString());
+		dateLabel.setText(new Date().toString());
 		pane.add(dateLabel);
+
+		Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run(){
+                dateLabel.setText(new Date().toString());
+            }
+        }, 1000, 1000);
 
 		Insets insets = pane.getInsets();
 		Dimension size = roomListPane.getPreferredSize();
@@ -320,7 +348,8 @@ public class MainPage
 		updateData();
 	}
 
-	public void updateData(){
+	public void updateData()
+	{
 		co2Print.setText("CO2: \n"+ co2Read + "%");
 		methanePrint.setText("CH4: \n" + methaneRead + "%");
 		tempPrint.setText("Temperature: \n" + tempRead + "F");
@@ -331,15 +360,6 @@ public class MainPage
 		tempParse = Float.parseFloat(tempRead);
 		humidParse = Float.parseFloat(humidRead);
 
-		/*
-		if(co2Parse < carbonDioxideThresholdLow){
-			co2Print.setBackground(Color.GREEN);
-		}else if(co2Parse > carbonDioxideThresholdLow && co2Parse < carbonDioxideThresholdHigh){
-			co2Print.setBackground(Color.ORANGE);
-		}else{
-            co2Print.setBackground(Color.RED);
-		}*/
-
 		if(co2Parse > carbonDioxideThreshold)
 		{
 			co2Print.setBackground(Color.RED);
@@ -349,15 +369,6 @@ public class MainPage
 			co2Print.setBackground(Color.GREEN);
 		}
 
-        /*
-		if(methaneParse <methaneThresholdLow){
-			methanePrint.setBackground(Color.GREEN);
-		}else if(methaneParse >methaneThresholdLow && methaneParse <methaneThresholdHigh){
-			methanePrint.setBackground(Color.ORANGE);
-		}else{
-			methanePrint.setBackground(Color.RED);
-		}
-		*/
 
 		if(methaneParse > methaneThreshold)
 		{
@@ -387,19 +398,5 @@ public class MainPage
 		}
 
 	}
-
-	/*
-     public static void main(String[] args)
-     {
-
-     javax.swing.SwingUtilities.invokeLater(new Runnable()
-     {
-     public void run()
-     {
-     showGUI();
-     }
-     });
-     }*/
-
 
 }

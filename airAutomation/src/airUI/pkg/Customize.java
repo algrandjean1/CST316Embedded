@@ -26,10 +26,7 @@ import javax.swing.event.ChangeListener;
 
 public class Customize implements ActionListener, ItemListener, ChangeListener
 {
-
-	String roomProp = "room.properties";
-    String userSetsProp = "userSettings.properties";
-    private XBeeHandler xbeeHandler;
+	private XBeeHandler xbeeHandler = MainDriver.xbeeHandler;
 	Properties props;
 	Properties roomProps;
 	Room newRoom;
@@ -322,8 +319,8 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				{
 					//System.out.println("Modify existing file");
 					correctRange(N,low,high);
-					newRoom.createRoom(modRoom, lowEnd, highEnd, xbeeHandler);
-					modifyKeys(keys, modRoom, lowEnd,highEnd);
+					newRoom.createRoom(modRoom, lowEnd, highEnd, MainDriver.xbeeHandler);
+					modifyKeys(keys, modRoom, lowEnd, highEnd);
 					populateRoomBox(keys);
 					added = true;
 					roomBox.revalidate();
@@ -340,7 +337,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 			if(!newRoom.containsRoom(N))
 			{
 				//System.out.println("Create new Room");
-				keys.add(newRoom.createRoom(N, L, H, xbeeHandler));
+				keys.add(newRoom.createRoom(N, L, H, MainDriver.xbeeHandler));
 				populateRoomBox(keys);
 				roomBox.revalidate();
 				added = true;
@@ -395,8 +392,6 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 				populateKeysList(name,low,high);
 			}
 
-			props.load(inIt);
-			inIt.close();
 		}
 		catch(FileNotFoundException e)
 		{
