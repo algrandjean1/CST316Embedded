@@ -117,12 +117,12 @@ public class MainPage
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void addToListModel(String ele)
 	{
 		room.addElement(ele);
 	}
-	
+
 	public void readUserSettings()
 	{
 		//System.out.println("read user Settings");
@@ -166,11 +166,11 @@ public class MainPage
 		pane.setLayout(null);
 		JLabel roomLabel, onLabel;
 		final JLabel dateLabel;
-        
+
 		Font bigText = new Font("Serif",Font.BOLD,20);
-        
+
 		roomList = Room.getroomList();
-		
+
 		currentRoomList = new JList(room);
 		currentRoomList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -180,18 +180,18 @@ public class MainPage
 
 				int lastIndex = e.getLastIndex();
 				final Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
-				
-				
+
+
 				Timer timer = new Timer();
 				timer.scheduleAtFixedRate(new TimerTask()
 				{
 					public void run()
 					{
-						
+
 						readUserSettings();
 						String[] listArray = loadList.toArray(new String[loadList.size()]);
-						
-						
+
+
 						String co2Read = selectedRoom.getCarbonDioxide();
 						String methaneRead = selectedRoom.getMethane();
 						String tempRead = selectedRoom.getTemperature();
@@ -199,9 +199,9 @@ public class MainPage
 						//System.out.println(co2Read+" , "+methaneRead+" , "+tempRead+" , "+humidRead);
 						setData(co2Read, methaneRead, tempRead, humidRead);
 					}
-					
+
 				},10000,10000);
-				
+
 				//String co2Read = selectedRoom.getCarbonDioxide();
 				//String methaneRead = selectedRoom.getMethane();
 				//String tempRead = selectedRoom.getTemperature();
@@ -264,7 +264,7 @@ public class MainPage
 		dateLabel.setFont(bigText);
 		dateLabel.setText(new Date().toString());
 		pane.add(dateLabel);
-		
+
 		Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
