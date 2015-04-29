@@ -354,8 +354,8 @@ public class MainPage
 
 	public void updateData()
 	{
-		co2Print.setText("CO: \n"+ co2Read + "ppm");
-		methanePrint.setText("CH4: \n" + methaneRead + "%");
+		co2Print.setText("CO: \n"+ co2Read + "PPM");
+		methanePrint.setText("CH4: \n" + methaneRead + "PPM");
 		tempPrint.setText("Temperature: \n" + tempRead + "\u00b0" + "C");
 		humidPrint.setText("Humidity: \n" + humidRead + "%");
 
