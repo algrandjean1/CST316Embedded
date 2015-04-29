@@ -318,15 +318,14 @@ public class MainPage
 	public void showMainGUI(){
 
 		frame.setVisible(true);
-		//roomList = Room.getroomList();
-		readUserSettings();
-		
+		roomList = Room.getroomList();
+
 		room.clear();
 		currOn.clear();
 
         for(int i=0; i<roomList.size(); i++){
-            room.addElement(loadList.get(i).toString());
-            //currOn.addElement(roomList.get(i).toString());
+            room.addElement(roomList.get(i).toString());
+            currOn.addElement(roomList.get(i).toString());
         }
         currentRoomList = new JList(room);
         currentlyOnListPane = new JList(currOn);
