@@ -169,6 +169,34 @@ public class Room implements IDataReceiveListener
 				} // end while parsing data
 
 	}
+	
+	public void updateData() {
+		String line;
+		String[] sensorData;
+		
+		XBeeMessage xbeeMessage = xbeeHandler.getXbee().readData();
+		/*try
+		{
+			XBeeMessage xbeeMessage = xbeeHandler.getXbee().readDataFrom(xbeeHandler.getDevices());
+		}
+		catch (Exception e)
+		{
+			System.out.println("error while retriving data");
+			e.printStackTrace();
+		}*/
+		
+		System.out.println("Dragon: " + xbeeMessage.getDataString());
+
+		line = xbeeMessage.getDataString();
+		while(line != null) {
+			sensorData = line.split(",");
+
+			this.temperature = sensorData[0];
+			this.humidity = sensorData[1];
+			this.carbonDioxide = sensorData[2];
+			this.methane = sensorData[3];
+		} // end while parsing data
+	}
 
 	public void popUserReadingsArray()
 	{
