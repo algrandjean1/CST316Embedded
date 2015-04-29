@@ -204,7 +204,7 @@ public class MainPage
 						setData(co2Read, methaneRead, tempRead, humidRead);
 					}
 
-				},10000,10000);
+				},0,5000);
 
 				//String co2Read = selectedRoom.getCarbonDioxide();
 				//String methaneRead = selectedRoom.getMethane();
