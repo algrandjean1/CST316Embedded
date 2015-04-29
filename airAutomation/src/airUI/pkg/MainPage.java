@@ -188,8 +188,8 @@ public class MainPage
 					public void run()
 					{
 
-						readUserSettings();
-						String[] listArray = loadList.toArray(new String[loadList.size()]);
+						//readUserSettings();
+						//String[] listArray = loadList.toArray(new String[loadList.size()]);
 
 
 						String co2Read = selectedRoom.getCarbonDioxide();
