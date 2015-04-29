@@ -54,6 +54,7 @@ public class MainPage
 	float methaneThreshold;
 
 	MainDriver driver;
+	Room ro;
 
 	private String co2Read = "0";
 	private String methaneRead = "0";
@@ -109,9 +110,7 @@ public class MainPage
 		}catch(NullPointerException e){
 			//System.out.println("here");
 			System.out.println("One of the properties in the property file " + propFileName + " is missing.");
-		}
-		catch(IOException e)
-		{
+		}catch(IOException e){
 			System.out.println("IOException Error occured while reading from property file '" + propFileName);
 			e.printStackTrace();
 		}
@@ -121,23 +120,15 @@ public class MainPage
 	{
 		pane.setLayout(null);
 		JLabel roomLabel, onLabel, dateLabel;
-
+        
 		Font bigText = new Font("Serif",Font.BOLD,20);
-
+        
 		roomList = Room.getroomList();
-
-        //	room.addElement(arg0)
-        /*	for(int i=0; i<thisList.length; i++){
-         room.addElement(thisList[i]);
-         currOn.addElement(thisList[i]);
-         }*/
-
-		//currentRoomList = new JList(room);
+		
 		currentRoomList = new JList(room);
 		currentRoomList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		currentRoomList.addListSelectionListener(new ListSelectionListener() {
-
 			public void valueChanged(ListSelectionEvent e) {
 
 
@@ -147,47 +138,8 @@ public class MainPage
 				String methaneRead = selectedRoom.getMethane();
 				String tempRead = selectedRoom.getTemperature();
 				String humidRead = selectedRoom.getHumidity();
-
-				try
-				{
-					String name;
-					String lowandHigh;
-					String low;
-					String high;
-
-					Room loadUsers;
-					FileInputStream inIt = new FileInputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
-					roomProps.load(inIt);
-					inIt.close();
-					Enumeration keysToLoad = roomProps.propertyNames();
-
-					while(keysToLoad.hasMoreElements())
-					{
-						loadList.add((String) keysToLoad.nextElement());
-					}
-
-					//System.out.println(loadList.size());
-					for(int i=0;i<loadList.size();i++)
-					{
-						//System.out.println(loadList.get(i));
-						name = loadList.get(i);
-						lowandHigh = roomProps.getProperty(name);
-						String[] splitList = lowandHigh.split(",");
-						low = splitList[0];
-						high = splitList[1];
-						tempRead = splitList[2];
-						humidRead = splitList[3];
-						co2Read = splitList[4];
-						methaneRead = splitList[5];
-
-						setData(co2Read, methaneRead, tempRead, humidRead);
-					}
-				}
-				catch(IOException ex)
-				{
-					ex.printStackTrace();
-				}
-
+				//System.out.println(co2Read+" , "+methaneRead+" , "+tempRead+" , "+humidRead);
+				setData(co2Read, methaneRead, tempRead, humidRead);
 			}
 		});
 
@@ -320,7 +272,8 @@ public class MainPage
 		updateData();
 	}
 
-	public void updateData(){
+	public void updateData()
+	{
 		co2Print.setText("CO2: \n"+ co2Read + "%");
 		methanePrint.setText("CH4: \n" + methaneRead + "%");
 		tempPrint.setText("Temperature: \n" + tempRead + "F");
@@ -331,15 +284,6 @@ public class MainPage
 		tempParse = Float.parseFloat(tempRead);
 		humidParse = Float.parseFloat(humidRead);
 
-		/*
-		if(co2Parse < carbonDioxideThresholdLow){
-			co2Print.setBackground(Color.GREEN);
-		}else if(co2Parse > carbonDioxideThresholdLow && co2Parse < carbonDioxideThresholdHigh){
-			co2Print.setBackground(Color.ORANGE);
-		}else{
-            co2Print.setBackground(Color.RED);
-		}*/
-
 		if(co2Parse > carbonDioxideThreshold)
 		{
 			co2Print.setBackground(Color.RED);
@@ -349,15 +293,6 @@ public class MainPage
 			co2Print.setBackground(Color.GREEN);
 		}
 
-        /*
-		if(methaneParse <methaneThresholdLow){
-			methanePrint.setBackground(Color.GREEN);
-		}else if(methaneParse >methaneThresholdLow && methaneParse <methaneThresholdHigh){
-			methanePrint.setBackground(Color.ORANGE);
-		}else{
-			methanePrint.setBackground(Color.RED);
-		}
-		*/
 
 		if(methaneParse > methaneThreshold)
 		{
@@ -387,19 +322,5 @@ public class MainPage
 		}
 
 	}
-
-	/*
-     public static void main(String[] args)
-     {
-
-     javax.swing.SwingUtilities.invokeLater(new Runnable()
-     {
-     public void run()
-     {
-     showGUI();
-     }
-     });
-     }*/
-
 
 }
