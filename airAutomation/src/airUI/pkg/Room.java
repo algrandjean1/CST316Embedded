@@ -31,6 +31,7 @@ import com.digi.xbee.api.models.XBeeMessage;
  */
 public class Room implements IDataReceiveListener
 {
+	int counter = 0;
 	private String room = "room.properties";
 	private String user = "user.properties";
 	private String userS = "userSettings.properties";
@@ -169,6 +170,34 @@ public class Room implements IDataReceiveListener
 				} // end while parsing data
 
 	}
+	
+	public void updateData() {
+		String line;
+		String[] sensorData;
+		
+		XBeeMessage xbeeMessage = xbeeHandler.getXbee().readData();
+		/*try
+		{
+			XBeeMessage xbeeMessage = xbeeHandler.getXbee().readDataFrom(xbeeHandler.getDevices());
+		}
+		catch (Exception e)
+		{
+			System.out.println("error while retriving data");
+			e.printStackTrace();
+		}*/
+		
+		System.out.println("Dragon: " + xbeeMessage.getDataString());
+
+		line = xbeeMessage.getDataString();
+		while(line != null) {
+			sensorData = line.split(",");
+
+			this.temperature = sensorData[0];
+			this.humidity = sensorData[1];
+			this.carbonDioxide = sensorData[2];
+			this.methane = sensorData[3];
+		} // end while parsing data
+	}
 
 	public void popUserReadingsArray()
 	{
@@ -271,7 +300,10 @@ public class Room implements IDataReceiveListener
 	 * @return the temperature
 	 */
 	public String getTemperature() {
-		return temperature;
+		counter++;
+		String test = counter + "";
+		//return temperature;
+		return test;
 	}
 
 	/**

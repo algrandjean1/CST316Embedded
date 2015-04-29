@@ -38,7 +38,7 @@ public class MainPage
 	JButton customizeButton;
 	JButton reportsButton;
 	JButton refreshButton;
-	JList currentRoomList, currentlyOnListPane;
+	JList currentRoomList; //currentlyOnListPane;
 	JScrollPane roomListPane;
 	ArrayList<String> roomList;
 	ArrayList<String> loadList = new ArrayList<String>();
@@ -71,7 +71,6 @@ public class MainPage
 	JTextArea co2Print, methanePrint, tempPrint, humidPrint;
 
 	DefaultListModel room = new DefaultListModel();
-	DefaultListModel currOn = new DefaultListModel();
 
 
 	public MainPage(MainDriver driver)
@@ -192,6 +191,10 @@ public class MainPage
 						//String[] listArray = loadList.toArray(new String[loadList.size()]);
 
 
+						/*System.out.println("Updating room data at: "+new Date().toString());
+						selectedRoom.updateData();
+						System.out.println("Room data updated at: "+new Date().toString());*/
+						
 						String co2Read = selectedRoom.getCarbonDioxide();
 						String methaneRead = selectedRoom.getMethane();
 						String tempRead = selectedRoom.getTemperature();
@@ -200,14 +203,8 @@ public class MainPage
 						setData(co2Read, methaneRead, tempRead, humidRead);
 					}
 
-				},10000,10000);
+				},0,5000);
 
-				//String co2Read = selectedRoom.getCarbonDioxide();
-				//String methaneRead = selectedRoom.getMethane();
-				//String tempRead = selectedRoom.getTemperature();
-				//String humidRead = selectedRoom.getHumidity();
-				//System.out.println(co2Read+" , "+methaneRead+" , "+tempRead+" , "+humidRead);
-				//setData(co2Read, methaneRead, tempRead, humidRead);
 			}
 		});
 
@@ -215,11 +212,11 @@ public class MainPage
 		roomListPane.setPreferredSize(new Dimension(100,200));
 		pane.add(roomListPane);
 
-		currentlyOnListPane = new JList(currOn);
-		currentlyOnListPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		JScrollPane onList = new JScrollPane(currentlyOnListPane);
-		onList.setPreferredSize(new Dimension(100,200));
-		pane.add(onList);
+		//currentlyOnListPane = new JList(currOn);
+		//currentlyOnListPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		//JScrollPane onList = new JScrollPane(currentlyOnListPane);
+		//onList.setPreferredSize(new Dimension(100,200));
+		//pane.add(onList);
 
 		customizeButton = new JButton("Refresh");
 		pane.add(customizeButton);
@@ -236,8 +233,8 @@ public class MainPage
 		roomLabel = new JLabel("Current Room: ");
 		pane.add(roomLabel);
 
-		onLabel = new JLabel("Currently On: ");
-		pane.add(onLabel);
+		//onLabel = new JLabel("Currently On: ");
+		//pane.add(onLabel);
 
 		co2Print = new JTextArea();
 		co2Print.setFont(bigText);
@@ -275,11 +272,11 @@ public class MainPage
 
 		Insets insets = pane.getInsets();
 		Dimension size = roomListPane.getPreferredSize();
-		roomListPane.setBounds(100 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
+		roomListPane.setBounds(230 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
 
 
-		size = onList.getPreferredSize();
-		onList.setBounds(350 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
+		//size = onList.getPreferredSize();
+		//onList.setBounds(350 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
 
 		size = customizeButton.getPreferredSize();
 		customizeButton.setBounds(110 + insets.left, 500 + insets.right, size.width + 5, size.height + 5);
@@ -288,10 +285,10 @@ public class MainPage
 		reportsButton.setBounds(360 + insets.left, 500 + insets.right, size.width + 5, size.height + 5);
 
 		size = roomLabel.getPreferredSize();
-		roomLabel.setBounds(5 + insets.left, 250 + insets.right, size.width, size.height);
+		roomLabel.setBounds(130 + insets.left, 250 + insets.right, size.width, size.height);
 
-		size = onLabel.getPreferredSize();
-		onLabel.setBounds(260 + insets.left,250 + insets.right, size.width, size.height);
+		//size = onLabel.getPreferredSize();
+		//onLabel.setBounds(260 + insets.left,250 + insets.right, size.width, size.height);
 
 		size = co2Print.getPreferredSize();
 		co2Print.setBounds(10 + insets.left, 2 + insets.right, size.width + 65, size.height + 60);
@@ -319,19 +316,33 @@ public class MainPage
 
 		frame.setVisible(true);
 		roomList = Room.getroomList();
-
+		
+		loadListModel(room, roomList);
+		
+		/*
 		room.clear();
-		currOn.clear();
+		//currOn.clear();
 
         for(int i=0; i<roomList.size(); i++){
             room.addElement(roomList.get(i).toString());
-            currOn.addElement(roomList.get(i).toString());
+            //currOn.addElement(roomList.get(i).toString());
         }
         currentRoomList = new JList(room);
-        currentlyOnListPane = new JList(currOn);
+        //currentlyOnListPane = new JList(currOn);
 
         //fireContentsChanged();
-
+		*/
+	}
+	
+	public void loadListModel(DefaultListModel r, ArrayList<String> rL)
+	{
+		r.clear();
+		int s = rL.size();
+		for(int i=0; i<s; i++){
+            r.addElement(rL.get(i).toString());
+            //currOn.addElement(roomList.get(i).toString());
+        }
+        currentRoomList = new JList(r);
 	}
 
 	public void hideMainGUI(){
@@ -350,10 +361,10 @@ public class MainPage
 
 	public void updateData()
 	{
-		co2Print.setText("CO2: \n"+ co2Read + "%");
-		methanePrint.setText("CH4: \n" + methaneRead + "%");
-		tempPrint.setText("Temperature: \n" + tempRead + "F");
-		humidPrint.setText("Humidity: \n" + humidRead + "%");
+		co2Print.setText("CO: \n"+ co2Read + " PPM");
+		methanePrint.setText("CH4: \n" + methaneRead + " PPM");
+		tempPrint.setText("Temperature: \n" + tempRead + "\u00b0" + "C");
+		humidPrint.setText("Humidity: \n" + humidRead + " %");
 
 		co2Parse = Float.parseFloat(co2Read);
 		methaneParse = Float.parseFloat(methaneRead);
