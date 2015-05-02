@@ -1,18 +1,18 @@
 package airUI.pkg;
 
-//layout for comments
-
-/*
-*****************************************************************************************************************
-*
-*****************************************************************************************************************
-*/
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Properties;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -20,21 +20,24 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.SpinnerListModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-public class Customize implements ActionListener, ItemListener
+public class Customize implements ActionListener, ItemListener, ChangeListener
 {
-	//Date time = new Date();
-	//SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+	private XBeeHandler xbeeHandler = MainDriver.xbeeHandler;
+	Properties props;
+	Properties roomProps;
+	Room newRoom;
 
-	int TEMPRANGE = 27;
-	int TIMERANGE = 49;
+	int STEPS = 1;
 
-	ArrayList<String> roomList = new ArrayList<String>();
-	ArrayList<String> tempR = new ArrayList<String>();
-	ArrayList<String> tempR2 = new ArrayList<String>();
-	ArrayList<String> timeR = new ArrayList<String>();
-	ArrayList<String> timeR2 = new ArrayList<String>();
+	String lowFromProp;
+	String highFromProp;
+
+	ArrayList<Room> keys = new ArrayList<Room>();
+	ArrayList<String> loadList = new ArrayList<String>();
 
 	protected JFrame mainWin;
 	protected JPanel mainPan;
@@ -42,115 +45,96 @@ public class Customize implements ActionListener, ItemListener
 	protected JLabel rLabel;
 	protected JLabel Temp;
 	protected JLabel To;
-	protected JLabel To2;
-	protected JLabel SleepSch;
 	protected JLabel RPre;
 	protected JLabel newR;
 
-	protected JTextField newRoom;
+	protected JTextField roomName;
+	protected JTextField removeName;
 
 	protected JSpinner lowTemp;
 	protected JSpinner highTemp;
 	protected JSpinner lowTime;
 	protected JSpinner highTime;
 
-	protected SpinnerListModel tempModel;
-	protected SpinnerListModel tempModel2;
-	protected SpinnerListModel timeModel;
-	protected SpinnerListModel timeModel2;
+	protected SpinnerNumberModel tempModel;
+	protected SpinnerNumberModel tempModel2;
 
-	protected JComboBox roomBox;
-	protected JComboBox roomPreset;
-
+	protected JComboBox<String> roomBox;
 	protected JButton addModRooms;
+
 	protected JButton backButton;
-	
+	protected JButton saveButton;
+	protected JButton removeButton;
+
 	protected MainDriver driver;
+	protected Room r;
 
 	public Customize(MainDriver driver)
 	{
 		this.driver = driver;
-		
+
+		this.props = new Properties();
+		this.roomProps = new Properties();
+		FileInputStream in;
+		try
+		{
+			in = new FileInputStream(MainDriver.ROOM_PROPERTIES_PATH);
+			roomProps.load(in);
+			in.close();
+
+			lowFromProp = roomProps.getProperty("tempThresholdLow");
+			highFromProp = roomProps.getProperty("tempThresholdHigh");
+
+		}
+		catch (FileNotFoundException e)
+		{
+			System.out.println("File is not Found");
+			e.printStackTrace();
+		}
+		catch(NullPointerException e)
+		{
+			System.out.println("File is null");
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			System.out.print("General Error");
+			e.printStackTrace();
+		}
+
 		mainWin = new JFrame("Customize");
 		mainPan = new JPanel();
 
-		Temp = new JLabel("Temp: ");
+		Temp = new JLabel("Temperature: ");
 		rLabel = new JLabel("Rooms: ");
 		To = new JLabel(" to ");
-		To2 = new JLabel(" to ");
-		SleepSch = new JLabel("Sleep Schedule: ");
 		RPre = new JLabel("Room's Preset: ");
 		newR = new JLabel("New Room Name: ");
 
-		newRoom = new JTextField();
+		roomName = new JTextField();
+		removeName = new JTextField();
+
+		int LOWRANGE = Integer.parseInt(lowFromProp);
+		int HIGHRANGE = Integer.parseInt(highFromProp);
+
+		int CURRENTTEMP = LOWRANGE;
+		int CURRENTTEMP2 = LOWRANGE+1;
+
+		tempModel = new SpinnerNumberModel(CURRENTTEMP, LOWRANGE, HIGHRANGE, STEPS);
+		tempModel2 = new SpinnerNumberModel(CURRENTTEMP2, LOWRANGE, HIGHRANGE, STEPS);
+
+		lowTemp = new JSpinner(tempModel);
+		highTemp = new JSpinner(tempModel2);
+
+		roomBox = new JComboBox(keys.toArray());
 
 		addModRooms = new JButton("Add/Modify");
 		backButton = new JButton("Back");
+		saveButton = new JButton("Save");
+		removeButton = new JButton("remove");
 
-		lowTemp = new JSpinner();
-		highTemp = new JSpinner();
-		lowTime = new JSpinner();
-		highTime = new JSpinner();
-
-		roomBox = new JComboBox(roomList.toArray());
-
-		//this is to fill in for the Temperature settings range
-		int start = 60;
-		tempR.add("None");
-		tempR2.add("None");
-		for(int i = 1; i < TEMPRANGE; i++)
-		{
-			tempR.add(Integer.toString(start));
-			tempR2.add(Integer.toString(start));
-			start++;
-		}
-
-		tempModel = new SpinnerListModel(tempR);
-		tempModel2 = new SpinnerListModel(tempR2);
-
-		String am = "AM";
-		String pm = "PM";
-		int k = 1;
-		String odd = "00";
-		String even = "30";
-		timeR.add("0:00");
-		timeR2.add("0:00");
-		for(int i = 1; i < TIMERANGE; i++)
-		{
-			if(i % 2 == 0)
-			{
-				if(k > 12)
-				{
-					timeR.add(Integer.toString(k % 12) + ":" + even + pm);
-					timeR2.add(Integer.toString(k % 12) + ":" + even + pm);
-				}
-				else
-				{
-					timeR.add(Integer.toString(k) + ":" + even + am);
-					timeR2.add(Integer.toString(k) + ":" + even + am);
-				}
-				k++;
-			}
-			else
-			{
-				if(k > 12)
-				{
-					timeR.add(Integer.toString(k % 12) + ":" + odd + pm);
-					timeR2.add(Integer.toString(k % 12) + ":" + odd + pm);
-				}
-				else
-				{
-					timeR.add(Integer.toString(k) + ":" + odd + am);
-					timeR2.add(Integer.toString(k) + ":" + odd + am);
-				}
-			}
-		}
-
-		timeModel = new SpinnerListModel(timeR);
-		timeModel2 = new SpinnerListModel(timeR2);
-		
 		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		layOut();
+		readUserSettings();
 	}
 
 	public void layOut()
@@ -172,22 +156,20 @@ public class Customize implements ActionListener, ItemListener
 		roomBox.addItemListener(this);
 		mainPan.add(roomBox);
 
-		//the label "Temp: "
-		Temp.setBounds(170,100,60,30);
+		//the label "Temperature: "
+		Temp.setBounds(170,100,90,30);
 		mainPan.add(Temp);
 
 		//the Spinner on left for temp
-		lowTemp.setBounds(220, 100, 120, 30);
-		lowTemp.setModel(tempModel);
+		lowTemp.setBounds(250, 100, 120, 30);
 		mainPan.add(lowTemp);
 
 		//the label " to "
-		To.setBounds(350,100,40,30);
+		To.setBounds(375,100,25,30);
 		mainPan.add(To);
 
 		//the Spinner on the right for temp
-		highTemp.setBounds(420,100,120,30);
-		highTemp.setModel(tempModel2);
+		highTemp.setBounds(405,100,120,30);
 		mainPan.add(highTemp);
 
 		//The label "New Rooms Name: "
@@ -195,83 +177,332 @@ public class Customize implements ActionListener, ItemListener
 		mainPan.add(newR);
 
 		//the textfield that is blank for new Rooms
-		newRoom.setBounds(295,150,120,30);
-		mainPan.add(newRoom);
+		roomName.setBounds(295,150,120,30);
+		mainPan.add(roomName);
 
 		//the button add or modify a rooms
 		addModRooms.setBounds(430,150,120,30);
 		mainPan.add(addModRooms);
 		addModRooms.addActionListener(this);
 
+		//the textfield that is blank for rooms to remove
+		removeName.setBounds(170,300,120,30);
+		mainPan.add(removeName);
 
-		//the label "Sleep Schedule: "
-		SleepSch.setBounds(170,200, 150, 30);
-		mainPan.add(SleepSch);
-
-		//the Spinner on the left for time
-		lowTime.setBounds(170,250,80,30);
-		lowTime.setModel(timeModel);
-		mainPan.add(lowTime);
-
-		//Second label " to "
-		To2.setBounds(260,250,40,30);
-		mainPan.add(To2);
-
-		//the spinner on the right for time
-		highTime.setBounds(290,250,80,30);
-		highTime.setModel(timeModel2);
-		mainPan.add(highTime);
+		//the button to remove rooms
+		removeButton.setBounds(295,300,120,30);
+		mainPan.add(removeButton);
+		removeButton.addActionListener(this);
 
 		//the back button
-		backButton.setBounds(500,500,60,30);
+		backButton.setBounds(300,500,120,30);
 		mainPan.add(backButton);
 		backButton.addActionListener(driver);
 
+		//the save button
+		saveButton.setBounds(170,500,120,30);
+		mainPan.add(saveButton);
+		saveButton.addActionListener(this);
+
 	}
 
-	public void setUp()
-	{
-		mainWin.setVisible(true);
-		mainPan.setVisible(true);
-		mainWin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		layOut();
-	}
-    /*
-	public static void main(String[] args)
-	{
-		Customize run = new Customize();
-		run.setUp();
-	}
-	*/
 	public void actionPerformed(ActionEvent e)
 	{
+		//System.out.println("Action Performed ");
 		if(e.getSource() == addModRooms)
 		{
-			if(newRoom.getText() != null)
-			{
-				roomBox.addItem(newRoom.getText());
-			}
-			else
-			{
-				;
-			}
+			//System.out.println("addModRooms button");
+			String nameOfRoom = roomName.getText();
+			String lowEnd = lowTemp.getValue().toString();
+			String highEnd = highTemp.getValue().toString();
+
+			populateKeysList(nameOfRoom, lowEnd, highEnd);
 		}
-		else if(e.getSource() == backButton)
+		else if(e.getSource() == saveButton)
 		{
-			;
+			//System.out.println("Save Button");
+			writeUserSettings(keys);
 		}
+		else if(e.getSource() == removeButton)
+		{
+			//System.out.println("remove button");
+			String rmItem = removeName.getText();
+			rmFromKeysList(rmItem);
+		}
+
 	}
 
 	public void itemStateChanged(ItemEvent event)
 	{
+		//System.out.println("item state change");
 		if(event.getStateChange() == ItemEvent.SELECTED)
 		{
 			Object compare = event.getSource();
+			if(roomBox==compare)
+			{
+				//System.out.println("Room Box changed");
+				String keyToget = roomBox.getSelectedItem().toString();
+				int setLow = Integer.parseInt(newRoom.getRoom(keyToget).getLowerBound());
+				int setHigh = Integer.parseInt(newRoom.getRoom(keyToget).getUpperBound());
+				setRoomValues(keyToget, setLow, setHigh);
+				roomBox.revalidate();
+
+			}
 		}
 	}
 
-	public void showcustomize(){
+	@Override
+	public void stateChanged(ChangeEvent e)
+	{
+		//System.out.println("State change");
+		String name = roomName.getText();
+		int lowEnd = Integer.parseInt(lowTemp.getValue().toString());
+		int highEnd = Integer.parseInt(highTemp.getValue().toString());
+
+		if (tempModel instanceof SpinnerNumberModel || tempModel2 instanceof SpinnerNumberModel)
+		{
+			//System.out.println("go inside state change");
+            correctRange(name, lowEnd, highEnd);
+        }
+	}
+
+
+	public boolean correctRange(String N, int L, int H)
+	{
+		boolean corrected = false;
+		//System.out.println("Correct Range");
+		if(L >= H || H <= L)
+		{
+			//System.out.println("Has been Corrected");
+			setRoomValues(N,H,L);
+			corrected = true;
+		}
+		return corrected;
+	}
+
+	public boolean populateKeysList(String N, String L, String H)
+	{
+		boolean added = false;
+		//System.out.println("Add Modify Room Buttons");
+
+		String n = N;
+		String l = L;
+		String h = H;
+
+		int low = Integer.parseInt(l);
+		int high = Integer.parseInt(h);
+
+		if(correctRange(N,low,high))
+		{
+			populateKeysList(n,h,l);
+		}
+
+		if(N.equals("") || N.equals(" "))
+		{
+			//System.out.println("Blank");
+			boolean comapre = false;
+
+			String modRoom = roomBox.getSelectedItem().toString();
+			String lowCompare = newRoom.getRoom(modRoom).getLowerBound();
+			String highCompare = newRoom.getRoom(modRoom).getUpperBound();
+			String lowEnd = lowTemp.getValue().toString();
+			String highEnd = highTemp.getValue().toString();
+
+			if(lowCompare.equalsIgnoreCase(lowEnd) && highCompare.equalsIgnoreCase(highEnd))
+			{
+				added = false;
+			}
+			else
+			{
+				comapre = newRoom.removeRoom(modRoom);
+				if(comapre == true)
+				{
+					//System.out.println("Modify existing file");
+					correctRange(N,low,high);
+					newRoom.createRoom(modRoom, lowEnd, highEnd, MainDriver.xbeeHandler);
+					modifyKeys(keys, modRoom, lowEnd, highEnd);
+					populateRoomBox(keys);
+					added = true;
+					roomBox.revalidate();
+				}
+				else
+				{
+					added = false;
+				}
+			}
+		}
+		else
+		{
+			//System.out.println("text not null");
+			if(!newRoom.containsRoom(N))
+			{
+				//System.out.println("Create new Room");
+				keys.add(newRoom.createRoom(N, L, H, MainDriver.xbeeHandler));
+				populateRoomBox(keys);
+				roomBox.revalidate();
+				added = true;
+			}
+			else if(roomName.getText().equalsIgnoreCase(N))
+			{
+				populateKeysList("",L, H);
+			}
+		}
+		return added;
+	}
+
+	public void setRoomValues(String na, int lo, int hi)
+	{
+		//System.out.println("Setting all room values");
+		roomName.setText(na);
+		tempModel.setValue(lo);
+		tempModel2.setValue(hi);
+	}
+
+
+	public void readUserSettings()
+	{
+		//System.out.println("read user Settings");
+		try
+		{
+			String name;
+			String lowandHigh;
+			String low;
+			String high;
+
+			Room loadUsers;
+			FileInputStream inIt = new FileInputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
+			props.load(inIt);
+			inIt.close();
+			Enumeration keysToLoad = props.propertyNames();
+
+			while(keysToLoad.hasMoreElements())
+			{
+				loadList.add((String) keysToLoad.nextElement());
+			}
+
+			//System.out.println(loadList.size());
+			for(int i=0;i<loadList.size();i++)
+			{
+				//System.out.println(loadList.get(i));
+				name = loadList.get(i);
+				lowandHigh = props.getProperty(name);
+				String[] splitList = lowandHigh.split(",");
+				low = splitList[0];
+				high = splitList[1];
+				populateKeysList(name,low,high);
+			}
+
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("File is not found");
+			e.printStackTrace();
+		}
+		catch(NullPointerException e)
+		{
+			System.out.println("File is null");
+			e.printStackTrace();
+		}
+		catch(IOException e)
+		{
+			System.out.println("General IOException");
+			e.printStackTrace();
+		}
+	}
+
+	public void writeUserSettings(ArrayList<Room> From)
+	{
+		//System.out.println("Writing User Setting");
+		try
+		{
+			FileOutputStream out = new FileOutputStream(MainDriver.USER_SETTINGS_PROPERTIES_PATH);
+			Room getAtt;
+			int s = From.size();
+			if(s == 0)
+			{
+				System.out.println("There is nothing to save");
+			}
+			else
+			{
+				for(int k=0;k<s;k++)
+				{
+					getAtt = From.get(k);
+					String nameToSet = getAtt.getName();
+					String lowAndHigh = getAtt.getLowerBound() + "," + getAtt.getUpperBound();
+					props.setProperty(nameToSet, lowAndHigh);
+				}
+			}
+			props.store(out, "User settings saved");
+			out.close();
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("File is not Found");
+			e.printStackTrace();
+		}
+		catch(NullPointerException e)
+		{
+			System.out.println("File is null");
+			e.printStackTrace();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void populateRoomBox(ArrayList<Room> toPop)
+	{
+		//System.out.println("Populate Room Box");
+		int toPopSize = toPop.size();
+		roomBox.removeAllItems();
+		String name;
+		Room temp;
+		for(int i = 0; i < toPopSize; i++)
+		{
+			temp = toPop.get(i);
+			name = temp.getName();
+			roomBox.addItem(name);
+		}
+	}
+
+	public void modifyKeys(ArrayList<Room> mv, String toModName, String newLow, String newHigh)
+	{
+		//System.out.println("Modify keys");
+		Room temp;
+		int SIZE = mv.size();
+		for(int i = 0; i < SIZE; i++)
+		{
+			System.out.println(i);
+			temp = mv.get(i);
+			String name = temp.getName();
+			if(name.equalsIgnoreCase(toModName))
+			{
+				mv.remove(i);
+				temp.removeRoom(toModName);
+				populateKeysList(toModName, newLow, newHigh);
+			}
+		}
+	}
+
+
+	public void rmFromKeysList(String rm)
+	{
+		Room toRm = newRoom.getRoom(rm);
+		if(keys.remove(toRm) && newRoom.removeRoom(rm))
+		{
+
+			//System.out.println(rm + " is removed");
+			props.remove(rm);
+			populateRoomBox(keys);
+		}
+	}
+
+
+	public void showcustomize()
+	{
 		mainWin.setVisible(true);
+		layOut();
 	}
 
 	public void hidecustomize(){
