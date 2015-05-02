@@ -15,6 +15,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -38,7 +40,7 @@ public class MainPage
 	JButton customizeButton;
 	JButton reportsButton;
 	JButton refreshButton;
-	JList currentRoomList; //currentlyOnListPane;
+	JList currentRoomList;
 	JScrollPane roomListPane;
 	ArrayList<String> roomList;
 	ArrayList<String> loadList = new ArrayList<String>();
@@ -73,9 +75,7 @@ public class MainPage
 	DefaultListModel room = new DefaultListModel();
 
 
-	public MainPage(MainDriver driver)
-	{
-
+	public MainPage(MainDriver driver){
 		this.driver = driver;
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		addElements(frame.getContentPane());
@@ -174,15 +174,20 @@ public class MainPage
 		currentRoomList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		currentRoomList.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-
-
-				int lastIndex = e.getLastIndex();
-				final Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
-
-
-				Timer timer = new Timer();
-				timer.scheduleAtFixedRate(new TimerTask()
+            
+			public void valueChanged(ListSelectionEvent e) { //Begin timer for updating sensor readings
+				
+                Timer timer = new Timer();
+                timer.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run(){
+                        int lastIndex = e.getLastIndex();
+                        Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
+                        String co2Read = "0";
+                        String methaneRead = "0";
+                        String tempRead = "0";
+                        String humidRead = "0";
+				try
 				{
 					public void run()
 					{
@@ -202,21 +207,19 @@ public class MainPage
 						//System.out.println(co2Read+" , "+methaneRead+" , "+tempRead+" , "+humidRead);
 						setData(co2Read, methaneRead, tempRead, humidRead);
 					}
-
-				},0,5000);
-
+				}
+				catch(IOException ex)
+				{
+					ex.printStackTrace();
+				}
+                    }
+                }, 1000, 1000);
 			}
-		});
-
+		});     //End timer with data updates for sensors
+        
 		roomListPane = new JScrollPane(currentRoomList);
 		roomListPane.setPreferredSize(new Dimension(100,200));
 		pane.add(roomListPane);
-
-		//currentlyOnListPane = new JList(currOn);
-		//currentlyOnListPane.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		//JScrollPane onList = new JScrollPane(currentlyOnListPane);
-		//onList.setPreferredSize(new Dimension(100,200));
-		//pane.add(onList);
 
 		customizeButton = new JButton("Refresh");
 		pane.add(customizeButton);
@@ -232,9 +235,6 @@ public class MainPage
 
 		roomLabel = new JLabel("Current Room: ");
 		pane.add(roomLabel);
-
-		//onLabel = new JLabel("Currently On: ");
-		//pane.add(onLabel);
 
 		co2Print = new JTextArea();
 		co2Print.setFont(bigText);
@@ -255,29 +255,26 @@ public class MainPage
 		humidPrint.setFont(bigText);
 		humidPrint.setText("Humidity: \n" + humidRead);
 		pane.add(humidPrint);
-
-		//Date today = new Date();
-		dateLabel = new JLabel();
-		dateLabel.setFont(bigText);
-		dateLabel.setText(new Date().toString());
-		pane.add(dateLabel);
-
-		Timer timer = new Timer();
+        
+        dateLabel = new JLabel();
+        dateLabel.setFont(bigText);
+        dateLabel.setText(new Date().toString());
+        pane.add(dateLabel);
+        pane.repaint();
+        
+        Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run(){
                 dateLabel.setText(new Date().toString());
             }
         }, 1000, 1000);
-
+        
 		Insets insets = pane.getInsets();
 		Dimension size = roomListPane.getPreferredSize();
+        
 		roomListPane.setBounds(230 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
-
-
-		//size = onList.getPreferredSize();
-		//onList.setBounds(350 + insets.left, 250 + insets.right, size.width + 40, size.height + 20);
-
+        
 		size = customizeButton.getPreferredSize();
 		customizeButton.setBounds(110 + insets.left, 500 + insets.right, size.width + 5, size.height + 5);
 
@@ -285,10 +282,8 @@ public class MainPage
 		reportsButton.setBounds(360 + insets.left, 500 + insets.right, size.width + 5, size.height + 5);
 
 		size = roomLabel.getPreferredSize();
-		roomLabel.setBounds(130 + insets.left, 250 + insets.right, size.width, size.height);
 
-		//size = onLabel.getPreferredSize();
-		//onLabel.setBounds(260 + insets.left,250 + insets.right, size.width, size.height);
+		roomLabel.setBounds(130 + insets.left, 250 + insets.right, size.width, size.height);
 
 		size = co2Print.getPreferredSize();
 		co2Print.setBounds(10 + insets.left, 2 + insets.right, size.width + 65, size.height + 60);
@@ -321,28 +316,20 @@ public class MainPage
 		
 		/*
 		room.clear();
-		//currOn.clear();
+	public void loadListModel(DefaultListModel r, ArrayList<String> rL)
+	{
+		//r.clear();
+		//for(int i=0; i<s; i++){
+            //r.addElement(rL.get(i).toString());
+        //}
+        //currentRoomList = new JList(r);
+
 
         for(int i=0; i<roomList.size(); i++){
             room.addElement(roomList.get(i).toString());
-            //currOn.addElement(roomList.get(i).toString());
         }
         currentRoomList = new JList(room);
-        //currentlyOnListPane = new JList(currOn);
-
-        //fireContentsChanged();
-		*/
-	}
-	
-	public void loadListModel(DefaultListModel r, ArrayList<String> rL)
-	{
-		r.clear();
-		int s = rL.size();
-		for(int i=0; i<s; i++){
-            r.addElement(rL.get(i).toString());
-            //currOn.addElement(roomList.get(i).toString());
-        }
-        currentRoomList = new JList(r);
+        
 	}
 
 	public void hideMainGUI(){
@@ -370,7 +357,7 @@ public class MainPage
 		methaneParse = Float.parseFloat(methaneRead);
 		tempParse = Float.parseFloat(tempRead);
 		humidParse = Float.parseFloat(humidRead);
-
+		
 		if(co2Parse > carbonDioxideThreshold)
 		{
 			co2Print.setBackground(Color.RED);
@@ -379,8 +366,7 @@ public class MainPage
 		{
 			co2Print.setBackground(Color.GREEN);
 		}
-
-
+		
 		if(methaneParse > methaneThreshold)
 		{
 			co2Print.setBackground(Color.RED);
@@ -409,5 +395,4 @@ public class MainPage
 		}
 
 	}
-
 }
