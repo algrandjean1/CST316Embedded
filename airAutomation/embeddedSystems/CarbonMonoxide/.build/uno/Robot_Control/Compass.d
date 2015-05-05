@@ -1,4 +1,6 @@
-.build/uno/src/mq7code.d .build/uno/src/mq7code.o: .build/uno/src/mq7code.cpp \
+.build/uno/Robot_Control/Compass.d .build/uno/Robot_Control/Compass.o:  \
+ /Applications/Arduino.app/Contents/Resources/Java/libraries/Robot_Control/Compass.cpp \
+  /Applications/Arduino.app/Contents/Resources/Java/libraries/Robot_Control/Compass.h \
   /Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/Arduino.h \
   /Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/binary.h \
   /Applications/Arduino.app/Contents/Resources/Java/hardware/arduino/cores/arduino/WCharacter.h \
