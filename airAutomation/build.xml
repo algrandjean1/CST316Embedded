@@ -22,8 +22,9 @@
     
     <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="test.class.path" />
     <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${lib}/findbugs-ant.jar"/>
+    <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="${lib}/appbundler-1.0.jar" />
     
-    <property name="pmd.path" location="airAutomation/lib/pmd-bin-5.3.0" />
+    <property name="pmd.path" location="lib/pmd-bin-5.3.0" />
     
     <path id="test.class.path">
         <pathelement location="${build}" />
@@ -49,7 +50,7 @@
     <target name="targets">
         
         <!-- Display Available Targets -->
-        <echo message="targets are clean, prepare, compile.test, test, build, execute"/>
+        <echo message="targets are clean, prepare, compile.test, test, build, execute, jar, bundle"/>
     </target>
     
     <target name="clean">
@@ -58,6 +59,7 @@
         <delete dir="${test.report.dir}" />
         <delete dir="${test.dir}" />
         <delete file="airAutomation.jar" />
+        <delete file="airAutomation.app" />
     </target>
     
     <target name="prepare">
@@ -146,6 +148,26 @@
                 <attribute name="Class-Path" value="${jar.classpath}" />
             </manifest>
         </jar>
+    </target>
+    
+    <target name="bundle" depends="jar" description="Bundle jar">
+        <!-- Bundle Jar -->
+        <delete dir="app" />
+        <mkdir dir="app" />
+        <bundleapp outputdirectory="app"
+            name="airAutomation"
+            displayname="Air Automation"
+            identifier="airUI.pkg.MainDriver"
+            mainclassname="airUI.pkg.MainDriver" >
+            <classpath file="airAutomation.jar" />
+            <option value="-Dapple.laf.useScreenMenuBar=true"/>
+            <option value="-Dcom.apple.macos.use-file-dialog-packages=true"/>
+            <option value="-Dcom.apple.macos.useScreenMenuBar=true"/>
+            <option value="-Dapple.awt.application.name=airAutomation"/>
+            <option value="-Dcom.apple.smallTabs=true"/>
+            
+            <option value="-Xmx1024M"/>
+        </bundleapp>
     </target>
     
     <target name="execute" depends="jar" description="Execute jar to run program">
