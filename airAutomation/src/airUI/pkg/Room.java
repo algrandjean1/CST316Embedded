@@ -30,7 +30,6 @@ import com.digi.xbee.api.models.XBeeMessage;
  */
 public class Room implements IDataReceiveListener
 {
-	int counter = 0;
 	private String room = "room.properties";
 	private String user = "user.properties";
 	private String userS = "userSettings.properties";
@@ -300,10 +299,7 @@ public class Room implements IDataReceiveListener
 	 * @return the temperature
 	 */
 	public String getTemperature() {
-		counter++;
-		String test = counter + "";
-		//return temperature;
-		return test;
+		return temperature;
 	}
 
 	/**
