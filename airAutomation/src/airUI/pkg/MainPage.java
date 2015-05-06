@@ -174,20 +174,15 @@ public class MainPage
 		currentRoomList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		currentRoomList.addListSelectionListener(new ListSelectionListener() {
-            
-			public void valueChanged(ListSelectionEvent e) { //Begin timer for updating sensor readings
-				
-                Timer timer = new Timer();
-                timer.scheduleAtFixedRate(new TimerTask() {
-                    @Override
-                    public void run(){
-                        int lastIndex = e.getLastIndex();
-                        Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
-                        String co2Read = "0";
-                        String methaneRead = "0";
-                        String tempRead = "0";
-                        String humidRead = "0";
-				try
+			public void valueChanged(ListSelectionEvent e) {
+
+
+				int lastIndex = e.getLastIndex();
+				final Room selectedRoom = Room.getRoom(roomList.get(lastIndex));
+
+
+				Timer timer = new Timer();
+				timer.scheduleAtFixedRate(new TimerTask()
 				{
 					public void run()
 					{
@@ -207,16 +202,11 @@ public class MainPage
 						//System.out.println(co2Read+" , "+methaneRead+" , "+tempRead+" , "+humidRead);
 						setData(co2Read, methaneRead, tempRead, humidRead);
 					}
-				}
-				catch(IOException ex)
-				{
-					ex.printStackTrace();
-				}
-                    }
-                }, 1000, 1000);
+
+				},0,5000);
+
 			}
-		});     //End timer with data updates for sensors
-        
+		});
 		roomListPane = new JScrollPane(currentRoomList);
 		roomListPane.setPreferredSize(new Dimension(100,200));
 		pane.add(roomListPane);
@@ -314,21 +304,15 @@ public class MainPage
 		
 		loadListModel(room, roomList);
 		
-		/*
-		room.clear();
+	}
 	public void loadListModel(DefaultListModel r, ArrayList<String> rL)
 	{
-		//r.clear();
-		//for(int i=0; i<s; i++){
-            //r.addElement(rL.get(i).toString());
-        //}
-        //currentRoomList = new JList(r);
-
-
-        for(int i=0; i<roomList.size(); i++){
-            room.addElement(roomList.get(i).toString());
+		r.clear();
+		int s = rL.size();
+		for(int i=0; i<s; i++){
+            r.addElement(rL.get(i).toString());
         }
-        currentRoomList = new JList(room);
+        currentRoomList = new JList(r);
         
 	}
 
