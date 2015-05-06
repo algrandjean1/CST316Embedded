@@ -1,14 +1,12 @@
 <?xml version="1.0"?>
 <project name="Embedded CST316 Project Test Build" default="targets" basedir=".">
-    
     <!-- Set Global Properties For This Build -->
-    <property name="src" location="src" />
-	<property name="lib" location="lib" />
-	<property name="test" location="src/testAirUI/airUI/pkg" />
-    <property name="build" location="classes" />
-    <property name="test.dir" location="classes/tests" />
-    <property name="test.report.dir" location="testreport" />
-    
+    <property name="src" location="airAutomation/src" />
+	<property name="lib" location="airAutomation/lib" />
+	<property name="test" location="airAutomation/src/testAirUI/airUI/pkg" />
+    <property name="build" location="airAutomation/classes" />
+    <property name="test.dir" location="airAutomation/classes/tests" />
+    <property name="test.report.dir" location="airAutomation/testreport" />
     <path id="test.class.path">
         <pathelement location="${build}" />
         <pathelement location="${lib}/xbjlib-1.0.1.jar" />
@@ -19,40 +17,35 @@
     	<pathelement location="${lib}/pmd-core-5.2.3.jar" />
     	<pathelement location="${lib}/pmd-java-5.2.3.jar" />
     </path>
-    
+
     <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="test.class.path" />
     <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${lib}/findbugs-ant.jar"/>
     <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="${lib}/appbundler-1.0.jar" />
-    
+
     <property name="pmd.path" location="lib/pmd-bin-5.3.0" />
-    
+
     <path id="test.class.path">
         <pathelement location="${build}" />
     	<fileset dir="${lib}">
     		<include name="**/*.jar" />
     	</fileset>
     </path>
-    
+
     <path id="pmd.classpath">
         <fileset dir="${pmd.path}/lib" includes="*.jar"/>
     </path>
-    
     <path id="compile.class.path">
         <pathelement location="${build}" />
         <fileset dir="${lib}">
     		<include name="**/*.jar" />
     	</fileset>
-        <fileset dir="${src}">
-            <include name="**/*.properties" />
-        </fileset>
     </path>
-    
     <target name="targets">
-        
+
         <!-- Display Available Targets -->
         <echo message="targets are clean, prepare, compile.test, test, build, execute, jar, bundle"/>
     </target>
-    
+
     <target name="clean">
         <!-- Delete The ${build} Directory Tree -->
         <delete dir="${build}" />
@@ -61,7 +54,7 @@
         <delete file="airAutomation.jar" />
         <delete file="airAutomation.app" />
     </target>
-    
+
     <target name="prepare">
         <!-- Create The Time Stamp -->
         <tstamp/>
@@ -70,7 +63,7 @@
         <mkdir dir="${test.dir}" />
         <mkdir dir="${test.report.dir}" />
     </target>
-    
+
     <target name="compile.test" depends="clean, prepare" description="Compile Unit Tests">
         <!-- Compile All Classes -->
         <javac srcdir="${src}"
@@ -84,7 +77,6 @@
             <classpath refid="test.class.path" />
         </javac>
     </target>
-    
     <target name="test" depends="compile.test" description="Execute Unit Tests">
         <!-- Run Junit tests -->
     	<property name="junit.path" refid="test.class.path"/>
@@ -100,34 +92,34 @@
                 </fileset>
             </batchtest>
         </junit>
-        
-        <!-- Run PMD -->
-        <echo message="Running PMD"/>
-        <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="pmd.classpath" />
-        <pmd shortFilenames="true">
-            <sourceLanguage name="java" version="1.8"/>
-            <ruleset>rulesets/java/design.xml</ruleset>
-            <ruleset>java-basic</ruleset>
-            <ruleset>java-naming</ruleset>
-            <ruleset>java-empty</ruleset>
-            <auxclasspath refid="test.class.path"/>
-            <formatter type="xml" toFile="${test.report.dir}/pmd.xml">
-                <param name="linkPrefix" value="http://pmd.sourceforge.net/xref/"/>
-            </formatter>
-            <fileset dir="${src}">
-                <include name="**/*.java"/>
-            </fileset>
-        </pmd>
-        <!-- Run Findbugs -->
-        <echo message="Running Findbugs" />
-        <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${lib}/findbugs-ant.jar"/>
-        <findbugs home="${lib}" output="xml" outputFile="${test.report.dir}/findbugs.xml">
-            <auxClasspath refid="test.class.path"/>
-            <sourcePath path="${src}"/>
-            <class location="${build}"/>
-        </findbugs>
-    </target>
-    
+
+    <!-- Run PMD -->
+	<echo message="Running PMD"/>
+	<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="pmd.classpath" />
+	<pmd shortFilenames="true">
+		<sourceLanguage name="java" version="1.8"/>
+		<ruleset>rulesets/java/design.xml</ruleset>
+		<ruleset>java-basic</ruleset>
+		<ruleset>java-naming</ruleset>
+		<ruleset>java-empty</ruleset>
+		<auxclasspath refid="test.class.path"/>
+		<formatter type="xml" toFile="${test.report.dir}/pmd.xml">
+			<param name="linkPrefix" value="http://pmd.sourceforge.net/xref/"/>
+		</formatter>
+		<fileset dir="${src}">
+			<include name="**/*.java"/>
+		</fileset>
+	</pmd>
+    <!-- Run Findbugs -->
+	<echo message="Running Findbugs" />
+    <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${lib}/findbugs-ant.jar"/>
+	<findbugs home="${lib}" output="xml" outputFile="${test.report.dir}/findbugs.xml">
+		<auxClasspath refid="test.class.path"/>
+		<sourcePath path="${src}"/>
+		<class location="${build}"/>
+	</findbugs>
+</target>
+
     <target name="build" depends="clean, prepare" description="Compile class files for program execution">
         <!-- Build Project Files -->
         <echo message="Build source files" />
@@ -137,19 +129,19 @@
             <classpath refid="compile.class.path"/>
         </javac>
     </target>
-    
+
     <target name="jar" depends="build" description="Package all files into jar">
-        <manifestclasspath property="jar.classpath" jarfile="airAutomation.jar">
+        <manifestclasspath property="jar.classpath" jarfile="airAutomation/airAutomation.jar">
             <classpath refid="compile.class.path" />
         </manifestclasspath>
-        <jar destfile="airAutomation.jar" basedir="${build}">
+        <jar destfile="airAutomation/airAutomation.jar" basedir="${build}">
             <manifest>
                 <attribute name="Main-Class" value="airUI.pkg.MainDriver" />
                 <attribute name="Class-Path" value="${jar.classpath}" />
             </manifest>
         </jar>
     </target>
-    
+
     <target name="bundle" depends="jar" description="Bundle jar">
         <!-- Bundle Jar -->
         <delete dir="app" />
@@ -165,18 +157,18 @@
             <option value="-Dcom.apple.macos.useScreenMenuBar=true"/>
             <option value="-Dapple.awt.application.name=airAutomation"/>
             <option value="-Dcom.apple.smallTabs=true"/>
-            
+
             <option value="-Xmx1024M"/>
         </bundleapp>
     </target>
-    
+
     <target name="execute" depends="jar" description="Execute jar to run program">
         <!-- Execute The Program -->
         <echo message="Compile and execute AirUI Program" />
         <java classname="airUI.pkg.MainDriver" fork="true">
             <arg value="-h"/>
             <classpath>
-                <pathelement location="airAutomation.jar"/>
+                <pathelement location="airAutomation/airAutomation.jar"/>
                 <pathelement path="${compile.class.path}"/>
             </classpath>
         </java>
