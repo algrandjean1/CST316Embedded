@@ -17,19 +17,20 @@
     	<pathelement location="${lib}/pmd-core-5.2.3.jar" />
     	<pathelement location="${lib}/pmd-java-5.2.3.jar" />
     </path>
-    
+
     <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="test.class.path" />
     <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${lib}/findbugs-ant.jar"/>
-    
-    <property name="pmd.path" location="airAutomation/lib/pmd-bin-5.3.0" />
-    
+    <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="${lib}/appbundler-1.0.jar" />
+
+    <property name="pmd.path" location="lib/pmd-bin-5.3.0" />
+
     <path id="test.class.path">
         <pathelement location="${build}" />
     	<fileset dir="${lib}">
     		<include name="**/*.jar" />
     	</fileset>
     </path>
-    
+
     <path id="pmd.classpath">
         <fileset dir="${pmd.path}/lib" includes="*.jar"/>
     </path>
@@ -40,19 +41,20 @@
     	</fileset>
     </path>
     <target name="targets">
-        
+
         <!-- Display Available Targets -->
-        <echo message="targets are clean, prepare, compile.test, test, build, execute"/>
+        <echo message="targets are clean, prepare, compile.test, test, build, execute, jar, bundle"/>
     </target>
-    
+
     <target name="clean">
         <!-- Delete The ${build} Directory Tree -->
         <delete dir="${build}" />
         <delete dir="${test.report.dir}" />
         <delete dir="${test.dir}" />
-        <delete file="airAutomation/airAutomation.jar" />
+        <delete file="airAutomation.jar" />
+        <delete file="airAutomation.app" />
     </target>
-    
+
     <target name="prepare">
         <!-- Create The Time Stamp -->
         <tstamp/>
@@ -61,7 +63,7 @@
         <mkdir dir="${test.dir}" />
         <mkdir dir="${test.report.dir}" />
     </target>
-    
+
     <target name="compile.test" depends="clean, prepare" description="Compile Unit Tests">
         <!-- Compile All Classes -->
         <javac srcdir="${src}"
@@ -127,7 +129,7 @@
             <classpath refid="compile.class.path"/>
         </javac>
     </target>
-    
+
     <target name="jar" depends="build" description="Package all files into jar">
         <manifestclasspath property="jar.classpath" jarfile="airAutomation/airAutomation.jar">
             <classpath refid="compile.class.path" />
@@ -139,6 +141,27 @@
             </manifest>
         </jar>
     </target>
+
+    <target name="bundle" depends="jar" description="Bundle jar">
+        <!-- Bundle Jar -->
+        <delete dir="app" />
+        <mkdir dir="app" />
+        <bundleapp outputdirectory="app"
+            name="airAutomation"
+            displayname="Air Automation"
+            identifier="airUI.pkg.MainDriver"
+            mainclassname="airUI.pkg.MainDriver" >
+            <classpath file="airAutomation.jar" />
+            <option value="-Dapple.laf.useScreenMenuBar=true"/>
+            <option value="-Dcom.apple.macos.use-file-dialog-packages=true"/>
+            <option value="-Dcom.apple.macos.useScreenMenuBar=true"/>
+            <option value="-Dapple.awt.application.name=airAutomation"/>
+            <option value="-Dcom.apple.smallTabs=true"/>
+
+            <option value="-Xmx1024M"/>
+        </bundleapp>
+    </target>
+
     <target name="execute" depends="jar" description="Execute jar to run program">
         <!-- Execute The Program -->
         <echo message="Compile and execute AirUI Program" />
