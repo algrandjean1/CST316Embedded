@@ -2,6 +2,7 @@ package airUI.pkg;
 
 import javax.swing.table.AbstractTableModel;
 
+@SuppressWarnings("serial")
 public class TableModel extends AbstractTableModel {
     
     
@@ -34,6 +35,7 @@ public class TableModel extends AbstractTableModel {
         return colNames[index];
     }
 	
+	@SuppressWarnings("hiding")
 	public void setData(String[] colNames, Object[][] data){
 		this.colNames = colNames;
 		this.data = data;

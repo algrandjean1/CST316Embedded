@@ -4,6 +4,7 @@
 package testAirUI.airUI.pkg;
 
 import airUI.pkg.*;
+
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,6 +16,7 @@ import airUI.pkg.XBeeHandler;
  * @author BMosAir
  *
  */
+@SuppressWarnings("unused")
 public class roomTest {
 	private Room room;
 	private XBeeHandler xbeeHandler;

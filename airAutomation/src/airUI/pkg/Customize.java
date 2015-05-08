@@ -24,6 +24,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+@SuppressWarnings("unused")
 public class Customize implements ActionListener, ItemListener, ChangeListener
 {
 	private XBeeHandler xbeeHandler = MainDriver.xbeeHandler;
@@ -69,6 +70,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	protected MainDriver driver;
 	protected Room r;
 
+	@SuppressWarnings({ "hiding", "unchecked", "rawtypes" })
 	public Customize(MainDriver driver)
 	{
 		this.driver = driver;
@@ -232,6 +234,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 
 	}
 
+	@SuppressWarnings("static-access")
 	public void itemStateChanged(ItemEvent event)
 	{
 		//System.out.println("item state change");
@@ -280,6 +283,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		return corrected;
 	}
 
+	@SuppressWarnings("static-access")
 	public boolean populateKeysList(String N, String L, String H)
 	{
 		boolean added = false;
@@ -359,6 +363,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	}
 
 
+	@SuppressWarnings("rawtypes")
 	public void readUserSettings()
 	{
 		//System.out.println("read user Settings");
@@ -466,6 +471,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 		}
 	}
 
+	@SuppressWarnings("static-access")
 	public void modifyKeys(ArrayList<Room> mv, String toModName, String newLow, String newHigh)
 	{
 		//System.out.println("Modify keys");
@@ -486,6 +492,7 @@ public class Customize implements ActionListener, ItemListener, ChangeListener
 	}
 
 
+	@SuppressWarnings("static-access")
 	public void rmFromKeysList(String rm)
 	{
 		Room toRm = newRoom.getRoom(rm);

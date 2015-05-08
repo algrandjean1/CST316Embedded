@@ -32,6 +32,7 @@ public class XBeeHandler {
 	 *  scans for 30 seconds 
 	 *  returns devices or message that no devices were found
 	 */
+	@SuppressWarnings("unused")
 	public XBeeHandler() throws Exception {
 		try {
 		xbee = new ZigBeeDevice(getFirstUsbPortName(), 115200);
@@ -108,6 +109,7 @@ public class XBeeHandler {
  * @return all discovered devices on the network
  * @throws Exception
  */
+	@SuppressWarnings("unused")
 	public RemoteXBeeDevice getDevices() throws Exception {
 		RemoteXBeeDevice dragon = xbeeNetwork.getDevice("DRAGON");
 		
@@ -130,7 +132,6 @@ public class XBeeHandler {
 	 * @return serial port of machine
 	 */
 	private static String getFirstUsbPortName() {
-		@SuppressWarnings("unchecked")
 		String firstXbee = null;
 
 		File[] files = new File("/dev").listFiles(new FilenameFilter()

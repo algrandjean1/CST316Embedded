@@ -28,6 +28,7 @@ import com.digi.xbee.api.models.XBeeMessage;
 /**
  * Room object with sensor data
  */
+@SuppressWarnings("unused")
 public class Room implements IDataReceiveListener
 {
 	private String room = "room.properties";
@@ -43,18 +44,22 @@ public class Room implements IDataReceiveListener
 
 	private ArrayList<String> usersReadings = new ArrayList<String>();
 
-    public void setTemperature(String temperature) {
+	@SuppressWarnings("hiding")
+	public void setTemperature(String temperature) {
 		this.temperature = temperature;
 	}
 
+	@SuppressWarnings("hiding")
 	public void setHumidity(String humidity) {
 		this.humidity = humidity;
 	}
 
+	@SuppressWarnings("hiding")
 	public void setCarbonDioxide(String carbonDioxide) {
 		this.carbonDioxide = carbonDioxide;
 	}
 
+	@SuppressWarnings("hiding")
 	public void setMethane(String methane) {
 		this.methane = methane;
 	}
@@ -65,6 +70,7 @@ public class Room implements IDataReceiveListener
 	 * @param lowerBound lower boundary of temperature to be set
 	 * @param upperBound upper boundary of temperature to be set
 	 */
+	@SuppressWarnings("hiding")
 	private Room(String name, String lowerBound, String upperBound, XBeeHandler xbeeHandler) {
 		try {
 			try{
@@ -115,7 +121,7 @@ public class Room implements IDataReceiveListener
 			userProps.setProperty("tempThresholdHigh", upperBound);
 
 			// write user settings to properties file if they change
-			FileOutputStream out = new FileOutputStream("user.properties");
+			FileOutputStream out = new FileOutputStream(MainDriver.USER_PROPERTIES_PATH);
 			userProps.store(out, "User settings saved");
 			out.close();
 		}catch(FileNotFoundException e){
@@ -198,6 +204,7 @@ public class Room implements IDataReceiveListener
 		
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void popUserReadingsArray()
 	{
 		FileInputStream inIt;

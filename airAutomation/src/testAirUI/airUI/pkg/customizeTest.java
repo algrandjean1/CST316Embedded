@@ -16,6 +16,7 @@ import airUI.pkg.XBeeHandler;
  * @author Cuahuc
  *
  */
+@SuppressWarnings("unused")
 public class customizeTest 
 {
 	private XBeeHandler xbeeHandler;
@@ -39,6 +40,7 @@ public class customizeTest
 	/**
 	 * Test method for {@link airUI.pkg.Customize#populateKeysList(java.lang.String, java.lang.String, java.lang.String)}.
 	 */
+	@SuppressWarnings({ "hiding", "static-access" })
 	@Test
 	public void testAddModRoomsButton() throws Exception
 	{

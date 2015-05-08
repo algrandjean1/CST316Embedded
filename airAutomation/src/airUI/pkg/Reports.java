@@ -12,6 +12,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 
+@SuppressWarnings("unused")
 class ReportsListener implements ActionListener
 {
     
@@ -24,15 +25,18 @@ class ReportsListener implements ActionListener
 }
 
 
+@SuppressWarnings("serial")
 public class Reports extends JFrame {
     
     static JPanel mainPane = new JPanel();
     JButton backButton;
     MainDriver driver;
     TableModel model = new TableModel();
-    protected JComboBox roomBox;
+    @SuppressWarnings("rawtypes")
+	protected JComboBox roomBox;
     
-    public Reports(MainDriver mainDriver) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public Reports(MainDriver mainDriver) {
         
         this.driver = mainDriver;
         // main panel for reports frame
@@ -182,6 +186,7 @@ public class Reports extends JFrame {
 		this.setVisible(false);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void populateRooms(){
 		int sizeOfListRoom = Room.getSize();
 		ArrayList<String> roomList = Room.getroomList();

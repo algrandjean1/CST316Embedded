@@ -33,7 +33,7 @@ import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
+@SuppressWarnings({ "rawtypes", "unused" })
 public class MainPage
 {
 	JFrame frame = new JFrame("Main Page.");
@@ -75,6 +75,7 @@ public class MainPage
 	DefaultListModel room = new DefaultListModel();
     
     
+	@SuppressWarnings("hiding")
 	public MainPage(MainDriver driver){
 		this.driver = driver;
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -117,6 +118,7 @@ public class MainPage
 		}
 	}
     
+	@SuppressWarnings("unchecked")
 	public void addToListModel(String ele)
 	{
 		room.addElement(ele);
@@ -160,10 +162,11 @@ public class MainPage
 		}
 	}
     
+	@SuppressWarnings("unchecked")
 	public void addElements(Container pane)
 	{
 		pane.setLayout(null);
-		JLabel roomLabel, onLabel;
+		JLabel roomLabel;
 		final JLabel dateLabel;
         
 		Font bigText = new Font("Serif",Font.BOLD,20);
@@ -184,6 +187,7 @@ public class MainPage
 				Timer timer = new Timer();
 				timer.scheduleAtFixedRate(new TimerTask()
                                           {
+					@SuppressWarnings("hiding")
 					public void run()
 					{
                         
@@ -305,6 +309,7 @@ public class MainPage
 		loadListModel(room, roomList);
 		
 	}
+	@SuppressWarnings("unchecked")
 	public void loadListModel(DefaultListModel r, ArrayList<String> rL)
 	{
 		r.clear();
