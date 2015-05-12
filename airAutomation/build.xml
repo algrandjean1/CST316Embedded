@@ -8,7 +8,9 @@
     <property name="build" location="classes" />
     <property name="test.dir" location="classes/tests" />
     <property name="test.report.dir" location="testreport" />
-    
+    <property environment="env" />
+    <echo message="JAVA_HOME is set to = ${env.JAVA_HOME}" />
+
     <path id="test.class.path">
         <pathelement location="${build}" />
         <pathelement location="${lib}/xbjlib-1.0.1.jar" />
@@ -22,7 +24,7 @@
     
     <taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="test.class.path" />
     <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${lib}/findbugs-ant.jar"/>
-   <!-- <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="${lib}/appbundler-1.0.jar" /> -->
+    <taskdef name="bundleapp" classname="com.oracle.appbundler.AppBundlerTask" classpath="${lib}/appbundler-1.0.jar" />
     
     <property name="pmd.path" location="lib/pmd-bin-5.3.0" />
     
@@ -44,6 +46,15 @@
     	</fileset>
         <fileset dir="${src}">
             <include name="**/*.properties" />
+        </fileset>
+    </path>
+    
+    <path id="bundlepath">
+        <fileset dir="${lib}">
+            <include name="**/*.jar" />
+            <include name="**/*.so" />
+            <include name="librxtxSerial.jnilib" />
+            <include name="rxtxSerial.dll" />
         </fileset>
     </path>
     
@@ -158,15 +169,16 @@
             name="airAutomation"
             displayname="Air Automation"
             identifier="airUI.pkg.MainDriver"
+            shortversion="1.0"
             mainclassname="airUI.pkg.MainDriver" >
+            <runtime dir="${env.JAVA_HOME}" />
             <classpath file="airAutomation.jar" />
+            <classpath refid="bundlepath" />
             <option value="-Dapple.laf.useScreenMenuBar=true"/>
             <option value="-Dcom.apple.macos.use-file-dialog-packages=true"/>
             <option value="-Dcom.apple.macos.useScreenMenuBar=true"/>
             <option value="-Dapple.awt.application.name=airAutomation"/>
             <option value="-Dcom.apple.smallTabs=true"/>
-            
-            <option value="-Xmx1024M"/>
         </bundleapp>
     </target>
     
